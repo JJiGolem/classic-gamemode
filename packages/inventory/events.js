@@ -375,7 +375,11 @@ module.exports = {
         if (!smoke) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
         if (!inventory.isInHands(smoke)) return notifs.error(player, `${inventory.getName(smoke.itemId)} не в руках`, header);
         var count = inventory.getParam(smoke, 'count').value;
-        if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
+        if (!count) return notifs.error(player, `Сигарет: 0 ед.`, header);
+        var matches = inventory.getItemByItemId(player, 139);
+        if (!matches) return notifs.error(player, `Спички не найдены`, header);
+        var matchesCount = inventory.getParam(matches, 'count').value;
+        if (!matchesCount) return notifs.error(player, `Спичек: 0 ед.`, header);
         if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
         if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
         if (player.lastUseSmoke) {
@@ -390,6 +394,10 @@ module.exports = {
         count--;
         if (!count) inventory.deleteItem(player, smoke);
         else inventory.updateParam(player, smoke, 'count', count);
+
+        matchesCount--;
+        if (!matchesCount) inventory.deleteItem(player, matches);
+        else inventory.updateParam(player, matches, 'count', matchesCount);
 
         player.call(`effect`, ['FocusOut', 15000]);
         notifs.success(player, `Вы употребили сигарету`, header);
@@ -589,7 +597,7 @@ module.exports = {
                     count--;
                     if (!count) inventory.deleteItem(player, item);
                     else inventory.updateParam(player, item, 'count', count);
-                    
+
                     craft.removeMaterials(player, [{
                         itemId: craft.firewoodItemId,
                         count: 5
