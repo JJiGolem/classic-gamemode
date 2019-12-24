@@ -11,6 +11,8 @@ var craft = new Vue({
         crafter: null,
         // Таймер очереди
         queueTimer: null,
+        // Скилл игрока
+        skill: 0,
     },
     computed: {
         currentType() {
@@ -31,7 +33,18 @@ var craft = new Vue({
                 if (this.isDeficit(material)) return false;
             }
 
-            return true;
+            return !this.isDeficitSkill;
+        },
+        isDeficitSkill() {
+            if (!this.currentItem) return false;
+
+            return this.currentItem.skill > this.skill;
+        },
+        progressSkillStyle() {
+            var info = this.skillInfo(this.skill);
+            return {
+                width: (this.skill - info.min) / (info.max - info.min) * 100 + '%'
+            };
         },
     },
     watch: {
@@ -119,10 +132,11 @@ var craft = new Vue({
                 width: 100 - col.time / col.maxTime * 100 + '%'
             };
         },
-        stateName(state) {
-            if (state == 'process') return 'Изготовление';
-            if (state == 'completed') return 'Завершено';
-            if (state == 'unsuccessfully') return 'Неудачно';
+        stateName(col) {
+            if (col.playerName != playerMenu.name) return col.playerName;
+            if (col.state == 'process') return 'Изготовление';
+            if (col.state == 'completed') return 'Завершено';
+            if (col.state == 'unsuccessfully') return 'Неудачно';
         },
         onClickItem(itemI) {
             if (this.currentType.itemI == itemI) this.currentType.itemI = -1;
@@ -141,7 +155,7 @@ var craft = new Vue({
         },
         onClickColumn(index) {
             var col = this.crafter.queue.columns[index];
-            if (!col.itemId || col.state == 'process') return;
+            if (!col.itemId || col.state == 'process' || col.playerName != playerMenu.name) return;
             this.callRemote(`craft.queue.take`, index);
         },
         callRemote(eventName, data) {
@@ -157,6 +171,22 @@ var craft = new Vue({
 
             var processList = this.crafter.queue.columns.filter(x => x.time);
             if (processList.length) this.startQueueTick(processList);
+        },
+        skillInfo(exp) {
+            var info = {
+                min: 0,
+                max: 30 * 60,
+                level: 1
+            };
+            var i = 1;
+            while (i < 100000) {
+                if (exp >= info.min && exp < info.max) return info;
+                i++;
+                info.min = info.max;
+                info.max *= 2;
+                info.level = i;
+            }
+            return null;
         },
     },
     mounted() {
@@ -184,6 +214,7 @@ craft.initCrafter({
                         count: 20
                     }],
                     time: 60,
+                    skill: 0,
                 },
                 {
                     itemId: 3,
@@ -208,6 +239,7 @@ craft.initCrafter({
                         },
                     ],
                     time: 60,
+                    skill: 0,
                 }
             ],
         },
@@ -223,6 +255,7 @@ craft.initCrafter({
                         count: 20
                     }],
                     time: 60,
+                    skill: 20,
                 },
                 {
                     itemId: 21,
@@ -239,6 +272,7 @@ craft.initCrafter({
                         }
                     ],
                     time: 90,
+                    skill: 30,
                 }
             ],
         }
@@ -254,11 +288,11 @@ craft.initCrafter({
             {
                 itemId: 3,
                 state: 'completed',
-                playerName: "Carter Slade",
+                playerName: "Cyrus Raider",
             },
             {
                 itemId: 7,
-                state: 'unsuccessfully'
+                state: 'unsuccessfully',
                 playerName: "Carter Slade",
             },
             {}

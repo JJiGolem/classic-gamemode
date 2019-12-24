@@ -166,6 +166,26 @@
     padding-right: 1vh;
 }
 
+#craft .right .craftItem .skill {
+    margin-bottom: 1vh;
+}
+
+#craft .right .craftItem .skill .progress {
+    background: #4c4c4c;
+    height: 1vh;
+    width: 100%;
+}
+
+#craft .right .craftItem .skill .progress .fill {
+    background: #b5b5b5;
+    height: 100%;
+}
+
+#craft .right .craftItem .skill .title {
+    display: flex;
+    justify-content: space-between;
+}
+
 #craft .right .craftItem .time {
     margin: auto;
     /* margin-bottom: 1vh; */
@@ -184,7 +204,7 @@
     margin: 1vh 0;
 }
 
-#craft .right .craftItem .title {
+#craft .right .craftItem > .title {
     align-items: center;
     display: flex;
     justify-content: space-between;
@@ -198,7 +218,7 @@
     /* padding: 1vh; */
 }
 
-#craft .right .queue .column:not(.process):hover {
+#craft .right .queue .column:not(.process):not(.disabled):hover {
     color: #fff;
 }
 
@@ -208,6 +228,10 @@
 
 #craft .right .queue .column.completed {
     border-color: #009200;
+}
+
+#craft .right .queue .column.disabled {
+    opacity: 0.5;
 }
 
 #craft .right .queue .column.unsuccessfully {

@@ -828,12 +828,12 @@
                     <div class="help" :class="{active: helpShow}" @click="helpShow = !helpShow"><i class="fas fa-info"></i></div>
                 </div>
                 <div class="column-list" v-show="!helpShow">
-                    <div v-for="(col, i) in crafter.queue.columns" v-key="i" class="column" :class="[col.state, col.itemId ? '' : 'empty']" @click="onClickColumn(i)">
+                    <div v-for="(col, i) in crafter.queue.columns" v-key="i" class="column" :class="[col.state, col.itemId ? '' : 'empty', playerMenu.name == col.playerName ? '' : 'disabled']" @click="onClickColumn(i)">
                         <div class="item" v-show="col.itemId">
                             <div class="icon" :style="{backgroundImage: `url(${inventory.urlItemImg(col.itemId)})`}"></div>
                             <div class="info">
                                 <div class="time" v-show="col.time">{{ col.time | time }}</div>
-                                <div class="state">{{ stateName(col.state) }}</div>
+                                <div class="state">{{ stateName(col) }}</div>
                             </div>
                         </div>
                         <div class="fill" v-show="col.state == 'process'" :style="progressStyle(col)"></div>
@@ -858,6 +858,15 @@
                         <div v-for="mat in currentItem.materials" class="material" :class="{deficit: isDeficit(mat)}">
                             <div class="name">{{ inventory.itemsInfo[mat.itemId].name }}</div>
                             <div class="count">{{ getMaterialCount(mat.itemId) }}/{{ mat.count }}</div>
+                        </div>
+                    </div>
+                    <div class="skill" :class="{deficit: isDeficitSkill}">
+                        <div class="title">
+                            <div>Навык</div>
+                            <div>{{ skillInfo(skill).level }}/{{ skillInfo(currentItem.skill).level }} lvl</div>
+                        </div>
+                        <div class="progress">
+                            <div class="fill" :style="progressSkillStyle"></div>
                         </div>
                     </div>
                     <div>{{ inventory.itemsInfo[currentItem.itemId].description }}</div>
