@@ -144,7 +144,6 @@ module.exports = {
                 count -= del;
                 if (!params.count || params.count - del <= 0) {
                     inventory.deleteItem(player, item);
-                    i--;
                 } else {
                     inventory.updateParam(player, item, 'count', params.count - del);
                 }
