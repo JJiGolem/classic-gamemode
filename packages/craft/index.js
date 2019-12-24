@@ -227,6 +227,7 @@ module.exports = {
         inventory.addItem(player, item.itemId, item.params, (e) => {
             if (e) return out(e);
 
+            this.addSkill(player, item.time);
             this.deleteItemFromQueue(crafter, col);
             notifs.success(player, `Предмет получен`);
         });
@@ -240,5 +241,10 @@ module.exports = {
             }
         }
         return null;
-    }
+    },
+    addSkill(player, exp) {
+        player.character.craft += exp;
+        player.character.save();
+        player.call(`craft.setSkill`, [player.character.craft]);
+    },
 };

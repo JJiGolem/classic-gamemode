@@ -19,6 +19,9 @@ mp.craft = {
     clearCrafter() {
         mp.callCEFV(`craft.clearCrafter()`);
     },
+    setSkill(exp) {
+        mp.callCEFV(`craft.skill = ${exp}`);
+    },
 };
 
 mp.events.add({
@@ -30,5 +33,8 @@ mp.events.add({
     },
     "craft.clearCrafter": () => {
         mp.craft.clearCrafter();
+    },
+    "craft.setSkill": (exp) => {
+        mp.craft.setSkill(exp);
     },
 });
