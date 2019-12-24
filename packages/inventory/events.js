@@ -1,6 +1,7 @@
 let bands = call('bands');
 let bizes = call('bizes');
 let clubs = call('clubs');
+let craft = call('craft');
 let death = call('death');
 let factions = call('factions');
 let fuelstations = call('fuelstations');
@@ -503,7 +504,7 @@ module.exports = {
     "inventory.item.use": (player, data) => {
         // debug(`item.use`)
         // debug(data)
-        data = JSON.parse(data);
+        if (typeof data == 'string') data = JSON.parse(data);
 
         var item = inventory.getItem(player, data.sqlId);
         if (!item) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
@@ -575,6 +576,28 @@ module.exports = {
                     inventory.updateParam(player, item, 'litres', 0);
                     notifs.success(player, `Содержимое канистры слито`, header);
                     inventory.notifyOverhead(player, `Слил канистру`);
+                }
+                break;
+            case 139: // спички
+                if (data.index == 0) { // костер
+                    var count = inventory.getParam(item, 'count').value;
+                    if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
+
+                    var firewoodCount = craft.getMaterialCount(player, craft.firewoodItemId);
+                    if (firewoodCount < 5) return notifs.error(player, `Недостаточно древесины`, header);
+
+                    count--;
+                    if (!count) inventory.deleteItem(player, item);
+                    else inventory.updateParam(player, item, 'count', count);
+                    
+                    craft.removeMaterials(player, [{
+                        itemId: craft.firewoodItemId,
+                        count: 5
+                    }]);
+
+                    data.pos.z += 0.1;
+                    craft.createBonfire(data.pos, new mp.Vector3(0, 0, player.heading));
+                    notifs.success(player, `Вы развели костер`, header);
                 }
                 break;
         }

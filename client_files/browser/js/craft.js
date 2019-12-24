@@ -94,6 +94,7 @@ var craft = new Vue({
             if (crafter.destroyTime) this.startDestroyTick();
 
             this.crafter = crafter;
+            this.firewoodCount = 0;
         },
         clearCrafter() {
             clearInterval(this.queueTimer);

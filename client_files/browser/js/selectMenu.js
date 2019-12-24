@@ -7129,6 +7129,10 @@ var selectMenu = new Vue({
                         values: ["$100"],
                     },
                     {
+                        text: 'Спички',
+                        values: ["$100"],
+                    },
+                    {
                         text: 'Назад'
                     }
                 ],
@@ -7160,6 +7164,9 @@ var selectMenu = new Vue({
                         }
                         if (e.itemName == 'Аптечка') {
                             mp.trigger('callRemote', 'supermarket.products.buy', 8);
+                        }
+                        if (e.itemName == 'Спички') {
+                            mp.trigger('callRemote', 'supermarket.products.buy', 9);
                         }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {

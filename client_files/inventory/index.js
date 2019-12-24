@@ -430,6 +430,12 @@ mp.events.add("inventory.item.adrenalin.use.callRemote", (data) => {
     mp.events.callRemote(`inventory.item.adrenalin.use`, JSON.stringify(data));
 });
 
+mp.events.add("inventory.item.use.callRemote", (data) => {
+    if (typeof data == 'string') data = JSON.parse(data);
+    data.pos = mp.inventory.getGroundItemPos(mp.players.local);
+    mp.events.callRemote(`inventory.item.use`, JSON.stringify(data));
+});
+
 mp.events.add("playerEnterVehicle", () => {
     if (!mp.players.local.getVariable("hands")) return;
     mp.callCEFV(`inventory.clearHands()`);

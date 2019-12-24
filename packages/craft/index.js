@@ -2,6 +2,7 @@
 
 let inventory = call('inventory');
 let notifs = call('notifications');
+let timer = call('timer');
 let utils = call('utils');
 
 module.exports = {
@@ -19,10 +20,6 @@ module.exports = {
                     materials: [{
                             itemId: 131,
                             count: 1
-                        },
-                        {
-                            itemId: 137,
-                            count: 3
                         }
                     ],
                     time: 10,
@@ -76,37 +73,43 @@ module.exports = {
     ],
     // Время ожидания предмета, после которого предмет из очереди уничтожится
     destroyItemTime: 10 * 60 * 1000,
+    // ИД предмета 'Древисина'
+    firewoodItemId: 137,
 
     init() {
         this.initCrafters();
     },
     initCrafters() {
         this.crafters.forEach(crafter => {
-            crafter.colshape = mp.colshapes.newSphere(crafter.pos.x, crafter.pos.y, crafter.pos.z, 1.5, 0);
-            crafter.colshape.onEnter = (player) => {
-                if (player.vehicle) return;
-                this.updateQueue(crafter);
-                player.call("craft.initCrafter", [this.convertToClientCrafter(crafter)]);
-                player.crafter = crafter;
-            };
-            crafter.colshape.onExit = (player) => {
-                player.call("craft.clearCrafter");
-                delete player.crafter;
-            };
-            crafter.colshape = crafter;
+            this.initCrafter(crafter);
+        });
+    },
+    initCrafter(crafter) {
+        crafter.colshape = mp.colshapes.newSphere(crafter.pos.x, crafter.pos.y, crafter.pos.z, 1.5, 0);
+        crafter.colshape.onEnter = (player) => {
+            if (player.vehicle) return;
+            this.updateQueue(crafter);
+            player.call("craft.initCrafter", [this.convertToClientCrafter(crafter)]);
+            player.crafter = crafter;
+        };
+        crafter.colshape.onExit = (player) => {
+            player.call("craft.clearCrafter");
+            delete player.crafter;
+        };
 
-            crafter.object = mp.objects.new(mp.joaat(crafter.model), crafter.pos, {
-                rotation: crafter.rot
-            });
+        crafter.object = mp.objects.new(mp.joaat(crafter.model), crafter.pos, {
+            rotation: crafter.rot
         });
     },
     convertToClientCrafter(crafter) {
-        return {
+        var clientData = {
             name: crafter.name,
             description: crafter.description,
             types: crafter.types,
             queue: crafter.queue,
         };
+        if (crafter.destroyDate) clientData.destroyTime = parseInt((crafter.destroyDate - Date.now()) / 1000);
+        return clientData;
     },
     craftItem(player, typeI, itemI) {
         if (!player.crafter) return notifs.error(player, `Подойдите ближе`);
@@ -258,5 +261,53 @@ module.exports = {
         player.character.craft += exp;
         player.character.save();
         player.call(`craft.setSkill`, [player.character.craft]);
+    },
+    createBonfire(pos, rot) {
+        var time = 1 * 20 * 1000;
+        var crafter = {
+            name: "Костер",
+            description: "Используется для приготовления еды.",
+            destroyDate: Date.now() + time,
+            types: [{
+                name: "Еда",
+                items: [{
+                    itemId: 137,
+                    params: {
+                        count: 5,
+                    },
+                    materials: [{
+                            itemId: 131,
+                            count: 1
+                        },
+                        {
+                            itemId: 137,
+                            count: 3
+                        }
+                    ],
+                    time: 10,
+                    skill: 0
+                }]
+            }],
+            queue: {
+                columns: [{},
+                    {},
+                    {},
+                    {},
+                ]
+            },
+            pos: pos,
+            rot: rot,
+            model: "prop_beach_fire",
+            colshape: null,
+            object: null,
+        };
+        this.crafters.push(crafter);
+        this.initCrafter(crafter);
+        timer.add(() => {
+            var i = this.crafters.indexOf(crafter);
+            if (i != -1) this.crafters.splice(i, 1);
+            crafter.colshape.destroy();
+            crafter.object.destroy();
+        }, time);
     },
 };

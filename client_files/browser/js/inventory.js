@@ -322,6 +322,17 @@ var inventory = new Vue({
                     }
                 },
             },
+            139: { // спички
+                'Костер': {
+                    handler(item) {
+                        var data = {
+                            sqlId: item.sqlId,
+                            index: 0
+                        };
+                        mp.trigger(`inventory.item.use.callRemote`, JSON.stringify(data));
+                    }
+                },
+            },
         },
         // Вайт-лист предметов, которые можно надеть
         bodyList: {
@@ -457,6 +468,15 @@ var inventory = new Vue({
                         index: (item.params.litres) ? 0 : 1
                     };
                     mp.trigger(`callRemote`, `inventory.item.use`, JSON.stringify(data));
+                }
+            },
+            139: { // спички
+                handler(item) {
+                    var data = {
+                        sqlId: item.sqlId,
+                        index: 0
+                    };
+                    mp.trigger(`inventory.item.use.callRemote`, JSON.stringify(data));
                 }
             },
         },
@@ -843,20 +863,15 @@ var inventory = new Vue({
 
                     if (place.sqlId == item.sqlId) {
                         this.itemNotif.text = `Предмет не может быть размещен в своем кармане`;
-                    }
-                    else if (place.itemId == item.itemId) {
+                    } else if (place.itemId == item.itemId) {
                         this.itemNotif.text = `Предмет не может быть размещен в предмете такого же типа`;
-                    }
-                    else if (place.sqlId < 0 && this.getItemsCount(item) > 0) {
+                    } else if (place.sqlId < 0 && this.getItemsCount(item) > 0) {
                         this.itemNotif.text = "Освободите вещь";
-                    }
-                    else if (place.sqlId > 0 && nextWeight > this.maxPlayerWeight && !this.getItem(item.sqlId)) {
+                    } else if (place.sqlId > 0 && nextWeight > this.maxPlayerWeight && !this.getItem(item.sqlId)) {
                         this.itemNotif.text = `Превышение по весу ${nextWeight} из ${this.maxPlayerWeight} кг`;
-                    }
-                    else if (this.blackList[place.itemId] && this.blackList[place.itemId].includes(item.itemId)) {
+                    } else if (this.blackList[place.itemId] && this.blackList[place.itemId].includes(item.itemId)) {
                         this.itemNotif.text = `Нельзя положить ${this.itemsInfo[item.itemId].name} в ${this.itemsInfo[place.itemId].name}`;
-                    }
-                    else this.itemNotif.text = null;
+                    } else this.itemNotif.text = null;
 
                     for (var x = 0; x < w; x++) {
                         for (var y = 0; y < h; y++) {
@@ -874,8 +889,7 @@ var inventory = new Vue({
                                             place.sqlId > 0 && this.getItem(item.sqlId);
                                         columns.targetSqlId = (canMerge) ? target.sqlId : null;
                                     }
-                                }
-                                else columns.targetSqlId = null;
+                                } else columns.targetSqlId = null;
                             }
                         }
                     }
@@ -919,8 +933,7 @@ var inventory = new Vue({
                 if (!freeSlot) {
                     this.notify(`Нет места для ${this.getItemName(oldItem)}`);
                     canAdd = false;
-                }
-                else {
+                } else {
                     this.addItem(oldItem, freeSlot.pocketIndex, freeSlot.index, freeSlot.parentId);
                     // if (this.weaponsList.includes(oldItem.itemId)) mp.trigger(`weapons.ammo.sync`, true);
                     this.callRemote("item.add", {
@@ -951,8 +964,7 @@ var inventory = new Vue({
             var freeSlot = this.findFreeSlot(item.itemId);
             if (!freeSlot) {
                 this.putGroundHandler(item);
-            }
-            else {
+            } else {
                 this.addItem(item, freeSlot.pocketIndex, freeSlot.index, freeSlot.parentId);
                 // if (this.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
                 this.callRemote("item.add", {
@@ -1396,8 +1408,7 @@ var inventory = new Vue({
                             mp.trigger(`weapons.ammo.remove`, item.sqlId, hash.toString());
                         }
                     };
-                }
-                else if (this.eatList.includes(itemId)) {
+                } else if (this.eatList.includes(itemId)) {
                     var handler = (item) => {
                         if (inventory.equipment[13] != item) return notifications.error(`Еда не в руках`, inventory.getItemName(item));
 
@@ -1416,8 +1427,7 @@ var inventory = new Vue({
                     this.hotkeysList[itemId] = {
                         handler: handler
                     };
-                }
-                else if (this.drinkList.includes(itemId)) {
+                } else if (this.drinkList.includes(itemId)) {
                     var handler = (item) => {
                         if (inventory.equipment[13] != item) return notifications.error(`Напиток не в руках`, inventory.getItemName(item));
 
@@ -1476,8 +1486,7 @@ var inventory = new Vue({
             }
             if (parent) {
                 Vue.set(parent.pockets[pocket].items, index, item);
-            }
-            else Vue.set(this.equipment, index, item);
+            } else Vue.set(this.equipment, index, item);
         },
         initItems(items) {
             if (typeof items == 'string') items = JSON.parse(items);
@@ -1723,8 +1732,7 @@ var inventory = new Vue({
                 busy.add("inventory", true, true);
                 mp.trigger(`radar.display`, false);
                 mp.trigger(`chat.opacity.set`, 0);
-            }
-            else {
+            } else {
                 busy.remove("inventory", true);
                 mp.trigger(`radar.display`, true);
                 mp.trigger(`chat.opacity.set`, 1);
@@ -1779,11 +1787,9 @@ var inventory = new Vue({
             var item = self.itemDrag.item;
             if (columns.bodyFocus != null) {
                 self.moveItemToBody(item, columns.bodyFocus);
-            }
-            else if (columns.hotkeyFocus) {
+            } else if (columns.hotkeyFocus) {
                 self.bindHotkey(self.itemDrag.item.sqlId, columns.hotkeyFocus);
-            }
-            else if (columns.targetSqlId) {
+            } else if (columns.targetSqlId) {
                 self.deleteItem(self.itemDrag.item.sqlId);
                 self.callRemote("item.merge", {
                     sqlId: self.itemDrag.item.sqlId,
@@ -1791,14 +1797,12 @@ var inventory = new Vue({
                     pocketI: columns.pocketI,
                     placeSqlId: columns.placeSqlId
                 });
-            }
-            else if (columns.binFocus) {
+            } else if (columns.binFocus) {
                 self.deleteItem(self.itemDrag.item.sqlId);
                 // mp.trigger(`inventory.ground.put`, item.sqlId);
                 self.putGroundHandler(item);
                 columns.binFocus = false;
-            }
-            else {
+            } else {
                 var index = parseInt(Object.keys(columns.columns)[0]);
                 if (!columns.deny && columns.placeSqlId != null &&
                     columns.pocketI != null &&
@@ -1806,8 +1810,7 @@ var inventory = new Vue({
                     if (columns.placeSqlId > 0) {
                         if (!self.getItem(item.sqlId)) self.setWaitItem(item, true);
                         self.addItem(item, columns.pocketI, index, columns.placeSqlId)
-                    }
-                    else {
+                    } else {
                         if (self.getItem(item.sqlId)) self.setWaitItem(item, true);
                         self.addEnvironmentItem(item, columns.pocketI, index, columns.placeSqlId);
                     }
