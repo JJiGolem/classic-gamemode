@@ -416,25 +416,61 @@ module.exports = {
             description: "Используется для приготовления еды.",
             destroyDate: Date.now() + time,
             types: [{
-                name: "Еда",
-                items: [{
-                    itemId: 137,
-                    params: {
-                        count: 5,
-                    },
-                    materials: [{
-                            itemId: 131,
-                            count: 1
+                    name: "Еда",
+                    items: [{
+                            itemId: 142,
+                            params: {
+                                satiety: 60
+                            },
+                            materials: [{
+                                itemId: 15,
+                                count: 4
+                            }],
+                            time: 1 * 60,
+                            skill: 0
                         },
                         {
-                            itemId: 137,
-                            count: 3
-                        }
-                    ],
-                    time: 10,
-                    skill: 0
-                }]
-            }],
+                            itemId: 143,
+                            params: {
+                                satiety: 70
+                            },
+                            materials: [{
+                                itemId: 36,
+                                count: 4
+                            }],
+                            time: 70,
+                            skill: 50 * 60
+                        },
+                        {
+                            itemId: 144,
+                            params: {
+                                satiety: 80
+                            },
+                            materials: [{
+                                itemId: 146,
+                                count: 4
+                            }],
+                            time: 70,
+                            skill: 90 * 60
+                        },
+                    ]
+                },
+                {
+                    name: "Напитки",
+                    items: [{
+                        itemId: 145,
+                        params: {
+                            thirst: 80
+                        },
+                        materials: [{
+                            itemId: 147,
+                            count: 4
+                        }],
+                        time: 70,
+                        skill: 20 * 60
+                    }, ]
+                }
+            ],
             queue: {
                 columns: [{},
                     {},
