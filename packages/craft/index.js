@@ -502,7 +502,7 @@ module.exports = {
         var out = (text) => {
             notifs.error(player, text, header);
         };
-        if (firewoodCount > this.getMaterialCount(player, this.firewoodItemId)) return out(`Недостаточно древесины`);
+        if (firewoodCount > this.getMaterialCount(player, this.firewoodItemId)) return out(`Недостаточно дерева`);
         var crafter = player.crafter;
         this.removeMaterials(player, [{
             itemId: this.firewoodItemId,

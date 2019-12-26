@@ -592,7 +592,7 @@ module.exports = {
                     if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
 
                     var firewoodCount = craft.getMaterialCount(player, craft.firewoodItemId);
-                    if (firewoodCount < 5) return notifs.error(player, `Недостаточно древесины`, header);
+                    if (firewoodCount < 5) return notifs.error(player, `Недостаточно дерева`, header);
 
                     count--;
                     if (!count) inventory.deleteItem(player, item);
