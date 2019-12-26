@@ -25,6 +25,7 @@
     <link rel="stylesheet" type="text/css" href="css/speedometer.css" />
     <link rel="stylesheet" type="text/css" href="css/interactionMenu.css" />
     <link rel="stylesheet" type="text/css" href="css/inventory.css" />
+    <link rel="stylesheet" type="text/css" href="css/craft.css" />
     <link rel="stylesheet" type="text/css" href="css/carSpecifications.css" />
     <link rel="stylesheet" type="text/css" href="css/check.css" />
     <link rel="stylesheet" type="text/css" href="css/inputWindow.css" />
@@ -800,6 +801,91 @@
                 <path d="M16.8557 4.54545C16.8557 3.05494 18.019 1.9656 19.5095 1.9656H30.4187C31.9087 1.9656 33.072 3.05494 33.072 4.54545V7.37101H35.0376V4.54545C35.0376 1.97136 32.9928 0 30.4187 0H19.5095C16.9354 0 14.8901 1.97136 14.8901 4.54545V7.37101H16.8557V4.54545Z" fill="white"/>
                 <path d="M13.341 50.0001H36.5841C38.8252 50.0001 40.5643 48.0287 40.5643 45.5775V15.2335H9.36035V45.5775C9.36035 48.0287 11.0994 50.0001 13.341 50.0001ZM31.2277 19.9263C31.2277 19.3835 31.6677 18.9435 32.2105 18.9435C32.7532 18.9435 33.1933 19.3835 33.1933 19.9263V43.1449C33.1933 43.6877 32.7532 44.1277 32.2105 44.1277C31.6677 44.1277 31.2277 43.6877 31.2277 43.1449V19.9263ZM23.9795 19.9263C23.9795 19.3835 24.4196 18.9435 24.9623 18.9435C25.5051 18.9435 25.9451 19.3835 25.9451 19.9263V43.1449C25.9451 43.6877 25.5051 44.1277 24.9623 44.1277C24.4196 44.1277 23.9795 43.6877 23.9795 43.1449V19.9263ZM16.7314 19.9263C16.7314 19.3835 17.1714 18.9435 17.7142 18.9435C18.2569 18.9435 18.697 19.3835 18.697 19.9263V43.1449C18.697 43.6877 18.2569 44.1277 17.7142 44.1277C17.1714 44.1277 16.7314 43.6877 16.7314 43.1449V19.9263Z" fill="white"/>
                 <path d="M8.353 13.2679H41.5715C42.9286 13.2679 44.0285 12.168 44.0285 10.8109C44.0285 9.45378 42.9286 8.35388 41.5715 8.35388H8.353C6.99589 8.35388 5.896 9.45378 5.896 10.8109C5.896 12.168 6.99589 13.2679 8.353 13.2679Z" fill="white"/>
+        </div>
+    </div>
+
+    <div id="craft" v-if="show && crafter" :style="{opacity: 1}">
+        <div class="left">
+            <div class="header">
+                <div v-for="(type, i) in crafter.types" v-key="i" :class="{active: type == currentType}" @click="crafter.typeI = i">{{ type.name }}</div>
+            </div>
+            <div class="item-list">
+                <div v-for="(item, i) in currentType.items" v-key="i" :class="{active: currentItem == item}" class="item" @click="onClickItem(i)">
+                    <div class="icon" :style="{backgroundImage: `url(${inventory.urlItemImg(item.itemId)})`}"></div>
+                    <div class="info">
+                        <div class="name">{{ inventory.itemsInfo[item.itemId].name | itemName }}</div>
+                        <div class="materials">
+                            <div v-for="mat in item.materials" v-key="i" :class="{deficit: isDeficit(mat)}">{{ getMaterialName(item, mat) }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="queue" v-show="!currentItem">
+                <div class="header">
+                    <div class="title">{{ crafter.name }}</div>
+                    <div class="help" :class="{active: helpShow}" @click="helpShow = !helpShow"><i class="fas fa-info"></i></div>
+                </div>
+                <div class="column-list" v-show="!helpShow">
+                    <div v-for="(col, i) in crafter.queue.columns" v-key="i" class="column" :class="[col.state, col.itemId ? '' : 'empty', playerMenu.name == col.playerName ? '' : 'disabled']" @click="onClickColumn(i)">
+                        <div class="item" v-show="col.itemId">
+                            <div class="icon" :style="{backgroundImage: `url(${inventory.urlItemImg(col.itemId)})`}"></div>
+                            <div class="info">
+                                <div class="time" v-show="col.time">{{ col.time | time }}</div>
+                                <div class="state">{{ stateName(col) }}</div>
+                            </div>
+                        </div>
+                        <div class="fill" v-show="col.state == 'process'" :style="progressStyle(col)"></div>
+                    </div>
+                </div>
+                <div class="bonfire" v-show="!helpShow && crafter.destroyTime">
+                    <div class="title" :class="{deficit: crafter.destroyTime < 60}">
+                        Горит {{ crafter.destroyTime | time }}
+                        <span v-show="firewoodCount">+{{ firewoodCount * 20 | time }}</span>
+                    </div>
+                    <div class="selector">
+                        <div class="button" @click="onClickDownFirewood">-</div>
+                        <div class="count">{{ firewoodCount }} ед.</div>
+                        <div class="button" @click="onClickUpFirewood">+</div>
+                    </div>
+                    <div class="button acceptFirewood" @click="onClickAcceptFirewood">Подкинуть</div>
+                </div>
+                <div class="help-info" v-show="helpShow">{{ crafter.description }}</div>
+            </div>
+            <div class="craftItem" v-if="currentItem">
+                <div class="param-list" v-if="paramsShow">
+                    <div v-for="param in currentItemParams" class="param">
+                        <div class="key">{{ param.name }}</div>
+                        <div class="value">{{ param.value }}</div>
+                    </div>
+                </div>
+                <div v-else class="icon" :style="{backgroundImage: `url(${inventory.urlItemImg(currentItem.itemId)})`}"></div>
+                <div class="title">
+                    <div class="name">{{ inventory.itemsInfo[currentItem.itemId].name }}</div>
+                    <div class="button details" :class="{active: paramsShow}" @click="onClickDetails"><i class="fas fa-ellipsis-h"></i></div>
+                </div>
+                <div class="description">
+                    <div class="material-list">
+                        <div v-for="mat in currentItem.materials" class="material" :class="{deficit: isDeficit(mat)}">
+                            <div class="name">{{ inventory.itemsInfo[mat.itemId].name }}</div>
+                            <div class="count">{{ getMaterialCount(mat.itemId) }}/{{ mat.count }}</div>
+                        </div>
+                    </div>
+                    <div class="skill" :class="{deficit: isDeficitSkill}">
+                        <div class="title">
+                            <div>Навык</div>
+                            <div>{{ skillInfo(skill).level }}/{{ skillInfo(currentItem.skill).level }} lvl</div>
+                        </div>
+                        <div class="progress">
+                            <div class="fill" :style="progressSkillStyle"></div>
+                        </div>
+                    </div>
+                    <div>{{ inventory.itemsInfo[currentItem.itemId].description }}</div>
+                </div>
+                <div class="time" v-show="canCraft">{{ currentItem.time | time }}</div>
+                <div class="button make" :class="{disabled: !canCraft}" @click="onClickCraft">Изготовить</div>
+            </div>
         </div>
     </div>
 
@@ -1860,6 +1946,7 @@
     <script src="js/speedometer.js"></script>
     <script src="js/interactionMenu.js"></script>
     <script src="js/inventory.js"></script>
+    <script src="js/craft.js"></script>
     <script src="js/carSpecifications.js"></script>
     <script src="js/check.js"></script>
     <script src="js/inputWindow.js"></script>

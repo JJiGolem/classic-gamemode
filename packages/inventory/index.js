@@ -29,7 +29,7 @@ module.exports = {
         6: [11],
         7: [10],
         8: [12],
-        9: [21, 22, 48, 49, 50, 52, 70, 91, 93, 96, 99, 100, 107, 136],
+        9: [21, 22, 48, 49, 50, 52, 70, 76, 91, 93, 96, 99, 100, 107, 136],
         10: [13],
         11: [8],
         12: [9],
@@ -286,7 +286,7 @@ module.exports = {
         var slot = this.findFreeSlot(player, itemId);
         if (!slot) return `Нет места для ${this.getInventoryItem(itemId).name}`;
         if (params.sex != null && params.sex != !player.character.gender) return `Предмет противоположного пола`;
-        var nextWeight = this.getCommonWeight(player) + this.getInventoryItem(itemId).weight;
+        var nextWeight = this.getCommonWeight(player) + this.getInventoryItem(itemId).weight * params.count || 1;
         if (nextWeight > this.maxPlayerWeight) return `Превышение по весу (${nextWeight.toFixed(2)} из ${this.maxPlayerWeight} кг)`;
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, itemId);
@@ -295,16 +295,9 @@ module.exports = {
         return null;
     },
     async addItem(player, itemId, params, callback = () => {}) {
+        var cantAdd = this.cantAdd(player, itemId, params);
+        if (cantAdd) return callback(cantAdd);
         var slot = this.findFreeSlot(player, itemId);
-        if (!slot) return callback(`Нет места для ${this.getInventoryItem(itemId).name}`);
-        if (params.sex != null && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
-        var nextWeight = this.getCommonWeight(player) + this.getInventoryItem(itemId).weight;
-        if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight.toFixed(2)} из ${this.maxPlayerWeight} кг)`);
-        if (params.weaponHash) {
-            var weapon = this.getItemByItemId(player, itemId);
-            if (weapon) return callback(`Оружие ${this.getName(itemId)} уже имеется`);
-            // if (slot.parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
-        }
         var struct = [];
         for (var key in params) {
             struct.push({
