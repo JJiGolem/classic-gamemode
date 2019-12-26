@@ -59,7 +59,11 @@ module.exports = {
                                 {
                                     itemId: 138,
                                     count: 8
-                                }
+                                },
+                                {
+                                    itemId: 148,
+                                    count: 2
+                                },
                             ],
                             time: 7 * 60,
                             skill: 60 * 60,
