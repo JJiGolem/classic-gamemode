@@ -286,7 +286,7 @@ module.exports = {
         var slot = this.findFreeSlot(player, itemId);
         if (!slot) return `Нет места для ${this.getInventoryItem(itemId).name}`;
         if (params.sex != null && params.sex != !player.character.gender) return `Предмет противоположного пола`;
-        var nextWeight = this.getCommonWeight(player) + this.getInventoryItem(itemId).weight;
+        var nextWeight = this.getCommonWeight(player) + this.getInventoryItem(itemId).weight * params.count || 1;
         if (nextWeight > this.maxPlayerWeight) return `Превышение по весу (${nextWeight.toFixed(2)} из ${this.maxPlayerWeight} кг)`;
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, itemId);
