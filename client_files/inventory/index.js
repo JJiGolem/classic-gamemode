@@ -33,6 +33,11 @@ mp.inventory = {
             pos: new mp.Vector3(0.2, -0.15, -0.1),
             rot: new mp.Vector3(13, -90, 10)
         },
+        76: { // каменный топор
+            bone: 24818,
+            pos: new mp.Vector3(0.2, -0.15, -0.1),
+            rot: new mp.Vector3(13, -90, 10)
+        },
         104: { // Combat MG
             bone: 24818,
             pos: new mp.Vector3(0.2, -0.165, -0.1),

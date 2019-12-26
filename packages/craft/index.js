@@ -9,22 +9,96 @@ module.exports = {
     // Изготовители (станок, верстак и т.п.)
     crafters: [{
             name: "Станок",
-            description: "Используется для работы с деревом.",
+            description: "Используется для переработки ресурсов и изготовления инструментов.",
             types: [{
-                name: "Материалы",
-                items: [{
-                    itemId: 137,
-                    params: {
-                        count: 5,
-                    },
-                    materials: [{
-                        itemId: 131,
-                        count: 1
-                    }],
-                    time: 10,
-                    skill: 0
-                }]
-            }],
+                    name: "Инструменты",
+                    items: [{
+                            itemId: 76,
+                            params: {
+                                health: 100,
+                                weaponHash: mp.joaat("weapon_stone_hatchet"),
+                            },
+                            materials: [{
+                                    itemId: 137,
+                                    count: 10
+                                },
+                                {
+                                    itemId: 138,
+                                    count: 15
+                                }
+                            ],
+                            time: 5 * 60,
+                            skill: 0
+                        },
+                        {
+                            itemId: 136,
+                            params: {
+                                health: 100,
+                            },
+                            materials: [{
+                                    itemId: 137,
+                                    count: 15
+                                },
+                                {
+                                    itemId: 138,
+                                    count: 10
+                                }
+                            ],
+                            time: 5 * 60,
+                            skill: 0
+                        },
+                        {
+                            itemId: 5,
+                            params: {
+                                health: 100
+                            },
+                            materials: [{
+                                    itemId: 137,
+                                    count: 12
+                                },
+                                {
+                                    itemId: 138,
+                                    count: 8
+                                }
+                            ],
+                            time: 7 * 60,
+                            skill: 60 * 60,
+                        },
+                        {
+                            itemId: 140,
+                            params: {
+                                health: 100
+                            },
+                            materials: [{
+                                    itemId: 137,
+                                    count: 20
+                                },
+                                {
+                                    itemId: 141,
+                                    count: 5
+                                }
+                            ],
+                            time: 7 * 60,
+                            skill: 120 * 60,
+                        },
+                    ]
+                },
+                {
+                    name: "Материалы",
+                    items: [{
+                        itemId: 137,
+                        params: {
+                            count: 5,
+                        },
+                        materials: [{
+                            itemId: 131,
+                            count: 1
+                        }],
+                        time: 5 * 60,
+                        skill: 0
+                    }, ]
+                }
+            ],
             queue: {
                 columns: [{},
                     {},
@@ -39,23 +113,97 @@ module.exports = {
             object: null,
         },
         {
-            name: "Каменоломня",
-            description: "Используется для работы с камнем.",
+            name: "Станок",
+            description: "Используется для переработки ресурсов и изготовления инструментов.",
             types: [{
-                name: "Материалы",
-                items: [{
-                    itemId: 138,
-                    params: {
-                        count: 5,
-                    },
-                    materials: [{
-                        itemId: 135,
-                        count: 1
-                    }],
-                    time: 10,
-                    skill: 0,
-                }]
-            }],
+                    name: "Инструменты",
+                    items: [{
+                            itemId: 76,
+                            params: {
+                                health: 100,
+                                weaponHash: mp.joaat("weapon_stone_hatchet"),
+                            },
+                            materials: [{
+                                    itemId: 137,
+                                    count: 10
+                                },
+                                {
+                                    itemId: 138,
+                                    count: 15
+                                }
+                            ],
+                            time: 5 * 60,
+                            skill: 0
+                        },
+                        {
+                            itemId: 136,
+                            params: {
+                                health: 100,
+                            },
+                            materials: [{
+                                    itemId: 137,
+                                    count: 15
+                                },
+                                {
+                                    itemId: 138,
+                                    count: 10
+                                }
+                            ],
+                            time: 5 * 60,
+                            skill: 0
+                        },
+                        {
+                            itemId: 5,
+                            params: {
+                                health: 100
+                            },
+                            materials: [{
+                                    itemId: 137,
+                                    count: 12
+                                },
+                                {
+                                    itemId: 138,
+                                    count: 8
+                                }
+                            ],
+                            time: 7 * 60,
+                            skill: 60 * 60,
+                        },
+                        {
+                            itemId: 140,
+                            params: {
+                                health: 100
+                            },
+                            materials: [{
+                                    itemId: 137,
+                                    count: 20
+                                },
+                                {
+                                    itemId: 141,
+                                    count: 5
+                                }
+                            ],
+                            time: 7 * 60,
+                            skill: 120 * 60,
+                        },
+                    ]
+                },
+                {
+                    name: "Материалы",
+                    items: [{
+                        itemId: 138,
+                        params: {
+                            count: 5,
+                        },
+                        materials: [{
+                            itemId: 135,
+                            count: 1
+                        }],
+                        time: 5 * 60,
+                        skill: 0,
+                    }]
+                }
+            ],
             queue: {
                 columns: [{},
                     {},
@@ -65,7 +213,7 @@ module.exports = {
             },
             pos: new mp.Vector3(2606.1240234375, 2793.6884765625, 33.736148834228516 - 1),
             rot: new mp.Vector3(0, 0, 90),
-            model: "gr_prop_gr_bench_02a",
+            model: "prop_tablesaw_01",
             colshape: null,
             object: null,
         },
