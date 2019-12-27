@@ -97,11 +97,12 @@
 }
 
 #bugTracker .right .bug .about {
+    font-size: 1.3vh;
     margin-top: 1vh;
 }
 
 #bugTracker .right .bug .info {
-    height: 70%;
+    height: 76%;
     overflow-x: hidden;
     overflow-y: auto;
 }

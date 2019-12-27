@@ -1921,9 +1921,10 @@
     <div id="bugTracker" v-if="show" :style="{opacity: 1}">
         <div class="left">
             <div class="title">Очки помощи: {{ score }}</div>
-            <div class="bug-list">
+            <div class="bug-list" v-if="bugList.length">
                 <div v-for="(bug, i) in bugList" v-key="i" :class="{active: i == bugI}" @click="onClickBug(i)">{{ bug.name }}</div>
             </div>
+            <div v-if="!bugList.length">Список пуст</div>
         </div>
         <div class="right">
             <div class="bug" v-if="currentBug">
