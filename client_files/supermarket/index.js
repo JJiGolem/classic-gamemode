@@ -118,4 +118,5 @@ function setPrices(config, multiplier) {
     mp.callCEFV(`selectMenu.menus["supermarketBags"].items[0].values[0] = '$${config.duffleBag}'`);
     mp.callCEFV(`selectMenu.menus["supermarketBags"].items[1].values[0] = '$${config.duffleBag}'`);
     mp.callCEFV(`selectMenu.menus["supermarketStuff"].items[3].values[0] = '$${config.healthPack}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketStuff"].items[4].values[0] = '$${config.matches}'`);
 }

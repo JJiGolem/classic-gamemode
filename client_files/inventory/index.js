@@ -33,6 +33,11 @@ mp.inventory = {
             pos: new mp.Vector3(0.2, -0.15, -0.1),
             rot: new mp.Vector3(13, -90, 10)
         },
+        76: { // каменный топор
+            bone: 24818,
+            pos: new mp.Vector3(0.2, -0.15, -0.1),
+            rot: new mp.Vector3(13, -90, 10)
+        },
         104: { // Combat MG
             bone: 24818,
             pos: new mp.Vector3(0.2, -0.165, -0.1),
@@ -428,6 +433,12 @@ mp.events.add("inventory.item.adrenalin.use.callRemote", (data) => {
     if (!rec) return mp.notify.error(`Рядом никого нет`, `Адреналин`);
     data.recId = rec.remoteId;
     mp.events.callRemote(`inventory.item.adrenalin.use`, JSON.stringify(data));
+});
+
+mp.events.add("inventory.item.use.callRemote", (data) => {
+    if (typeof data == 'string') data = JSON.parse(data);
+    data.pos = mp.inventory.getGroundItemPos(mp.players.local);
+    mp.events.callRemote(`inventory.item.use`, JSON.stringify(data));
 });
 
 mp.events.add("playerEnterVehicle", () => {

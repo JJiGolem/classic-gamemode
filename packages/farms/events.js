@@ -2,6 +2,7 @@ let carrier = call('carrier');
 let factions = call('factions');
 let farms = call('farms');
 let jobs = call('jobs');
+let inventory = call('inventory');
 let money = call('money');
 let notifs = call('notifications');
 let routes = call('routes');
@@ -332,8 +333,6 @@ module.exports = {
         var price = farm[`${key}Price`] * data.count;
         if (player.character.cash < price) return out(`Необходимо $${price}`);
 
-        // TODO: Пополнять баланс фермы
-
         money.removeCash(player, price, (res) => {
             if (!res) return out(`Ошибка списания наличных`);
 
@@ -348,6 +347,43 @@ module.exports = {
         }, `Загрузка урожая на ферме #${farm.id}`);
 
         notifs.success(player, `Урожай загружен`, header);
+    },
+    "farms.warehouse.products.inv.buy": (player, data) => {
+        data = JSON.parse(data);
+        var header = `Покупка на руки`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (player.vehicle) return out(`Выйдите из авто`);
+        if (!player.farm) return out(`Вы далеко`);
+        var farm = player.farm;
+        var key = ["productA", "productB", "productC"][data.index];
+        // if (key == 'productC' && !factions.isMafiaFaction(player.character.factionId)) return out(`Доступно только членам мафии`);
+        if (key == 'productC') return out(`Недоступно`);
+        if (farm[key] < 4 || farm[key] < data.count) return out(`На складе недостаточно урожая`);
+        var price = farm[`${key}Price`] * data.count;
+        if (player.character.cash < price) return out(`Необходимо $${price}`);
+        var itemId = [36, 146][data.index];
+        var params = {
+            count: data.count
+        };
+
+        // TODO: возможность покупки урожая С (травка)
+        var cantAdd = inventory.cantAdd(player, itemId, params);
+        if (cantAdd) return out(cantAdd);
+
+        money.removeCash(player, price, (res) => {
+            if (!res) return out(`Ошибка списания наличных`);
+
+            inventory.addItem(player, itemId, params, (e) => {
+                if (e) return out(e);
+
+                farm[key] -= data.count;
+                farm.balance += price;
+                farm.save();
+                notifs.success(player, `Урожай куплен`, header);
+            });
+        }, `Покупка урожая на руки на ферме #${farm.id}`);
     },
     "farms.warehouse.grains.take": (player, data) => {
         data = JSON.parse(data);

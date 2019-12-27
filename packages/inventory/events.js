@@ -1,6 +1,7 @@
 let bands = call('bands');
 let bizes = call('bizes');
 let clubs = call('clubs');
+let craft = call('craft');
 let death = call('death');
 let factions = call('factions');
 let fuelstations = call('fuelstations');
@@ -374,7 +375,11 @@ module.exports = {
         if (!smoke) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
         if (!inventory.isInHands(smoke)) return notifs.error(player, `${inventory.getName(smoke.itemId)} не в руках`, header);
         var count = inventory.getParam(smoke, 'count').value;
-        if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
+        if (!count) return notifs.error(player, `Сигарет: 0 ед.`, header);
+        var matches = inventory.getItemByItemId(player, 139);
+        if (!matches) return notifs.error(player, `Спички не найдены`, header);
+        var matchesCount = inventory.getParam(matches, 'count').value;
+        if (!matchesCount) return notifs.error(player, `Спичек: 0 ед.`, header);
         if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
         if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
         if (player.lastUseSmoke) {
@@ -389,6 +394,10 @@ module.exports = {
         count--;
         if (!count) inventory.deleteItem(player, smoke);
         else inventory.updateParam(player, smoke, 'count', count);
+
+        matchesCount--;
+        if (!matchesCount) inventory.deleteItem(player, matches);
+        else inventory.updateParam(player, matches, 'count', matchesCount);
 
         player.call(`effect`, ['FocusOut', 15000]);
         notifs.success(player, `Вы употребили сигарету`, header);
@@ -503,7 +512,7 @@ module.exports = {
     "inventory.item.use": (player, data) => {
         // debug(`item.use`)
         // debug(data)
-        data = JSON.parse(data);
+        if (typeof data == 'string') data = JSON.parse(data);
 
         var item = inventory.getItem(player, data.sqlId);
         if (!item) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
@@ -575,6 +584,28 @@ module.exports = {
                     inventory.updateParam(player, item, 'litres', 0);
                     notifs.success(player, `Содержимое канистры слито`, header);
                     inventory.notifyOverhead(player, `Слил канистру`);
+                }
+                break;
+            case 139: // спички
+                if (data.index == 0) { // костер
+                    var count = inventory.getParam(item, 'count').value;
+                    if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
+
+                    var firewoodCount = craft.getMaterialCount(player, craft.firewoodItemId);
+                    if (firewoodCount < 5) return notifs.error(player, `Недостаточно дерева`, header);
+
+                    count--;
+                    if (!count) inventory.deleteItem(player, item);
+                    else inventory.updateParam(player, item, 'count', count);
+
+                    craft.removeMaterials(player, [{
+                        itemId: craft.firewoodItemId,
+                        count: 5
+                    }]);
+
+                    data.pos.z += 0.1;
+                    craft.createBonfire(data.pos, new mp.Vector3(0, 0, player.heading));
+                    notifs.success(player, `Вы развели костер`, header);
                 }
                 break;
         }
