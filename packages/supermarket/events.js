@@ -32,7 +32,7 @@ module.exports = {
         let price = supermarket.productsConfig.phone * supermarket.productPrice * supermarket.getPriceMultiplier(supermarketId);
         if (player.character.cash < price) return player.call('supermarket.phone.buy.ans', [2]);
         let productsAvailable = supermarket.getProductsAmount(supermarketId);
-        
+
         let finalProducts = parseInt(supermarket.productsConfig.phone * 0.7);
         if (finalProducts > productsAvailable) return player.call('supermarket.phone.buy.ans', [3]);
 
@@ -115,6 +115,9 @@ module.exports = {
             case 8:
                 productName = 'healthPack';
                 break;
+            case 9:
+                productName = 'matches';
+                break;
         }
         let price = supermarket.productsConfig[productName] * supermarket.productPrice * supermarket.getPriceMultiplier(supermarketId);
         if (player.character.cash < price) return player.call('supermarket.products.buy.ans', [2]);
@@ -143,6 +146,8 @@ module.exports = {
             bagColor == 'green' ? params.variation = 41 : params.variation = 45;
         } else if (productName == 'healthPack') {
             params.count = 1;
+        } else if (productName == 'matches') {
+            params.count = 20;
         }
 
         inventory.addItem(player, itemId, params, (e) => {

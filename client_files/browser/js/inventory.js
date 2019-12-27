@@ -10,49 +10,56 @@ var inventory = new Vue({
                 description: 'Описание очков.',
                 height: 2,
                 width: 3,
-                weight: 0.1
+                weight: 0.1,
+                chance: 50,
             },
             3: {
                 name: 'Бронежилет',
                 description: 'Описание броника.',
                 height: 6,
                 width: 8,
-                weight: 10
+                weight: 10,
+                chance: 50,
             },
             7: {
                 name: 'Рубашка',
                 description: 'Описание рубашки.',
                 height: 5,
                 width: 4,
-                weight: 0.1
+                weight: 0.1,
+                chance: 50,
             },
             8: {
                 name: 'Штаны',
                 description: 'Описание штанов.',
                 height: 6,
                 width: 8,
-                weight: 0.1
+                weight: 0.1,
+                chance: 50,
             },
             9: {
                 name: 'Ботинки',
                 description: 'Описание ботинков.',
                 height: 3,
                 width: 3,
-                weight: 0.1
+                weight: 0.1,
+                chance: 50,
             },
             13: {
                 name: 'Сумка',
                 description: 'Описание сумки.',
                 height: 6,
                 width: 8,
-                weight: 2
+                weight: 2,
+                chance: 50,
             },
             16: {
                 name: 'Сигареты',
                 description: 'Описание.',
                 height: 2,
                 width: 2,
-                weight: 0.1
+                weight: 0.1,
+                chance: 50,
             },
             18: {
                 name: 'Фонарь SureFire G2 Nitrolon',
@@ -60,6 +67,7 @@ var inventory = new Vue({
                 height: 3,
                 width: 4,
                 weight: 2,
+                chance: 50,
             },
             21: {
                 name: 'Дробаш',
@@ -67,6 +75,7 @@ var inventory = new Vue({
                 height: 6,
                 width: 8,
                 weight: 2,
+                chance: 50,
             },
             24: {
                 name: 'Аптечка',
@@ -74,6 +83,7 @@ var inventory = new Vue({
                 height: 6,
                 width: 8,
                 weight: 0.1,
+                chance: 50,
             },
             37: {
                 name: 'Патрон',
@@ -81,6 +91,7 @@ var inventory = new Vue({
                 height: 4,
                 width: 4,
                 weight: 0.02,
+                chance: 50,
             },
             39: {
                 name: 'Патрон',
@@ -88,6 +99,7 @@ var inventory = new Vue({
                 height: 4,
                 width: 4,
                 weight: 0.02,
+                chance: 50,
             },
         },
         // Меню предмета по ПКМ
@@ -310,6 +322,17 @@ var inventory = new Vue({
                     }
                 },
             },
+            139: { // спички
+                'Костер': {
+                    handler(item) {
+                        var data = {
+                            sqlId: item.sqlId,
+                            index: 0
+                        };
+                        mp.trigger(`inventory.item.use.callRemote`, JSON.stringify(data));
+                    }
+                },
+            },
         },
         // Вайт-лист предметов, которые можно надеть
         bodyList: {
@@ -445,6 +468,15 @@ var inventory = new Vue({
                         index: (item.params.litres) ? 0 : 1
                     };
                     mp.trigger(`callRemote`, `inventory.item.use`, JSON.stringify(data));
+                }
+            },
+            139: { // спички
+                handler(item) {
+                    var data = {
+                        sqlId: item.sqlId,
+                        index: 0
+                    };
+                    mp.trigger(`inventory.item.use.callRemote`, JSON.stringify(data));
                 }
             },
         },
@@ -641,89 +673,21 @@ var inventory = new Vue({
             if (!item) return [];
 
             var params = [{
-                    name: "Вес",
-                    value: this.descItemWeight + " кг"
-                },
-                {
-                    name: "Занимает",
-                    value: this.itemsInfo[item.itemId].width + 'x' + this.itemsInfo[item.itemId].height + " ячейки"
-                },
-                {
-                    name: "Обнаружение",
-                    value: this.itemsInfo[item.itemId].chance + "%"
-                }
-            ];
-            if (item.params.health != null) params.push({
-                name: "Прочность",
-                value: +item.params.health.toFixed(2) + "%"
-            });
-            if (item.params.count) params.push({
-                name: "Количество",
-                value: item.params.count + " ед."
-            });
-            if (item.pockets) params.push({
-                name: "Карманы",
-                value: item.pockets.filter(x => !x.search).length + " ед."
-            });
-            if (item.pockets) params.push({
-                name: "Содержит",
-                value: this.getItemsCount(item) + " предметов"
-            });
-            if (item.params.clime) params.push({
-                name: "Климат",
-                value: `от ${item.params.clime[0]}° до ${item.params.clime[1]}°`
-            });
-            if (item.params.satiety) params.push({
-                name: "Сытость",
-                value: item.params.satiety + "%"
-            });
-            if (item.params.thirst) params.push({
-                name: "Жажда",
-                value: item.params.thirst + "%"
-            });
-            if (item.params.weaponHash) {
-                var ammoId = this.getAmmoItemId(item.itemId);
-                if (ammoId) params.push({
-                    name: "Калибр",
-                    value: this.itemsInfo[ammoId].name
-                });
-            }
-            if (item.params.ammo != null) {
+                name: "Вес",
+                value: this.descItemWeight + " кг"
+            }, ];
+            if (item.pockets) {
                 params.push({
-                    name: "Патроны",
-                    value: item.params.ammo + " ед."
+                    name: "Карманы",
+                    value: item.pockets.filter(x => !x.search).length + " ед."
+                });
+                params.push({
+                    name: "Содержит",
+                    value: this.getItemsCount(item) + " предметов"
                 });
             }
-            if (item.params.owner) params.push({
-                name: "Владелец",
-                value: `#${item.params.owner}`
-            });
-            if (item.params.faction) params.push({
-                name: "Организация",
-                value: `#${item.params.faction}`
-            });
-            if (item.params.litres != null) params.push({
-                name: "Топливо",
-                value: `${item.params.litres} л.`
-            });
-            if (item.params.max) params.push({
-                name: "Вместимость",
-                value: `${item.params.max} л.`
-            });
-            if (item.params.treeDamage) params.push({
-                name: "Урон по дереву",
-                value: `${item.params.treeDamage}%`
-            });
-            if (item.params.alcohol) params.push({
-                name: "Алкоголь",
-                value: `${item.params.alcohol}%`
-            });
-            if (item.params.sex != null) params.push({
-                name: "Пол",
-                value: (item.params.sex) ? "Мужской" : "Женский"
-            });
 
-
+            params = params.concat(this.getPrettyParams(item.itemId, item.params));
             return params;
         },
         havePockets() {
@@ -1103,6 +1067,80 @@ var inventory = new Vue({
 
             return +weight.toFixed(3);
         },
+        getPrettyParams(itemId, params) {
+            var result = [{
+                    name: "Занимает",
+                    value: this.itemsInfo[itemId].width + 'x' + this.itemsInfo[itemId].height + " ячейки"
+                },
+                {
+                    name: "Обнаружение",
+                    value: this.itemsInfo[itemId].chance + "%"
+                }
+            ];
+            if (params.health != null) result.push({
+                name: "Прочность",
+                value: +params.health.toFixed(2) + "%"
+            });
+            if (params.count) result.push({
+                name: "Количество",
+                value: params.count + " ед."
+            });
+            if (params.clime) result.push({
+                name: "Климат",
+                value: `от ${params.clime[0]}° до ${params.clime[1]}°`
+            });
+            if (params.satiety) result.push({
+                name: "Сытость",
+                value: params.satiety + "%"
+            });
+            if (params.thirst) result.push({
+                name: "Жажда",
+                value: params.thirst + "%"
+            });
+            if (params.weaponHash) {
+                var ammoId = this.getAmmoItemId(itemId);
+                if (ammoId) result.push({
+                    name: "Калибр",
+                    value: this.itemsInfo[ammoId].name
+                });
+            }
+            if (params.ammo != null) {
+                result.push({
+                    name: "Патроны",
+                    value: params.ammo + " ед."
+                });
+            }
+            if (params.owner) result.push({
+                name: "Владелец",
+                value: `#${params.owner}`
+            });
+            if (params.faction) result.push({
+                name: "Организация",
+                value: `#${params.faction}`
+            });
+            if (params.litres != null) result.push({
+                name: "Топливо",
+                value: `${params.litres} л.`
+            });
+            if (params.max) result.push({
+                name: "Вместимость",
+                value: `${params.max} л.`
+            });
+            if (params.treeDamage) result.push({
+                name: "Урон по дереву",
+                value: `${params.treeDamage}%`
+            });
+            if (params.alcohol) result.push({
+                name: "Алкоголь",
+                value: `${params.alcohol}%`
+            });
+            if (params.sex != null) result.push({
+                name: "Пол",
+                value: (params.sex) ? "Мужской" : "Женский"
+            });
+
+            return result;
+        },
         findFreeSlot(itemId) {
             for (var bodyIndex in this.bodyList) {
                 bodyIndex = parseInt(bodyIndex);
@@ -1268,6 +1306,20 @@ var inventory = new Vue({
                 }
             }
             return null;
+        },
+        getItemsByItemId(itemId, items = this.equipment, list = []) {
+            for (var index in items) {
+                var item = items[index];
+                if (item.itemId == itemId) list.push(item);
+
+                if (item.pockets) {
+                    for (var key in item.pockets) {
+                        var pocket = item.pockets[key];
+                        list = this.getItemsByItemId(itemId, pocket.items, list);
+                    }
+                }
+            }
+            return list;
         },
         // получить ID предмета патронов по ID предмета оружия
         getAmmoItemId(itemId) {
