@@ -236,7 +236,7 @@ module.exports = {
         });
     },
     initCrafter(crafter) {
-        crafter.colshape = mp.colshapes.newSphere(crafter.pos.x, crafter.pos.y, crafter.pos.z, 1.5, 0);
+        crafter.colshape = mp.colshapes.newSphere(crafter.pos.x, crafter.pos.y, crafter.pos.z, 2.5, 0);
         crafter.colshape.onEnter = (player) => {
             if (player.vehicle) return;
             this.updateQueue(crafter);
@@ -414,7 +414,7 @@ module.exports = {
         player.call(`craft.setSkill`, [player.character.craft]);
     },
     createBonfire(pos, rot) {
-        var time = 1 * 20 * 1000;
+        var time = 5 * 20 * 1000;
         var crafter = {
             name: "Костер",
             description: "Используется для приготовления еды.",
