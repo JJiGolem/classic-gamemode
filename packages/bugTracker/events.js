@@ -7,4 +7,8 @@ module.exports = {
         bugTracker.init();
         inited(__dirname);
     },
+    "bugTracker.bug.create": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        bugTracker.createBug(player, data);
+    },
 }

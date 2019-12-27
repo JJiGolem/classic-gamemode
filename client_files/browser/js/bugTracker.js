@@ -32,7 +32,18 @@ var bugTracker = new Vue({
     watch: {
         bugI(val) {
             if (val == -1) this.clearForm();
-        }
+        },
+        show(val) {
+            mp.trigger("blur", val, 300);
+            hud.keysShow = !val;
+            if (val) {
+                busy.add("bugTracker", true, true);
+                prompt.showByName("bugTracker_exit");
+            } else {
+                busy.remove("bugTracker", true);
+                prompt.hide();
+            }
+        },
     },
     methods: {
         initBugList(list) {
@@ -81,7 +92,7 @@ var bugTracker = new Vue({
             this.form.expectedResult = "";
         },
         notify(text) {
-            notifications.error(text, `Помощь проекту`);
+            notifications.error(text, `Помощь штату`);
         },
         callRemote(eventName, data) {
             if (typeof data == 'object') data = JSON.stringify(data);
@@ -90,6 +101,11 @@ var bugTracker = new Vue({
 
             mp.trigger("callRemote", eventName, data);
         },
+    },
+    mounted() {
+        window.addEventListener('keyup', (e) => {
+            if (e.keyCode == 27 && this.show) this.show = !this.show;
+        });
     },
 });
 
