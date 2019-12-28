@@ -27,23 +27,38 @@ let tuningParams = {
     secondaryColour: -1,
     engineType: {
         modType: 11,
-        current: -1
+        current: -1,
+        name: "Двигатель",
+        defaultModNames: ['Стандарт', 'Улучшение СУД, уровень 1', 'Улучшение СУД, уровень 2',
+            'Улучшение СУД, уровень 3', 'Улучшение СУД, уровень 4']
     },
     brakeType: {
         modType: 12,
-        current: -1
+        current: -1,
+        name: "Тормоза",
+        defaultModNames: ['Стандартные тормоза', 'Уличные тормоза', 'Спортивные тормоза',
+            'Гоночные тормоза']
     },
     transmissionType: {
         modType: 13,
-        current: -1
+        current: -1,
+        name: "Трансмиссия",
+        defaultModNames: ['Стандартная трансмиссия', 'Уличная трансмиссия',
+            'Спортивная трансмиссия', 'Гоночная трансмиссия']
     },
-    suspensionType:{
+    suspensionType: {
         modType: 15,
-        current: -1
+        current: -1,
+        name: "Подвеска",
+        defaultModNames: ['Стандартная подвеска', 'Заниженная подвеска', 'Уличная подвеска',
+            'Спортивная подвеска', 'Гоночная подвеска']
     },
     armourType: {
         modType: 16,
-        current: -1
+        current: -1,
+        name: "Броня",
+        defaultModNames: ['Нет', 'Усиление брони 20%', 'Усиление брони 40%', 'Усиление брони 60%',
+            'Усиление брони 80%', 'Усиление брони 100%']
     },
     turbo: {
         modType: 18,
@@ -207,10 +222,16 @@ mp.events.add('tuning.defaultMenu.show', (modName) => {
     let numMods = vehicle.getNumMods(data.modType);
     let items = [];
     for (let i = -1; i < numMods; i++) {
-        let label = mp.players.local.vehicle.getModTextLabel(data.modType, i);
-        let text = mp.game.ui.getLabelText(label);
-        if (text == 'NULL') {
-            i != -1 ? text = `${data.name} ${i + 1}` : text = 'Нет';
+        let text;
+        if (tuningParams[modName].hasOwnProperty("defaultModNames")) {
+            text = tuningParams[modName].defaultModNames[i + 1];
+            if (!text) text = `${data.name} ${i + 1}`;
+        } else {
+            let label = mp.players.local.vehicle.getModTextLabel(data.modType, i);
+            text = mp.game.ui.getLabelText(label);
+            if (text == 'NULL') {
+                i != -1 ? text = `${data.name} ${i + 1}` : text = 'Нет';
+            }
         }
         items.push({
             text: text,
@@ -240,41 +261,6 @@ mp.events.add('tuning.colorMenu.show', () => {
     mp.callCEFVN({ "selectMenu.menu.items[1].j": tuningParams.secondaryColour });
     mp.callCEFVN({ "selectMenu.menu.items[2].values": [`$${priceConfig.color}`] });
 
-});
-
-mp.events.add('tuning.engineMenu.show', () => {
-    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["tuningEngine"])`);
-    setMenuPrices(11, 3);
-    mp.callCEFV(`selectMenu.show = true`);
-});
-
-mp.events.add('tuning.breakMenu.show', () => {
-    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["tuningBreak"])`);
-    setMenuPrices(12, 2);
-    mp.callCEFV(`selectMenu.show = true`);
-});
-
-mp.events.add('tuning.transmissionMenu.show', () => {
-    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["tuningTransmission"])`);
-    setMenuPrices(13, 2);
-    mp.callCEFV(`selectMenu.show = true`);
-});
-
-mp.events.add('tuning.suspensionMenu.show', () => {
-    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["tuningSuspension"])`);
-    setMenuPrices(15, 3);
-    mp.callCEFV(`selectMenu.show = true`);
-});
-
-mp.events.add('tuning.armourMenu.show', () => {
-    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["tuningArmour"])`);
-    setMenuPrices(16, 4);
-    mp.callCEFV(`selectMenu.show = true`);
-});
-
-mp.events.add('tuning.turboMenu.show', () => { // disabled
-    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["tuningTurbo"])`);
-    mp.callCEFV(`selectMenu.show = true`);
 });
 
 mp.events.add('tuning.colors', (primary, secondary) => {
