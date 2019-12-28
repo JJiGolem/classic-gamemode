@@ -21,7 +21,8 @@ module.exports = {
         rope: 5,
         bag: 7,
         duffleBag: 30,
-        healthPack: 30
+        healthPack: 30,
+        matches: 8,
     },
     itemIds: {
         water: 34,
@@ -31,7 +32,8 @@ module.exports = {
         bag: 55,
         canister: 56,
         duffleBag: 13,
-        healthPack: 24
+        healthPack: 24,
+        matches: 139,
     },
     async init() {
         bizes = call('bizes');
@@ -51,7 +53,7 @@ module.exports = {
                 color: 0,
                 shortRange: true,
             });
-        
+
         mp.markers.new(1, new mp.Vector3(shop.x, shop.y, shop.z - 0.1), 0.8,
         {
             color: shop.bType ? [69, 140, 255, 128] : [50, 168, 82, 128],
@@ -114,7 +116,7 @@ module.exports = {
         return this.productsConfig;
     },
     getPriceConfig() {
-        let priceConfig = {}; 
+        let priceConfig = {};
         for (let key in this.productsConfig) {
             priceConfig[key] = this.productsConfig[key] * this.productPrice;
         }

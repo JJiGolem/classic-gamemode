@@ -5796,7 +5796,10 @@ var selectMenu = new Vue({
                         text: "Выгрузка",
                     },
                     {
-                        text: "Покупка"
+                        text: "Загрузка"
+                    },
+                    {
+                        text: "Покупка на руки"
                     },
                     {
                         text: "Вернуться"
@@ -5816,8 +5819,10 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Выгрузка') {
                             selectMenu.showByName("farmProductsFill");
-                        } else if (e.itemName == 'Покупка') {
+                        } else if (e.itemName == 'Загрузка') {
                             selectMenu.showByName("farmProductsBuy");
+                        } else if (e.itemName == 'Покупка на руки') {
+                            selectMenu.showByName("farmProductsInvBuy");
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmWarehouse");
                         }
@@ -5896,6 +5901,50 @@ var selectMenu = new Vue({
                             };
                             selectMenu.show = false;
                             mp.trigger(`callRemote`, `farms.warehouse.products.buy`, JSON.stringify(data));
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmProducts");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farmProducts");
+                }
+            },
+            "farmProductsInvBuy": {
+                name: "farmProductsInvBuy",
+                header: "Покупка на руки",
+                items: [{
+                        text: "Урожай",
+                        values: ["Урожай А", "Урожай Б", "Урожай С"],
+                    },
+                    {
+                        text: "Количество",
+                        values: ["4 ед.", "8 ед.", "12 ед."],
+                    },
+                    {
+                        text: "Купить"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Купить') {
+                            var data = {
+                                index: this.items[0].i,
+                                count: parseInt(this.items[1].values[this.items[1].i]),
+                            };
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `farms.warehouse.products.inv.buy`, JSON.stringify(data));
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmProducts");
                         }
@@ -6857,6 +6906,10 @@ var selectMenu = new Vue({
                         values: ["$100"],
                     },
                     {
+                        text: 'Спички',
+                        values: ["$100"],
+                    },
+                    {
                         text: 'Назад'
                     }
                 ],
@@ -6888,6 +6941,9 @@ var selectMenu = new Vue({
                         }
                         if (e.itemName == 'Аптечка') {
                             mp.trigger('callRemote', 'supermarket.products.buy', 8);
+                        }
+                        if (e.itemName == 'Спички') {
+                            mp.trigger('callRemote', 'supermarket.products.buy', 9);
                         }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {

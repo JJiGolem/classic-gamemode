@@ -245,7 +245,7 @@ module.exports = {
 
         colshape.health = Math.clamp(colshape.health - damage, 0, 100);
 
-        mp.players.forEachInRange(colshape.db.pos, colshape.db.radius, rec => {
+        mp.players.forEachInRange(colshape.db.pos, colshape.db.radius * 2, rec => {
             if (!rec.character) return;
             rec.call(`mason.rock.health`, [colshape.health]);
         });

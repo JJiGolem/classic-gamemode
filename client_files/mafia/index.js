@@ -224,9 +224,12 @@ mp.mafia = {
             mp.utils.requestAnimDict(a[0], () => {
                 player.taskPlayAnim(a[0], a[1], 8, 0, -1, 1, 0, false, false, false);
             });
+            if (mp.players.local.remoteId == player.remoteId) mp.busy.add("inBoot", false)
         } else {
-            if (mp.players.local.remoteId == player.remoteId) player.stopAnimTask(a[0], a[1], 3);
-            else player.clearTasksImmediately();
+            if (mp.players.local.remoteId == player.remoteId) {
+                player.stopAnimTask(a[0], a[1], 3);
+                mp.busy.remove("inBoot");
+            } else player.clearTasksImmediately();
             player.detach(true, true);
         }
     },

@@ -241,6 +241,12 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: false,
         },
+        // Скилл крафта (кол-во секунд, потраченных на изготовление)
+        craft: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false,
+        },
         // Законопослушность
         law: {
             type: DataTypes.INTEGER(11),

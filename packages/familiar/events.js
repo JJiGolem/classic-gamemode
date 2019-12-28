@@ -26,6 +26,7 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Игрок #${recId} не найден`, header);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, header);
         if (familiar.have(player, rec.character.id)) return notifs.error(player, `Вы уже знакомы с ${rec.name}`, header);
+        if (rec.getVariable("knocked")) return notifs.error(player, `Игрок не в состоянии знакомиться`, header);
 
         familiar.add(player, rec);
 

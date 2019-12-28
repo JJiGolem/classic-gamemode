@@ -378,6 +378,7 @@ module.exports = {
         var dist = player.dist(veh.position);
         if (dist > 10) return notifs.error(player, `Авто далеко`, header);
         if (!veh.db || veh.key != 'faction' || veh.owner != player.character.factionId) return notifs.error(player, `Авто не принадлежит вашей мафии`, header);
+        if (!veh.getVariable("trunk")) return notifs.error(player, `Багажник закрыт`, header);
 
         if (veh.getVariable("inBoot") != null) return notifs.error(player, `В багажнике нет места`, header);
 
@@ -393,6 +394,7 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Игрок не найден`, header);
         if (rec.getVariable("inBoot") == null) return notifs.error(player, `${rec.name} не в багажнике`, header);
         if (!factions.isMafiaFaction(player.character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
+        // TODO: проверка на багажник
 
         mp.vehicles.at(rec.getVariable("inBoot")).setVariable("inBoot", null);
         rec.setVariable("inBoot", null);

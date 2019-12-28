@@ -1,0 +1,349 @@
+#craft {
+    background: #171717dd;
+    color: #b9b9b9;
+    display: flex;
+    font-family: Ubuntu;
+    font-size: 1.5vh;
+    height: 46vh;
+    margin-right: 2vh;
+    opacity: 0;
+    padding: 1vh;
+    position: absolute;
+    right: 0%;
+    top: 50%;
+    transform: translate(0%, -50%);
+    width: 70vh;
+}
+
+#craft>div {
+    padding: 1vh;
+}
+
+#craft .button {
+    background: #0000008c;
+    border: 1px solid #444;
+    display: flex;
+    font-size: 1.3vh;
+    justify-content: center;
+    padding: 0.5vh;
+    width: fit-content;
+}
+
+#craft .button:hover {
+    border-color: #555;
+    color: #ddd;
+}
+
+#craft .button.active {
+    border-color: #777;
+    color: #eee;
+}
+
+#craft .button.disabled {
+    /* border-color: #7b3131; */
+    color: #7b3131;
+}
+
+#craft .deficit {
+    color: #bb4444;
+}
+
+#craft .left {
+    width: 55%;
+}
+
+#craft .left .header {
+    display: flex;
+    font-size: 1.3vh;
+    margin-bottom: 2vh;
+}
+
+#craft .left .header div {
+    background: #4a4a4aa1;
+    border: 1px solid #5a5a5a;
+    color: #c1c1c1;
+    margin-right: 1vh;
+    padding: 0.5vh;
+}
+
+#craft .left .header div:hover {
+    border-color: #868686;
+}
+
+#craft .left .header div.active {
+    background: #4a4a4a8c;
+    border-color: #868686;
+    color: #fff;
+}
+
+#craft .left .item {
+    background: #0000005e;
+    border: 1px solid #464646;
+    display: flex;
+    height: 5vh;
+    margin-bottom: 1vh;
+    margin-right: 1vh;
+    padding: 1vh;
+}
+
+#craft .left .item:hover {
+    border-color: #666;
+}
+
+#craft .left .item.active {
+    border-color: #ccad25;
+}
+
+#craft .left .item .icon {
+    background-position-y: center;
+    background-position-x: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    /* height: 3vh; */
+    /* margin: auto; */
+    width: 30%;
+}
+
+#craft .left .item .info {
+    width: 70%;
+}
+
+#craft .left .item .info .materials {
+    display: flex;
+    font-size: 1.3vh;
+    overflow: hidden;
+}
+
+#craft .left .item-list {
+    height: 88%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#craft .right {
+    width: 45%;
+}
+
+#craft .right .help:hover {
+    color: #ffc000;
+}
+
+#craft .right .help.active {
+    color: #ffc000;
+}
+
+#craft .right .craftItem {
+    height: 100%;
+    margin-top: 2vh;
+}
+
+#craft .right .craftItem .description {
+    height: 56%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin-bottom: 1vh;
+    padding-right: 1vh;
+}
+
+#craft .right .craftItem .icon {
+    background-position-y: center;
+    background-position-x: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 7vh;
+    /* margin: auto; */
+    /* height: 80%; */
+    /* width: 100%; */
+}
+
+#craft .right .craftItem .make, #craft .right .craftItem .materials {
+    margin: auto;
+    padding: 1vh;
+}
+
+#craft .right .craftItem .param-list {
+    font-size: 1.3vh;
+    height: 7vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: 1vh;
+}
+
+#craft .right .craftItem .skill {
+    font-size: 1.3vh;
+    margin-bottom: 1vh;
+}
+
+#craft .right .craftItem .skill .progress {
+    background: #4c4c4c;
+    height: 1vh;
+    width: 100%;
+}
+
+#craft .right .craftItem .skill .progress .fill {
+    background: #b5b5b5;
+    height: 100%;
+}
+
+#craft .right .craftItem .skill .title {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.2vh;
+}
+
+#craft .right .craftItem .time {
+    margin: auto;
+    /* margin-bottom: 1vh; */
+    width: fit-content;
+}
+
+#craft .right .craftItem .material, #craft .right .craftItem .param {
+    border-bottom: 1px solid #5f5f5f;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.3vh 0;
+}
+
+#craft .right .craftItem .material-list {
+    font-size: 1.3vh;
+    margin: 1vh 0;
+}
+
+#craft .right .craftItem > .title {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin: 1vh 0;
+}
+
+#craft .right .queue .bonfire {
+    margin: auto;
+    margin-top: 7vh;
+    width: fit-content;
+}
+
+#craft .right .queue .bonfire .acceptFirewood {
+    margin: auto;
+}
+
+#craft .right .queue .bonfire .count {
+    padding: 1vh;
+}
+
+#craft .right .queue .bonfire .selector {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+#craft .right .queue .bonfire .selector .button {
+    width: 1vh;
+}
+
+#craft .right .queue .bonfire .title {
+    text-align: center;
+}
+
+#craft .right .queue .bonfire .title span {
+    color: #caa41c;
+}
+
+#craft .right .queue .column {
+    border: 1px solid #ffffff14;
+    height: 5vh;
+    margin-bottom: 1vh;
+    /* padding: 1vh; */
+}
+
+#craft .right .queue .column:not(.process):not(.disabled):hover {
+    color: #fff;
+}
+
+#craft .right .queue .column:not(.empty) {
+    border-color: #808080;
+}
+
+#craft .right .queue .column.completed {
+    border-color: #009200;
+}
+
+#craft .right .queue .column.disabled {
+    opacity: 0.5;
+}
+
+#craft .right .queue .column.unsuccessfully {
+    border-color: #bb4444;
+}
+
+#craft .right .queue .column .fill {
+    background: linear-gradient(to right, #ffffff00, #32dc1b3b);
+    height: 100%;
+    transform: translate(0, -100%);
+}
+
+#craft .right .queue .header {
+    display: flex;
+    font-size: 2vh;
+    justify-content: space-between;
+    margin-bottom: 2.6vh;
+}
+
+#craft .right .item {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    margin: auto;
+    width: 80%;
+}
+
+#craft .right .item:hover {
+    border-color: #ccad25
+}
+
+#craft .right .item.active {
+    border-color: #ccad25
+}
+
+#craft .right .item .icon {
+    background-position-y: center;
+    background-position-x: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    /* height: 3vh; */
+    /* margin: auto; */
+    height: 80%;
+    width: 100%;
+}
+
+#craft .right .item .info {
+    /* align-items: center; */
+    display: grid;
+    text-align: right;
+    width: 70%;
+}
+
+#craft .right .item .time {
+    color: #ffc000;
+}
+
+#craft .right .item .state {
+    font-size: 1.1vh;
+}
+
+#craft ::-webkit-scrollbar {
+    background-color: none;
+    width: 0.5vh;
+}
+
+#craft ::-webkit-scrollbar-track {
+    box-shadow: none;
+    background-color: none;
+    border-radius: 2vh;
+}
+
+#craft ::-webkit-scrollbar-thumb {
+    /* border-width: 1px 1px 1px 2px; */
+    /* border-color: #222; */
+    border-radius: 2vh;
+    background-color: #FFDF29;
+}
