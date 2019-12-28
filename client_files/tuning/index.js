@@ -60,6 +60,12 @@ let tuningParams = {
         defaultModNames: ['Нет', 'Усиление брони 20%', 'Усиление брони 40%', 'Усиление брони 60%',
             'Усиление брони 80%', 'Усиление брони 100%']
     },
+    windowTint: {
+        modType: 55,
+        current: -1,
+        name: "Тонировка",
+        defaultModNames: ['Нет', 'Слабое затемнение', 'Среднее затемнение', 'Лимузин', 'Лимузин 2']
+    },
     turbo: {
         modType: 18,
         current: -1
@@ -225,7 +231,7 @@ mp.events.add('tuning.defaultMenu.show', (modName) => {
         let text;
         if (tuningParams[modName].hasOwnProperty("defaultModNames")) {
             text = tuningParams[modName].defaultModNames[i + 1];
-            if (!text) text = `${data.name} ${i + 1}`;
+            if (!text) continue;
         } else {
             let label = mp.players.local.vehicle.getModTextLabel(data.modType, i);
             text = mp.game.ui.getLabelText(label);
@@ -316,7 +322,11 @@ mp.events.add('tuning.end', () => {
 
 mp.events.add('tuning.mod.set', (type, index) => {
     if (type == -1) type = currentModType;
-    vehicle.setMod(type, index);
+    if (type == 55) {
+        vehicle.setWindowTint(index);
+    } else {
+        vehicle.setMod(type, index);
+    }
 });
 
 mp.events.add('tuning.buy', (modType, modIndex) => {

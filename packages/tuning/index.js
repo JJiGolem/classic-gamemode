@@ -21,7 +21,8 @@ let modsConfig = {
     "9": "rightFender",
     "10": "roof",
     "23": "frontWheels",
-    "48": "livery"
+    "48": "livery",
+    "55": "windowTint",
 }
 
 let priceConfig = { 

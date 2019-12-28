@@ -4920,6 +4920,9 @@ var selectMenu = new Vue({
                             case 'Колеса':
                                 mp.trigger('tuning.defaultMenu.show', 'frontWheels');
                                 break;
+                            case 'Тонировка':
+                                mp.trigger('tuning.defaultMenu.show', 'windowTint');
+                                break;
 
                         }
                     }
