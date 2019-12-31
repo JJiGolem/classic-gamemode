@@ -21,7 +21,11 @@ let modsConfig = {
     "9": "rightFender",
     "10": "roof",
     "23": "frontWheels",
-    "48": "livery"
+    "48": "livery",
+    "55": "windowTint",
+    "22": "xenon",
+    "62": "plateHolder",
+    "100": "neon"
 }
 
 let priceConfig = { 
@@ -47,6 +51,7 @@ module.exports = {
     minPriceMultiplier: 1.0,
     maxPriceMultiplier: 2.0,
     productPrice: 20,
+    elementsToSync: ['62', '100', '22'],
     async init() {
         bizes = call('bizes');
         await this.loadCustomsFromDB();
@@ -81,7 +86,11 @@ module.exports = {
             let modType = parseInt(key);
             let modIndex = vehicle.tuning[modsConfig[key]];
             if (modIndex != -1) {
-                vehicle.setMod(modType, modIndex);
+                if (this.elementsToSync.includes(key)) {
+                    this.syncMod(vehicle, key, modIndex);
+                } else {
+                    vehicle.setMod(modType, modIndex);
+                } 
             }
         }
     },
@@ -93,6 +102,9 @@ module.exports = {
     saveMod(vehicle, typeName, modIndex) {
         vehicle.tuning[typeName] = modIndex;
         vehicle.tuning.save();
+    },
+    syncMod(vehicle, type, index) {
+        vehicle.setVariable(modsConfig[type], index);
     },
     getPriceConfig() {
         return priceConfig;
@@ -172,6 +184,15 @@ module.exports = {
             default:
                 let products = parseInt((price * 0.8) / this.productPrice);
                 return products;
+        }
+    },
+    getIgnoreGetterModsData(vehicle) {
+        if (!vehicle.tuning) return;
+        return {
+            22: vehicle.tuning.xenon,
+            55: vehicle.tuning.windowTint,
+            62: vehicle.tuning.plateHolder,
+            100: vehicle.tuning.neon
         }
     } 
 }

@@ -6,6 +6,7 @@ let winter = call('winter');
 
 module.exports = {
     "init": () => {
+        winter.setXmasTrees();
         inited(__dirname);
     },
     "winter.job.start": (player) => {
