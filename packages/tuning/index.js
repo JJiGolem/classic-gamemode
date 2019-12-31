@@ -51,7 +51,7 @@ module.exports = {
     minPriceMultiplier: 1.0,
     maxPriceMultiplier: 2.0,
     productPrice: 20,
-    elementsToSync: ['62', '100'],
+    elementsToSync: ['62', '100', '22'],
     async init() {
         bizes = call('bizes');
         await this.loadCustomsFromDB();
@@ -105,7 +105,6 @@ module.exports = {
     },
     syncMod(vehicle, type, index) {
         vehicle.setVariable(modsConfig[type], index);
-        console.log(`set ${modsConfig[type]}`);
     },
     getPriceConfig() {
         return priceConfig;

@@ -488,6 +488,10 @@ mp.events.addDataHandler('neon', (entity, value) => {
     setNeon(entity, value);
 });
 
+mp.events.addDataHandler('xenon', (entity, value) => {
+    setXenon(entity, value);
+});
+
 mp.events.add('entityStreamIn', (entity) => {
     if (entity.type == 'vehicle') {
         let plateHolder = entity.getVariable('plateHolder');
@@ -497,6 +501,10 @@ mp.events.add('entityStreamIn', (entity) => {
         let neon = entity.getVariable('neon');
         if (neon === null || neon === undefined) neon = -1;
         setNeon(entity, neon);
+
+        let xenon = entity.getVariable('xenon');
+        if (xenon === null || xenon === undefined) xenon = -1;
+        setXenon(entity, xenon);
     }
 });
 
@@ -564,4 +572,9 @@ function setNeon(veh, index) {
         if (!color) return;
         veh.setNeonLightsColour(color[0], color[1], color[2]);
     }
+}
+
+function setXenon(veh, index) {
+    let toggle = index != -1;
+    veh.toggleMod(22, toggle);
 }
