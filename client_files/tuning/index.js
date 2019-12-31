@@ -64,7 +64,23 @@ let tuningParams = {
         modType: 55,
         current: -1,
         name: "Тонировка",
-        defaultModNames: ['Нет', 'Слабое затемнение', 'Среднее затемнение', 'Лимузин', 'Лимузин 2']
+        ignoreModGetter: true,
+        defaultModNames: ['Нет', 'Слабое затемнение', 'Среднее затемнение', 'Лимузин']
+    },
+    xenon: {
+        modType: 22,
+        current: -1,
+        name: "Фары",
+        ignoreModGetter: true,
+        defaultModNames: ['Обычные', 'Ксеноновые']
+    },
+    plateHolder: {
+        modType: 62,
+        current: -1,
+        name: "Номерные знаки",
+        ignoreModGetter: true,
+        defaultModNames: ['Синий на белом 1', 'Желтый на черном', 'Желтый на синем', 
+            'Синий на белом 2', 'Синий на белом 3', 'Черный на белом']
     },
     turbo: {
         modType: 18,
@@ -148,6 +164,8 @@ let currentModType;
 
 let lastIndex = 0;
 
+let ignoreModsGetterData;
+
 data.colors.forEach((current) => {
     colorIDs.push(current.id);
     colorValues.push(current.value);
@@ -172,7 +190,7 @@ mp.events.add('tuning.fadeOut', () => {
     mp.game.cam.doScreenFadeOut(80);
 });
 
-mp.events.add('tuning.start', (id, primary, secondary, priceInfo) => {
+mp.events.add('tuning.start', (id, primary, secondary, priceInfo, ignoreData) => {
     mp.timer.add(() => {
         mp.game.cam.doScreenFadeIn(500);
     }, 500);
@@ -192,6 +210,7 @@ mp.events.add('tuning.start', (id, primary, secondary, priceInfo) => {
     colorData.secondary = secondary;
     initTuningParams();
     initPrices(priceInfo);
+    ignoreModsGetterData = ignoreData;
     mp.events.call('tuning.menu.show');
 });
 
@@ -202,7 +221,7 @@ mp.events.add('tuning.menu.show', (index = lastIndex) => {
             if (tuningParams[key].hasOwnProperty('modelsToIgnore')) {
                 if (tuningParams[key].modelsToIgnore.includes(vehicle.model)) continue;
             }
-            if (vehicle.getNumMods(tuningParams[key].modType) > 0) {
+            if (vehicle.getNumMods(tuningParams[key].modType) > 0 || tuningParams[key].ignoreModGetter) {
                 mp.callCEFV(`selectMenu.menu.items.push({
                     text: '${tuningParams[key].name}',
                     values: ''
@@ -225,7 +244,7 @@ mp.events.add('tuning.defaultMenu.show', (modName) => {
     mp.events.call('tuning.modType.set', tuningParams[modName].modType);
 
     let data = tuningParams[modName];
-    let numMods = vehicle.getNumMods(data.modType);
+    let numMods = data.ignoreModGetter ? data.defaultModNames.length : vehicle.getNumMods(data.modType);
     let items = [];
     for (let i = -1; i < numMods; i++) {
         let text;
@@ -251,7 +270,8 @@ mp.events.add('tuning.defaultMenu.show', (modName) => {
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["tuningDefault"])`);
     mp.callCEFV(`selectMenu.menu.header = '${data.name}'`);
 
-    let setIndex = mp.players.local.vehicle.getMod(data.modType) + 1;
+    let setIndex = data.ignoreModGetter ? ignoreModsGetterData[data.modType] + 1 :
+        mp.players.local.vehicle.getMod(data.modType) + 1;
     mp.callCEFV(`selectMenu.menu.items[${setIndex}].values = ['уст.']`);
 
     mp.callCEFV(`selectMenu.show = true`);
@@ -324,6 +344,11 @@ mp.events.add('tuning.mod.set', (type, index) => {
     if (type == -1) type = currentModType;
     if (type == 55) {
         vehicle.setWindowTint(index);
+    } if (type == 22) {
+        let toggle = index != -1;
+        vehicle.toggleMod(22, toggle);
+    } if (type == 62) {
+        vehicle.setNumberPlateTextIndex(index + 1);
     } else {
         vehicle.setMod(type, index);
     }
@@ -339,7 +364,11 @@ mp.events.add('tuning.buy.ans', (ans, mod, index) => {
     mp.callCEFV('selectMenu.loader = false');
     switch (ans) {
         case 0:
-            tuningParams[mod].current = index;
+            if (ignoreModsGetterData.hasOwnProperty(tuningParams[mod].modType)) {
+                ignoreModsGetterData[tuningParams[mod].modType] = index;
+            } else {
+                tuningParams[mod].current = index;
+            }
             mp.callCEFV(`count = -1;
             selectMenu.menu.items.forEach((item) => {
                 if (item.values[0] == 'уст.') mp.trigger('tuning.item.update', \`${mod}\`, count)
@@ -347,7 +376,10 @@ mp.events.add('tuning.buy.ans', (ans, mod, index) => {
             });
             `);
             mp.callCEFV(`selectMenu.menu.items[${index + 1}].values = ['уст.']`);
-            vehicle.setMod(tuningParams[mod].modType, tuningParams[mod].current);
+
+            let current = ignoreModsGetterData.hasOwnProperty(tuningParams[mod].modType) ?
+                ignoreModsGetterData[tuningParams[mod].modType] : tuningParams[mod].current;
+            mp.events.call('tuning.mod.set', tuningParams[mod].modType, current);
             mp.callCEFV(`selectMenu.notification = 'Элемент тюнинга установлен'`);
             break;
         case 1:
@@ -435,12 +467,14 @@ mp.events.add('render', () => {
 
 function setCurrentParams() {
     vehicle.setColours(tuningParams.primaryColour, tuningParams.secondaryColour);
-
     for (let key in tuningParams) {
         if (tuningParams[key].hasOwnProperty('modType')) {
             vehicle.setMod(tuningParams[key].modType, tuningParams[key].current);
         }
     }
+    vehicle.toggleMod(22, ignoreModsGetterData[22] != -1);
+    vehicle.setWindowTint(ignoreModsGetterData[55]);
+    vehicle.setNumberPlateTextIndex(ignoreModsGetterData[62] + 1);
 }
 
 function calculatePrice(modType, index) {

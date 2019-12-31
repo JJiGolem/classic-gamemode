@@ -35,9 +35,10 @@ module.exports = {
                 config: tuning.getPriceConfig(),
                 priceMultiplier: tuning.getPriceMultiplier(shape.customsId)
             }
-            player.call('tuning.start', [customs.id, primary, secondary, priceInfo]);
-            player.call('vehicles.engine.toggle', [false]);
-            player.vehicle.setVariable("engine", false);
+            let ignoreGetterData = tuning.getIgnoreGetterModsData(player.vehicle);
+            player.call('tuning.start', [customs.id, primary, secondary, priceInfo, ignoreGetterData]);
+            // player.call('vehicles.engine.toggle', [false]);
+            // player.vehicle.setVariable("engine", false);
             player.vehicle.isBeingTuned = true;
 
             // TODO: from Carter: test hotfix with vehicle dimension

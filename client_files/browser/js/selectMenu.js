@@ -4923,6 +4923,12 @@ var selectMenu = new Vue({
                             case 'Тонировка':
                                 mp.trigger('tuning.defaultMenu.show', 'windowTint');
                                 break;
+                            case 'Фары':
+                                mp.trigger('tuning.defaultMenu.show', 'xenon');
+                                break;
+                            case 'Номерные знаки':
+                                mp.trigger('tuning.defaultMenu.show', 'plateHolder');
+                                break;
 
                         }
                     }

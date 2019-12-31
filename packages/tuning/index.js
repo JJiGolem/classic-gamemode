@@ -23,6 +23,8 @@ let modsConfig = {
     "23": "frontWheels",
     "48": "livery",
     "55": "windowTint",
+    "22": "xenon",
+    "62": "plateHolder"
 }
 
 let priceConfig = { 
@@ -173,6 +175,14 @@ module.exports = {
             default:
                 let products = parseInt((price * 0.8) / this.productPrice);
                 return products;
+        }
+    },
+    getIgnoreGetterModsData(vehicle) {
+        if (!vehicle.tuning) return;
+        return {
+            22: vehicle.tuning.xenon,
+            55: vehicle.tuning.windowTint,
+            62: vehicle.tuning.plateHolder
         }
     } 
 }
