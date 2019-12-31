@@ -115,6 +115,7 @@ let dropHouse = function(house, sellToGov) {
 module.exports = {
     dropHouseMultiplier: dropHouseMultiplier,
     holderImprovmentMultiplier: holderImprovmentMultiplier,
+    xmasTreesCreating: true,
 
     async init() {
         inventory = call('inventory');
@@ -392,6 +393,9 @@ module.exports = {
         exitColshape.place = 1;
         if (exitGarageColshape != null) exitGarageColshape.place = 2;
 
+        if (this.xmasTreesCreating) {
+            this.setXmasTree(houseInfo.Interior.id, houseInfo.id)
+        }
         houses.push({
             enter: enterColshape,
             exit: exitColshape,
@@ -591,7 +595,39 @@ module.exports = {
 
         return holder;
     },
-
+    setXmasTree(interiorId, dimension) {
+        let pos = this.getTreePositionByInteriorId(interiorId);
+        mp.objects.new(mp.joaat('prop_xmas_tree_int'), new mp.Vector3(pos[0], pos[1], pos[2]), {
+            rotation: new mp.Vector3(0, 0, pos[3]),
+            dimension: dimension
+        });
+    },
+    getTreePositionByInteriorId(id) {
+        switch(id) {
+            case 1:
+                return [152.3866424560547, -1000.8515014648438, -99.9, 178.06729125976562];
+            case 2:
+                return [264.3963928222656, -996.7416381835938, -99.9, 192.75595092773438];
+            case 3:
+                return [349.3298645019531, -1007.532470703125, -99.9, 92.3673095703125];
+            case 4:
+                return [-173.34803771972656, 491.5657958984375, 129.14367065429688, 12.562385559082031];
+            case 5:
+                return [-173.34803771972656, 491.5657958984375, 129.14367065429688, 12.562385559082031];
+            case 7:
+                return [119.1828842163086, 541.5076904296875, 182.9975067138672, 358.8365783691406];
+            case 8:
+                return [-926.083740234375, -371.86492919921875, 113.37455139160156, 303.1618957519531];
+            case 9:
+                return [-45.162803649902344, -585.3975830078125, 87.81224212646484, 267.11639404296875];
+            case 10:
+                return [-11.88645076751709, -1432.6400146484375, 30.21613655090332, 330.15673828125];
+            case 11:
+                return [-1910.1942138671875, -574.4353637695312, 18.197217559814453, 133.97935485839844];     
+            default:
+                return [152.3866424560547, -1000.8515014648438, -98.99999237060547, 178.06729125976562];
+        }
+    },
 
     loadBlips: loadBlips,
 };
