@@ -24,7 +24,8 @@ let modsConfig = {
     "48": "livery",
     "55": "windowTint",
     "22": "xenon",
-    "62": "plateHolder"
+    "62": "plateHolder",
+    "100": "neon"
 }
 
 let priceConfig = { 
@@ -50,7 +51,7 @@ module.exports = {
     minPriceMultiplier: 1.0,
     maxPriceMultiplier: 2.0,
     productPrice: 20,
-    elementsToSync: ['62'],
+    elementsToSync: ['62', '100'],
     async init() {
         bizes = call('bizes');
         await this.loadCustomsFromDB();
@@ -191,7 +192,8 @@ module.exports = {
         return {
             22: vehicle.tuning.xenon,
             55: vehicle.tuning.windowTint,
-            62: vehicle.tuning.plateHolder
+            62: vehicle.tuning.plateHolder,
+            100: vehicle.tuning.neon
         }
     } 
 }

@@ -82,6 +82,15 @@ let tuningParams = {
         defaultModNames: ['Синий на белом 1', 'Желтый на черном', 'Желтый на синем', 
             'Синий на белом 2', 'Синий на белом 3', 'Черный на белом']
     },
+    neon: {
+        modType: 100,
+        current: -1,
+        name: "Неон",
+        ignoreModGetter: true,
+        defaultModNames: ['Нет', 'Белый', 'Синий', '"Электрический голубой"', '"Мятно-зеленый"',
+            'Лайм', 'Желтый', '"Золотой дождь"', 'Оранжевый', 'Красный', '"Розовый пони"',
+            'Ярко-розовый', 'Фиолетовый']
+    },
     turbo: {
         modType: 18,
         current: -1
@@ -165,6 +174,10 @@ let currentModType;
 let lastIndex = 0;
 
 let ignoreModsGetterData;
+
+let neonColors = [[222, 222, 255], [2, 21, 255], [3, 83, 255], [0, 255, 140],
+[94, 255, 1], [255, 255, 0], [255, 150, 5], [255, 62, 0],
+[255, 1, 1], [255, 50, 100], [255, 5, 190], [35, 1, 255]];
 
 data.colors.forEach((current) => {
     colorIDs.push(current.id);
@@ -349,6 +362,8 @@ mp.events.add('tuning.mod.set', (type, index) => {
         vehicle.toggleMod(22, toggle);
     } if (type == 62) {
         vehicle.setNumberPlateTextIndex(index + 1);
+    } if (type == 100) {
+        setNeon(vehicle, index);
     } else {
         vehicle.setMod(type, index);
     }
@@ -469,11 +484,19 @@ mp.events.addDataHandler('plateHolder', (entity, value) => {
     entity.setNumberPlateTextIndex(value + 1);
 });
 
+mp.events.addDataHandler('neon', (entity, value) => {
+    setNeon(entity, value);
+});
+
 mp.events.add('entityStreamIn', (entity) => {
     if (entity.type == 'vehicle') {
         let plateHolder = entity.getVariable('plateHolder');
         if (plateHolder === null || plateHolder === undefined) plateHolder = -1;
         entity.setNumberPlateTextIndex(plateHolder + 1);
+
+        let neon = entity.getVariable('neon');
+        if (neon === null || neon === undefined) neon = -1;
+        setNeon(entity, neon);
     }
 });
 
@@ -487,6 +510,7 @@ function setCurrentParams() {
     vehicle.toggleMod(22, ignoreModsGetterData[22] != -1);
     vehicle.setWindowTint(ignoreModsGetterData[55]);
     vehicle.setNumberPlateTextIndex(ignoreModsGetterData[62] + 1);
+    setNeon(vehicle, ignoreModsGetterData[100]);
 }
 
 function calculatePrice(modType, index) {
@@ -527,5 +551,17 @@ function initPrices(info) {
     vehPrice = info.veh;
     for (let key in info.config) {
         priceConfig[key] = info.config[key] * info.priceMultiplier;
+    }
+}
+
+function setNeon(veh, index) {
+    let enable = index != -1;
+    [0, 1, 2, 3].forEach(element => {
+        veh.setNeonLightEnabled(element, enable);
+    });
+    if (enable) {
+        let color = neonColors[index];
+        if (!color) return;
+        veh.setNeonLightsColour(color[0], color[1], color[2]);
     }
 }

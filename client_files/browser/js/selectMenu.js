@@ -4929,6 +4929,9 @@ var selectMenu = new Vue({
                             case 'Номерные знаки':
                                 mp.trigger('tuning.defaultMenu.show', 'plateHolder');
                                 break;
+                            case 'Неон':
+                                mp.trigger('tuning.defaultMenu.show', 'neon');
+                                break;
 
                         }
                     }
