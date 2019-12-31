@@ -465,6 +465,18 @@ mp.events.add('render', () => {
     }
 });
 
+mp.events.addDataHandler('plateHolder', (entity, value) => {
+    entity.setNumberPlateTextIndex(value + 1);
+});
+
+mp.events.add('entityStreamIn', (entity) => {
+    if (entity.type == 'vehicle') {
+        let plateHolder = entity.getVariable('plateHolder');
+        if (plateHolder === null || plateHolder === undefined) plateHolder = -1;
+        entity.setNumberPlateTextIndex(plateHolder + 1);
+    }
+});
+
 function setCurrentParams() {
     vehicle.setColours(tuningParams.primaryColour, tuningParams.secondaryColour);
     for (let key in tuningParams) {

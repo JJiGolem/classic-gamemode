@@ -115,9 +115,11 @@ module.exports = {
         money.removeCash(player, price, function (result) {
             if (result) {
                 let config = tuning.getModsConfig();
+                let syncMods = tuning.elementsToSync;
                 typeName = config[type];
                 tuning.saveMod(vehicle, typeName, index);
-                vehicle.setMod(type, index);
+                syncMods.includes(type.toString()) ? tuning.syncMod(vehicle, type.toString(), index) :
+                    vehicle.setMod(type, index);
                 player.call('tuning.buy.ans', [0, typeName, index]);
                 tuning.removeProducts(customsId, products);
                 tuning.updateCashbox(customsId, price);

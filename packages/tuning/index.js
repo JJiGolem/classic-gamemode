@@ -50,6 +50,7 @@ module.exports = {
     minPriceMultiplier: 1.0,
     maxPriceMultiplier: 2.0,
     productPrice: 20,
+    elementsToSync: ['62'],
     async init() {
         bizes = call('bizes');
         await this.loadCustomsFromDB();
@@ -84,7 +85,11 @@ module.exports = {
             let modType = parseInt(key);
             let modIndex = vehicle.tuning[modsConfig[key]];
             if (modIndex != -1) {
-                vehicle.setMod(modType, modIndex);
+                if (this.elementsToSync.includes(key)) {
+                    this.syncMod(vehicle, key, modIndex);
+                } else {
+                    vehicle.setMod(modType, modIndex);
+                } 
             }
         }
     },
@@ -96,6 +101,10 @@ module.exports = {
     saveMod(vehicle, typeName, modIndex) {
         vehicle.tuning[typeName] = modIndex;
         vehicle.tuning.save();
+    },
+    syncMod(vehicle, type, index) {
+        vehicle.setVariable(modsConfig[type], index);
+        console.log(`set ${modsConfig[type]}`);
     },
     getPriceConfig() {
         return priceConfig;
