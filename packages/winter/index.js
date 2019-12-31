@@ -383,7 +383,12 @@ module.exports = {
     },
     // Опыт скилла за один круг
     exp: 0.2,
-
+    // Новогодние елки
+    treePositions: [
+        [-493.359619140625, -241.74563598632812, 34.796925354003906, 30.690296173095703],
+        [-538.72119140625, -262.4330749511719, 35.5997200012207, 207.77587890625],
+        [-28.137731552124023, -1736.7506103515625, 28.303434371948242, 300.8648376464844]
+    ],
     // получить арендованный трактор игрока
     getVehByDriver(player) {
         return mp.vehicles.toArray().find(x => x.db && x.db.key == 'job' && x.db.owner == 8 && x.driver && x.driver.playerId == player.id && x.driver.characterId == player.character.id);
@@ -538,4 +543,12 @@ module.exports = {
         var skill = jobs.getJobSkill(player, 8);
         jobs.setJobExp(player, skill, skill.exp + this.exp);
     },
+    setXmasTrees() {
+        this.treePositions.forEach((current) => {
+            mp.objects.new(mp.joaat('prop_xmas_ext'), new mp.Vector3(current[0], current[1], current[2]), {
+                rotation: new mp.Vector3(0, 0, current[3]),
+                dimension: 0
+            });
+        });
+    }
 };
