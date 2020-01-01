@@ -361,12 +361,10 @@ mp.events.add('tuning.mod.set', (type, index) => {
         let toggle = index != -1;
         vehicle.toggleMod(22, toggle);
     } else if (type == 62) {
-        mp.notify.info(`set plate ${index + 1}`)
         vehicle.setNumberPlateTextIndex(index + 1);
     } else if (type == 100) {
         setNeon(vehicle, index);
     } else {
-        mp.notify.info(`set mod ${type} ${index}`)
         vehicle.setMod(type, index);
     }
 });
