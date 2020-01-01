@@ -357,14 +357,16 @@ mp.events.add('tuning.mod.set', (type, index) => {
     if (type == -1) type = currentModType;
     if (type == 55) {
         vehicle.setWindowTint(index);
-    } if (type == 22) {
+    } else if (type == 22) {
         let toggle = index != -1;
         vehicle.toggleMod(22, toggle);
-    } if (type == 62) {
+    } else if (type == 62) {
+        mp.notify.info(`set plate ${index + 1}`)
         vehicle.setNumberPlateTextIndex(index + 1);
-    } if (type == 100) {
+    } else if (type == 100) {
         setNeon(vehicle, index);
     } else {
+        mp.notify.info(`set mod ${type} ${index}`)
         vehicle.setMod(type, index);
     }
 });
@@ -511,7 +513,7 @@ mp.events.add('entityStreamIn', (entity) => {
 function setCurrentParams() {
     vehicle.setColours(tuningParams.primaryColour, tuningParams.secondaryColour);
     for (let key in tuningParams) {
-        if (tuningParams[key].hasOwnProperty('modType')) {
+        if (tuningParams[key].hasOwnProperty('modType') && !tuningParams[key].ignoreModGetter) {
             vehicle.setMod(tuningParams[key].modType, tuningParams[key].current);
         }
     }
