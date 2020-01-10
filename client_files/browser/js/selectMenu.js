@@ -852,8 +852,8 @@ var selectMenu = new Vue({
                                 selectMenu.loader = true;
                                 let name = this.items[0].values[0];
                                 let surname = this.items[1].values[0];
-                                name = name[0].toUpperCase() + name.toLowerCase().substring(1, 20);
-                                surname = surname[0].toUpperCase() + surname.toLowerCase().substring(1, 20);
+                                // name = name[0].toUpperCase() + name.toLowerCase().substring(1, 20);
+                                // surname = surname[0].toUpperCase() + surname.toLowerCase().substring(1, 20);
                                 mp.trigger('characterInit.create.check', name, surname);
                                 break;
                             case "Назад":
