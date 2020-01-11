@@ -527,7 +527,7 @@ module.exports = {
                 return false;
             }
             if (player.character.job != 8) {
-                notifs.error(player, `Вы не работаете снегоуборщиком`, header);
+                notifs.error(player, `Вы не работаете уборщиком`, header);
                 return false;
             }
             player.character.pay += this.pay * jobs.bonusPay;

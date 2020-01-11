@@ -9484,7 +9484,7 @@ var selectMenu = new Vue({
             },
             "winterJob": {
                 name: "winterJob",
-                header: "Работа снегоуборщика",
+                header: "Работа уборщика",
                 items: [{
                         text: "Устроиться",
                     },
