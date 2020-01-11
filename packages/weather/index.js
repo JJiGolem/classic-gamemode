@@ -4,7 +4,7 @@ let weather = {};
 weather.isSet = false;
 
 const request = require("request");
-const WEATHER_LOADING = false; // Загрузка погоды с сайта
+const WEATHER_LOADING = true; // Загрузка погоды с сайта
 const REQUEST_TIME = 30 * 60 * 1000; // Время повторного запроса в случае ошибки (в мс)
 const API_KEY = "dec51824772fb8b5c61f1964fc56370c"; // ключ с darksky.net
 const TIME_ZONE = "America/Los_Angeles";
@@ -118,7 +118,7 @@ module.exports = {
     getForecastDataByHour(hours) {
         if (this.customWeather) return this.generateCustomWeather(hours);
         let currentWeather = {};
-        
+
         if (weatherForecast.length == 0) {
             console.log("[WEATHER] Данных о погоде нет, запрашиваем стандартные данные");
             currentWeather.summary = DEFAULT_SUMMARY;
@@ -215,7 +215,7 @@ module.exports = {
     generateCustomWeather(hours) {
         let weather = {};
         switch (this.customWeatherType) {
-            case 'winter': 
+            case 'winter':
             weather.summary = 'Снег';
             if (hours > 6 && hours < 23) {
                 weather.temperature = utils.randomInteger(-5, -3);
