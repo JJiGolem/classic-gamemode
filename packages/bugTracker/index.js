@@ -77,10 +77,10 @@ module.exports = {
             result: card.desc.match(/\n\*\*Результат:\*\*\n\*(.+)\*\n\n/)[1],
             expectedResult: card.desc.match(/\n\*\*Ожидаемый результат:\*\*\n\*(.+)\*\n\n/)[1],
             author: card.desc.match(/\nСоздатель: ([a-zA-Z]+ [a-zA-Z]+)/)[1],
-            executor: "Swifty Swift",
+            executor: card.idMembers.length + " чел.",
             state: "в очереди",
             build: parseInt(card.desc.match(/\nСборка: #([0-9]+)/)[1]),
-            date: "27.12.20",
+            date: card.dateLastActivity,
         };
     },
     getClientBugsByAuthor(name) {
