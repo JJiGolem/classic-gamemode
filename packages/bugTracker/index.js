@@ -56,11 +56,39 @@ module.exports = {
             // console.log('response', response);
             this.bugCards.push(response);
             notifs.success(player, `Спасибо за участие!`, `Помощь штату`);
-            // TODO: синхронизация с клиентом
+            player.call(`bugTracker.bugs.add`, [this.convertToClientBug(response)]);
         } catch (error) {
             if (error) {
                 console.log('error ', error);
             }
         }
-    }
+    },
+    convertToClientBug(card) {
+        var stepsMatch = card.desc.match(/\*\*Шаги воспроизведения:\*\*\n\n([а-яА-ЯёЁa-zA-Z0-9\. \n]+)\n\n\n/)[1];
+        var steps = [];
+        stepsMatch.split('\n').forEach(step => {
+            var array = step.split(' ');
+            array.unshift();
+            steps.push(array.join(' '));
+        });
+        return {
+            name: card.name,
+            steps: steps,
+            result: card.desc.match(/\n\*\*Результат:\*\*\n\*(.+)\*\n\n/)[1],
+            expectedResult: card.desc.match(/\n\*\*Ожидаемый результат:\*\*\n\*(.+)\*\n\n/)[1],
+            author: card.desc.match(/\nСоздатель: ([a-zA-Z]+ [a-zA-Z]+)/)[1],
+            executor: "Swifty Swift",
+            state: "в очереди",
+            build: parseInt(card.desc.match(/\nСборка: #([0-9]+)/)[1]),
+            date: "27.12.20",
+        };
+    },
+    getClientBugsByAuthor(name) {
+        var list = [];
+        this.bugCards.forEach(card => {
+            var bug = this.convertToClientBug(card);
+            if (bug.author == name) list.push(bug);
+        });
+        return list;
+    },
 };

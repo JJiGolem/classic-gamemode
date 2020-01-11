@@ -50,6 +50,10 @@ var bugTracker = new Vue({
             if (typeof list == 'string') list = JSON.parse(list);
             this.bugList = list;
         },
+        addBug(bug) {
+            if (typeof bug == 'string') bug = JSON.parse(bug);
+            this.bugList.push(bug);
+        },
         onClickBug(index) {
             if (this.bugI == index) this.bugI = -1;
             else this.bugI = index;
