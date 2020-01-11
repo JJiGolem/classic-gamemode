@@ -470,6 +470,9 @@ var inventory = new Vue({
                     mp.trigger(`callRemote`, `inventory.item.use`, JSON.stringify(data));
                 }
             },
+            136: { // кирка
+                handler(item) {}
+            },
             139: { // спички
                 handler(item) {
                     var data = {
