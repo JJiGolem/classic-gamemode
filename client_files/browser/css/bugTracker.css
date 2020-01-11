@@ -1,0 +1,160 @@
+#bugTracker {
+    background: #171717dd;
+    color: #b9b9b9;
+    display: flex;
+    font-family: Ubuntu;
+    font-size: 1.5vh;
+    justify-content: space-between;
+    height: 46vh;
+    opacity: 0;
+    padding: 1vh;
+    position: absolute;
+    right: 2vh;
+    top: 50%;
+    transform: translate(0%, -50%);
+    width: 70vh;
+}
+
+#bugTracker>div {
+    padding: 1vh;
+}
+
+#bugTracker input, #bugTracker textarea {
+    background: #0000003b;
+    border: none;
+    color: #b9b9b9;
+    font-size: 1.6vh;
+    outline: none;
+    padding: 1vh;
+    width: 93%;
+}
+
+#bugTracker input::placeholder, #bugTracker textarea::placeholder {
+    /* color: #9c9c9c; */
+    opacity: 0.8;
+}
+
+#bugTracker .button {
+    background: #0000008c;
+    border: 1px solid #444;
+    display: flex;
+    font-size: 1.3vh;
+    justify-content: center;
+    padding: 0.5vh;
+    width: fit-content;
+}
+
+#bugTracker .button:hover {
+    border-color: #555;
+    color: #ddd;
+}
+
+#bugTracker .button.active {
+    border-color: #777;
+    color: #eee;
+}
+
+#bugTracker .left {
+    width: 30%;
+}
+
+#bugTracker .left .bug-list {
+    height: 94%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#bugTracker .left .bug-list>div {
+    background: #0000005e;
+    border: 1px solid #464646;
+    display: flex;
+    margin-bottom: 1vh;
+    margin-right: 1vh;
+    padding: 1vh;
+    word-break: break-word;
+}
+
+#bugTracker .left .bug-list>div:hover {
+    border-color: #666;
+}
+
+#bugTracker .left .bug-list>div.active {
+    border-color: #ccad25;
+}
+
+#bugTracker .title {
+    /* color: #FFDF29; */
+    font-size: 1.7vh;
+    margin-bottom: 1vh;
+}
+
+#bugTracker .right {
+    width: 70%;
+}
+
+#bugTracker .right .bug {
+    height: 100%;
+}
+
+#bugTracker .right .bug .about {
+    font-size: 1.3vh;
+    margin-top: 1vh;
+}
+
+#bugTracker .right .bug .info {
+    height: 76%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#bugTracker .right .create-bug {
+    height: 100%;
+    padding-right: 1vh;
+}
+
+#bugTracker .right .create-bug>.button {
+    margin: auto;
+    margin-top: 1vh;
+}
+
+#bugTracker .right .create-bug .info {
+    height: 87%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#bugTracker .right .create-bug .info>div {
+    margin-bottom: 1vh;
+}
+
+#bugTracker .right .create-bug .info>input {
+    margin-bottom: 1vh;
+}
+
+#bugTracker .right .create-bug .steps .button {
+    margin-top: 0.5vh;
+}
+
+#bugTracker .right .header {
+    color: #FFDF29;
+    font-size: 1.7vh;
+    margin-bottom: 1vh;
+}
+
+#bugTracker ::-webkit-scrollbar {
+    background-color: none;
+    width: 0.5vh;
+}
+
+#bugTracker ::-webkit-scrollbar-track {
+    box-shadow: none;
+    background-color: none;
+    border-radius: 2vh;
+}
+
+#bugTracker ::-webkit-scrollbar-thumb {
+    /* border-width: 1px 1px 1px 2px; */
+    /* border-color: #222; */
+    border-radius: 2vh;
+    background-color: #FFDF29;
+}
