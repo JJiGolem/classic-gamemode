@@ -11,7 +11,7 @@ let massTeleportData = {
 };
 
 module.exports = {
-    // Кол-во варнов, при которых игрок улетаем в бан
+    // Кол-во варнов, при которых игрок улетает в бан
     banWarns: 3,
     // Время снятия бана за варны
     warnsBanDays: 30,
@@ -21,7 +21,7 @@ module.exports = {
     /// Инициализация админских команд из всех модулей
     init() {
         notifs = call('notifications');
-        
+
         console.log("[COMMANDS] load commands...");
         fs.readdirSync(path.dirname(__dirname)).forEach(file => {
             if (file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/commands.js')) {

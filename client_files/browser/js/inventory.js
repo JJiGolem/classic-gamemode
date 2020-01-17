@@ -470,6 +470,9 @@ var inventory = new Vue({
                     mp.trigger(`callRemote`, `inventory.item.use`, JSON.stringify(data));
                 }
             },
+            136: { // кирка
+                handler(item) {}
+            },
             139: { // спички
                 handler(item) {
                     var data = {
@@ -1752,7 +1755,7 @@ var inventory = new Vue({
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
-            if (busy.includes(["auth", "chat", "terminal", "interaction", "mapCase", "phone", "playerMenu", "inputWindow", "fishing.game", "selectItems", "playersList"])) return;
+            if (busy.includes(["auth", "chat", "terminal", "interaction", "mapCase", "phone", "playerMenu", "inputWindow", "fishing.game", "selectItems", "playersList", "bugTracker"])) return;
             if (selectMenu.isEditing) return;
             if (Date.now() - self.lastShowTime < 500) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;

@@ -41,7 +41,7 @@ mp.winter = {
                 sprite: 599,
                 color: 4,
                 position: pos,
-                name: `Снегоуборщик`
+                name: `Уборщик`
             }
         };
         mp.events.call('NPC.create', pedInfo);
@@ -50,13 +50,13 @@ mp.winter = {
 
 mp.events.add({
     "characterInit.done": () => {
-        mp.keys.bind(79, true, () => { // O
+        /*mp.keys.bind(79, true, () => { // O
             if (mp.game.ui.isPauseMenuActive() || mp.busy.includes()) return;
             if (mp.players.local.vehicle) return;
             if (mp.players.local.dimension) return;
             if (mp.utils.inInterior(mp.players.local)) return mp.notify.warning(`Попробуйте слепить в другом месте`);
             mp.winter.takeSnowball();
-        });
+        });*/
         mp.winter.createJobPed();
     },
     "winter.jobshape.enter": () => {

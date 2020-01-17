@@ -158,6 +158,9 @@ var prompt = new Vue({
             "craft_exit": {
                 text: "Нажмите <span>Esc</span> для того, чтобы выйти",
             },
+            "bugTracker_exit": {
+                text: "Нажмите <span>Esc</span> для того, чтобы выйти",
+            },
         },
         text: null
     },
