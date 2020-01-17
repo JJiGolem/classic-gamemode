@@ -1076,6 +1076,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Продать транспорт') {
+                            selectMenu.loader = true;
                             mp.trigger(`carmarket.car.sell`);
                         }
                         if (e.itemName == 'Отмена') {
