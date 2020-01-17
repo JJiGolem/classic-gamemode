@@ -73,11 +73,12 @@ var inputWindow = new Vue({
                 mp.trigger(`callRemote`, `fib.vehicle.plate.set`, JSON.stringify(data));
             }
             if (this.name == 'dice') {
-                if (isNaN(this.value)) return notifications.push(`error`, `Требуется число`);
-                if (this.value <= 0 || this.value > 1000000) return notifications.push(`error`, `Некорректное число`);
+                let value = parseInt(this.value);
+                if (isNaN(value)) return notifications.push(`error`, `Требуется число`);
+                if (value <= 0 || value > 1000000) return notifications.push(`error`, `Некорректное число`);
                 var data = {
                     targetId: this.playerId,
-                    amount: parseInt(this.value),
+                    amount: value,
                 };
                 this.show = false;
                 mp.trigger(`callRemote`, `casino.dice.offer.send`, JSON.stringify(data));

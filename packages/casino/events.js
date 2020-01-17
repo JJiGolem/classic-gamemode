@@ -15,7 +15,7 @@ module.exports = {
 
         let target = mp.players.at(data.targetId);
         if (!target || !target.character) return notify.error(player, `Игрок не найден`);
-        if (player == target) return notify.error(player, `Нельзя играть в кости с самим собой`); //comment for tests
+        //if (player == target) return notify.error(player, `Нельзя играть в кости с самим собой`); //comment for tests
         if (!casino.isPlayerInCasinoArea(player)) return notify.error(player, `Вы не в казино`);
         if (!casino.isPlayerInCasinoArea(target)) return notify.error(player, `Игрок не в казино`);
         if (player.dist(target.position) > 5) return notify.error(player, `Игрок далеко`);
@@ -63,13 +63,10 @@ module.exports = {
             if (senderCount > targetCount) {
                 winner = sender;
                 loser = target;
-                //console.log('sender win')
             } else if (targetCount > senderCount) {
                 winner = target;
                 loser = sender;
-                //console.log('target win')
             } else {
-                
                 notify.info(target, `Вы сыграли в ничью`);
                 notify.info(sender, `Вы сыграли в ничью`);
                 isDraw = true;

@@ -36,7 +36,7 @@ let weatherConfig = {
 }
 
 module.exports = {
-    customWeather: true,
+    customWeather: false,
     customWeatherType: 'winter',
     getCurrentWeather() {
         let current = {};

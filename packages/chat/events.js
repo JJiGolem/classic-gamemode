@@ -273,7 +273,7 @@ module.exports = {
         if (isNaN(targetId) || isNaN(amount) || amount <= 0) return notify.warning(player, `Некорректные данные`);
         let data = {
             targetId: args[0],
-            amount: args[1]
+            amount: amount
         }
         mp.events.call('casino.dice.offer.send', player, data);
     },
