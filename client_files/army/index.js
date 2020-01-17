@@ -35,7 +35,7 @@ mp.army = {
     captureTimer: null,
     captureTeams: [],
     captureZone: null,
-
+    isInFuelStationShape: false,
 
     startCapture(teamAId, teamBId, time, teamAScore = 0, teamBScore = 0, pos = [], teamAIds = [], teamBIds = []) {
         time = parseInt(time);
@@ -153,6 +153,22 @@ mp.events.add({
         var blip = mp.army.captureZone;
         if (blip) mp.game.invoke(mp.bands.natives.SET_BLIP_ROTATION, blip, 0);
     },
+    "army.fuelstation.enter": (enter) => {
+        mp.army.isInFuelStationShape = enter;
+    },
+});
+
+mp.keys.bind(0x45, true, () => { /// E
+    if (mp.game.ui.isPauseMenuActive()) return;
+    if (mp.busy.includes()) return;
+    if (!mp.army.isInFuelStationShape) return;
+    let player = mp.players.local;
+    let vehicle = player.vehicle;
+    if (vehicle && vehicle.getPedInSeat(-1) == player.handle) {
+        mp.events.callRemote('army.fuelstation.fill');
+    } else {
+        mp.prompt.show('Чтобы заправить транспортное средство, вы должны находиться в нем');
+    }
 });
 
 mp.army.destroyCaptureZone();
