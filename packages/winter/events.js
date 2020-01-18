@@ -6,11 +6,11 @@ let winter = call('winter');
 
 module.exports = {
     "init": () => {
-        winter.setXmasTrees();
+        //winter.setXmasTrees();
         inited(__dirname);
     },
     "winter.job.start": (player) => {
-        if (!player.character.carLicense) return notifs.error(player, `Необходимо водительское удостоверение`, `Снегоуборщик`);
+        if (!player.character.carLicense) return notifs.error(player, `Необходимо водительское удостоверение`, `Уборщик`);
         mp.events.call("jobs.set", player, 8);
     },
     "winter.job.stop": (player) => {
@@ -73,7 +73,7 @@ module.exports = {
             player.call(`prompt.waitShowByName`, [`winter_job`]);
             winter.startTractorRoute(player);
             notifs.success(player, `Удачной работы!`, header);
-        }, `Аренда трактора для снегоуборки`);
+        }, `Аренда трактора для уборки`);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;

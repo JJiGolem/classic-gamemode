@@ -4,5 +4,6 @@
 module.exports = [
     'test',
     'bars',
-    'dlcpacks'
+    'dlcpacks',
+    'bugTracker'
 ];

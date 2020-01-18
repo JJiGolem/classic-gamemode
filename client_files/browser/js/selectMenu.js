@@ -852,8 +852,8 @@ var selectMenu = new Vue({
                                 selectMenu.loader = true;
                                 let name = this.items[0].values[0];
                                 let surname = this.items[1].values[0];
-                                name = name[0].toUpperCase() + name.toLowerCase().substring(1, 20);
-                                surname = surname[0].toUpperCase() + surname.toLowerCase().substring(1, 20);
+                                // name = name[0].toUpperCase() + name.toLowerCase().substring(1, 20);
+                                // surname = surname[0].toUpperCase() + surname.toLowerCase().substring(1, 20);
                                 mp.trigger('characterInit.create.check', name, surname);
                                 break;
                             case "Назад":
@@ -1076,6 +1076,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Продать транспорт') {
+                            selectMenu.loader = true;
                             mp.trigger(`carmarket.car.sell`);
                         }
                         if (e.itemName == 'Отмена') {
@@ -2610,6 +2611,9 @@ var selectMenu = new Vue({
                     {
                         text: "Дубликат ключей"
                     },
+                    // {
+                    //     text: "Помощь штату"
+                    // },
                     {
                         text: "Закрыть"
                     },
@@ -2637,6 +2641,8 @@ var selectMenu = new Vue({
                             if (selectMenu.menus["governmentServiceVehKeys"].items.length <= 1) return selectMenu.notification = `Вы не имеете авто`;
                             selectMenu.menus["governmentServiceVehKeys"].isDublicate = true;
                             selectMenu.showByName("governmentServiceVehKeys");
+                        } else if (e.itemName == "Помощь штату") {
+                            selectMenu.showByName("governmentServiceHelp");
                         } else selectMenu.show = false;
                     }
                 }
@@ -2774,6 +2780,40 @@ var selectMenu = new Vue({
                             };
                             mp.trigger(`callRemote`, `government.service.keys.veh.restore`, JSON.stringify(data));
                             selectMenu.show = false;
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("governmentService");
+                }
+            },
+            "governmentServiceHelp": {
+                name: "governmentServiceHelp",
+                header: "Помощь штату",
+                items: [{
+                        text: "Репорт",
+                    },
+                    // {
+                    //     text: "Рейтинг помощников",
+                    // }
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                isDublicate: false,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Вернуться") selectMenu.showByName("governmentService");
+                        else if (e.itemName == "Репорт") {
+                            selectMenu.show = false;
+                            bugTracker.show = true;
                         }
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("governmentService");
                 }
@@ -9445,7 +9485,7 @@ var selectMenu = new Vue({
             },
             "winterJob": {
                 name: "winterJob",
-                header: "Работа снегоуборщика",
+                header: "Работа уборщика",
                 items: [{
                         text: "Устроиться",
                     },

@@ -57,7 +57,7 @@ module.exports = {
             dimension: 0
         },
         {
-            name: "Снегоуборщики",
+            name: "Уборщики",
             pos: {
                 x: -630,
                 y: -1653,

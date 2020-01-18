@@ -201,9 +201,9 @@ mp.events.add('chat.action.shout', (nickname, id, message) => {
     splitChatMessage(message, `!{#ffdfa8}${nickname}[${id}] кричит: `)
 });
 
-mp.events.add('chat.action.walkietalkie', (nickname, id, rank, message) => {
+mp.events.add('chat.action.walkietalkie', (nickname, id, rank, message, isJobRadio = false) => {
     if (typeof(message) != "string") message = message.join(' ');
-    splitChatMessage(message, `!{#33cc66}[R] ${rank} ${nickname}[${id}]: `)
+    splitChatMessage(message, `${isJobRadio ? '!{#40f5ec}' : '!{#33cc66}'}[R] ${rank} ${nickname}[${id}]: `)
 });
 
 mp.events.add('chat.action.nonrp', (nickname, id, message) => {

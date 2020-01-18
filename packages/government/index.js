@@ -1,5 +1,7 @@
 "use strict";
 
+let bugTracker = call('bugTracker');
+
 module.exports = {
     // Кол-во боеприпасов, списываемое за выдачу формы
     clothesAmmo: 0,
@@ -36,6 +38,7 @@ module.exports = {
                 vehicles: player.vehicleList || [],
             };
             player.call(`government.service.showMenu`, [data]);
+            player.call(`bugTracker.bugs.init`, [bugTracker.getClientBugsByAuthor(player.name)]);
         };
         colshape.onExit = (player) => {
             player.call(`selectMenu.hide`);
