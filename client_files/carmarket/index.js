@@ -1,5 +1,6 @@
 let isInCarMarketColshape = false;
 let sellButtonPressed = false;
+let isSellMenuShown = false;
 mp.events.add('carmarket.colshape.enter', () => {
     isInCarMarketColshape = true;
 });
@@ -16,6 +17,8 @@ mp.keys.bind(0x45, true, () => {
     if (isInCarMarketColshape) {
         if (!mp.players.local.vehicle) return;
         if (mp.players.local.vehicle.getPedInSeat(-1) != mp.players.local.handle) return;
+        if (isSellMenuShown) return;
+        isSellMenuShown = true;
         mp.events.callRemote('carmarket.sellmenu.show');
     }
 });
@@ -48,12 +51,14 @@ mp.events.add('carmarket.car.sell.ans', (ans, price) => {
             break;
     }
     sellButtonPressed = false;
+    isSellMenuShown = false;
     mp.callCEFV(`selectMenu.loader = false;`);
 });
 
 mp.events.add('carmarket.sellmenu.close', () => {
     mp.busy.remove('carmarket.sellmenu');
     mp.callCEFV(`selectMenu.show = false`);
+    isSellMenuShown = false;
 });
 
 mp.events.add('carmarket.buymenu.show', (data) => {
