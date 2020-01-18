@@ -369,7 +369,7 @@ module.exports = {
     },
     "army.fuelstation.fill": (player) => {
         let vehicle = player.vehicle;
-        if (!vehicle) return notify.error(player, 'Вы не в транспорте')
+        if (!vehicle) return notifs.error(player, 'Вы не в транспорте')
         if (vehicle.fuel >= vehicle.properties.maxFuel) return notifs.warning(player, 'Автомобиль полностью заправлен');
         if (vehicle.key != 'faction' || !factions.isArmyFaction(vehicle.owner)) return notifs.warning(player, 'Этот автомобиль нельзя заправить');
 
