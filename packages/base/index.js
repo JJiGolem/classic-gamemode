@@ -2,10 +2,7 @@
 /// Базовый модуль, отвечающий за загрузку остальных модулей, так же выполняет основные сервисные функции
 let fs = require('fs');
 let path = require('path');
-let exec = require('exec');
-let childProcess = require('child_process');
 
-const isBuild = mp.config.isBuild;
 let isInited = false;
 
 global.db = require('./db');
@@ -73,14 +70,6 @@ global.d = (text) => {
         require('../notifications').info(rec, text, `Server DEBUG-LOG`);
     });
 };
-
-if (!isBuild) {
-    require('../../scripts/dev').compile();
-} else {
-    console.log('START BUILD CLIENT-SIDE');
-    childProcess.execSync('npm run build');
-    console.log('END BUILD CLIENT-SIDE');
-}
 
 /// Вызов подключения к БД, подключение всех модулей и вызов их инициализации
 /// Должен быть ниже объявления глобальных функций, что бы они успели загрузииться
