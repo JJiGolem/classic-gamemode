@@ -4,6 +4,7 @@ var chat = require('./index');
 let news = call('news');
 let admin = call('admin');
 let notify = call('notifications');
+let jobs = call('jobs');
 
 module.exports = {
 
@@ -187,7 +188,12 @@ module.exports = {
     },
 
     "/r": (player, message) => {
-        factions.sayRadio(player, message.join(' '));
+        if (!player.character) return;
+        if (player.character.job) {
+            jobs.sayRadio(player, message.join(' '));
+        } else {
+            factions.sayRadio(player, message.join(' '));
+        }
     },
 
     "/f": (player, message) => {
@@ -273,7 +279,7 @@ module.exports = {
         if (isNaN(targetId) || isNaN(amount) || amount <= 0) return notify.warning(player, `Некорректные данные`);
         let data = {
             targetId: args[0],
-            amount: args[1]
+            amount: amount
         }
         mp.events.call('casino.dice.offer.send', player, data);
     },

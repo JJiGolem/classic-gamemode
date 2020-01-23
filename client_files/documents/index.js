@@ -249,7 +249,7 @@ function getFactionName(id) {
         case 5:
             return 'EMS';
         case 6:
-            return 'National Guard';
+            return 'U. S. Army';
         case 7:
             return 'Weazel News';
         default:

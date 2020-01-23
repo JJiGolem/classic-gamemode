@@ -33,6 +33,11 @@ mp.inventory = {
             pos: new mp.Vector3(0.2, -0.15, -0.1),
             rot: new mp.Vector3(13, -90, 10)
         },
+        76: { // каменный топор
+            bone: 24818,
+            pos: new mp.Vector3(0.2, -0.15, -0.1),
+            rot: new mp.Vector3(13, -90, 10)
+        },
         104: { // Combat MG
             bone: 24818,
             pos: new mp.Vector3(0.2, -0.165, -0.1),
@@ -42,6 +47,11 @@ mp.inventory = {
             bone: 24818,
             pos: new mp.Vector3(0.2, -0.165, -0.1),
             rot: new mp.Vector3(13, 180, 10)
+        },
+        136: { // кирка
+            bone: 24818,
+            pos: new mp.Vector3(0.35, -0.1, -0.1),
+            rot: new mp.Vector3(0, -90, 10)
         },
     },
     lastActionTime: 0,
@@ -425,6 +435,12 @@ mp.events.add("inventory.item.adrenalin.use.callRemote", (data) => {
     mp.events.callRemote(`inventory.item.adrenalin.use`, JSON.stringify(data));
 });
 
+mp.events.add("inventory.item.use.callRemote", (data) => {
+    if (typeof data == 'string') data = JSON.parse(data);
+    data.pos = mp.inventory.getGroundItemPos(mp.players.local);
+    mp.events.callRemote(`inventory.item.use`, JSON.stringify(data));
+});
+
 mp.events.add("playerEnterVehicle", () => {
     if (!mp.players.local.getVariable("hands")) return;
     mp.callCEFV(`inventory.clearHands()`);
@@ -496,6 +512,7 @@ mp.events.add("render", () => {
         mp.game.controls.disableControlAction(0, 24, true); /// удары
         mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
         mp.game.controls.disableControlAction(0, 140, true); /// удары R
+        mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
     }
     if (mp.renderChecker) mp.utils.drawText2d(`inventory rend: ${Date.now() - start} ms`, [0.8, 0.59]);
 });

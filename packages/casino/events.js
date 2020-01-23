@@ -63,13 +63,10 @@ module.exports = {
             if (senderCount > targetCount) {
                 winner = sender;
                 loser = target;
-                //console.log('sender win')
             } else if (targetCount > senderCount) {
                 winner = target;
                 loser = sender;
-                //console.log('target win')
             } else {
-                
                 notify.info(target, `Вы сыграли в ничью`);
                 notify.info(sender, `Вы сыграли в ничью`);
                 isDraw = true;

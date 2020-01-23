@@ -365,6 +365,43 @@ module.exports = {
             notifs.info(rec, `Вы не следуете за ${player.name}`, header);
         }
     },
+    "mafia.vehicle.boot.put": (player, recId) => {
+        var header = `Багажник`;
+        var rec = mp.players.at(recId);
+        if (!rec || !rec.character) return notifs.error(player, `Игрок не найден`, header);
+        if (!rec.cuffs) return notifs.error(player, `${rec.name} не связан`, header);
+        if (rec.getVariable("inBoot") != null) return notifs.error(player, `${rec.name} уже в багажнике`, header);
+        if (!factions.isMafiaFaction(player.character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
+
+        var veh = mp.vehicles.getNear(player);
+        if (!veh) return notifs.error(player, `Авто не найдено`, header);
+        var dist = player.dist(veh.position);
+        if (dist > 10) return notifs.error(player, `Авто далеко`, header);
+        if (!veh.db || veh.key != 'faction' || veh.owner != player.character.factionId) return notifs.error(player, `Авто не принадлежит вашей мафии`, header);
+        if (!veh.getVariable("trunk")) return notifs.error(player, `Багажник закрыт`, header);
+
+        if (veh.getVariable("inBoot") != null) return notifs.error(player, `В багажнике нет места`, header);
+
+        rec.setVariable("inBoot", veh.id);
+        veh.setVariable("inBoot", rec.id);
+
+        notifs.success(player, `${rec.name} посажен в багажник`, header);
+        notifs.info(rec, `${player.name} посадил вас в багажник`, header);
+    },
+    "mafia.vehicle.boot.remove": (player, recId) => {
+        var header = `Багажник`;
+        var rec = mp.players.at(recId);
+        if (!rec || !rec.character) return notifs.error(player, `Игрок не найден`, header);
+        if (rec.getVariable("inBoot") == null) return notifs.error(player, `${rec.name} не в багажнике`, header);
+        if (!factions.isMafiaFaction(player.character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
+        // TODO: проверка на багажник
+
+        mp.vehicles.at(rec.getVariable("inBoot")).setVariable("inBoot", null);
+        rec.setVariable("inBoot", null);
+
+        notifs.success(player, `${rec.name} высажен из багажника`, header);
+        notifs.info(rec, `${player.name} высадил вас из багажника`, header);
+    },
     "player.faction.changed": (player, oldVal) => {
         if (!mafia.inWar(oldVal)) return;
         player.call(`mafia.bizWar.stop`);

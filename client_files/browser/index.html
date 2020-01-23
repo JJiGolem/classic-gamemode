@@ -25,6 +25,7 @@
     <link rel="stylesheet" type="text/css" href="css/speedometer.css" />
     <link rel="stylesheet" type="text/css" href="css/interactionMenu.css" />
     <link rel="stylesheet" type="text/css" href="css/inventory.css" />
+    <link rel="stylesheet" type="text/css" href="css/craft.css" />
     <link rel="stylesheet" type="text/css" href="css/carSpecifications.css" />
     <link rel="stylesheet" type="text/css" href="css/check.css" />
     <link rel="stylesheet" type="text/css" href="css/inputWindow.css" />
@@ -43,6 +44,7 @@
     <link rel="stylesheet" type="text/css" href="css/selectItems.css" />
     <link rel="stylesheet" type="text/css" href="css/medicalCard.css" />
     <link rel="stylesheet" type="text/css" href="css/governmentBadge.css" />
+    <link rel="stylesheet" type="text/css" href="css/bugTracker.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -803,6 +805,91 @@
         </div>
     </div>
 
+    <div id="craft" v-if="show && crafter" :style="{opacity: 1}">
+        <div class="left">
+            <div class="header">
+                <div v-for="(type, i) in crafter.types" v-key="i" :class="{active: type == currentType}" @click="crafter.typeI = i">{{ type.name }}</div>
+            </div>
+            <div class="item-list">
+                <div v-for="(item, i) in currentType.items" v-key="i" :class="{active: currentItem == item}" class="item" @click="onClickItem(i)">
+                    <div class="icon" :style="{backgroundImage: `url(${inventory.urlItemImg(item.itemId)})`}"></div>
+                    <div class="info">
+                        <div class="name">{{ inventory.itemsInfo[item.itemId].name | itemName }}</div>
+                        <div class="materials">
+                            <div v-for="mat in item.materials" v-key="i" :class="{deficit: isDeficit(mat)}">{{ getMaterialName(item, mat) }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="queue" v-show="!currentItem">
+                <div class="header">
+                    <div class="title">{{ crafter.name }}</div>
+                    <div class="help" :class="{active: helpShow}" @click="helpShow = !helpShow"><i class="fas fa-info"></i></div>
+                </div>
+                <div class="column-list" v-show="!helpShow">
+                    <div v-for="(col, i) in crafter.queue.columns" v-key="i" class="column" :class="[col.state, col.itemId ? '' : 'empty', playerMenu.name == col.playerName ? '' : 'disabled']" @click="onClickColumn(i)">
+                        <div class="item" v-show="col.itemId">
+                            <div class="icon" :style="{backgroundImage: `url(${inventory.urlItemImg(col.itemId)})`}"></div>
+                            <div class="info">
+                                <div class="time" v-show="col.time">{{ col.time | time }}</div>
+                                <div class="state">{{ stateName(col) }}</div>
+                            </div>
+                        </div>
+                        <div class="fill" v-show="col.state == 'process'" :style="progressStyle(col)"></div>
+                    </div>
+                </div>
+                <div class="bonfire" v-show="!helpShow && crafter.destroyTime">
+                    <div class="title" :class="{deficit: crafter.destroyTime < 60}">
+                        Горит {{ crafter.destroyTime | time }}
+                        <span v-show="firewoodCount">+{{ firewoodCount * 20 | time }}</span>
+                    </div>
+                    <div class="selector">
+                        <div class="button" @click="onClickDownFirewood">-</div>
+                        <div class="count">{{ firewoodCount }} ед.</div>
+                        <div class="button" @click="onClickUpFirewood">+</div>
+                    </div>
+                    <div class="button acceptFirewood" @click="onClickAcceptFirewood">Подкинуть</div>
+                </div>
+                <div class="help-info" v-show="helpShow">{{ crafter.description }}</div>
+            </div>
+            <div class="craftItem" v-if="currentItem">
+                <div class="param-list" v-if="paramsShow">
+                    <div v-for="param in currentItemParams" class="param">
+                        <div class="key">{{ param.name }}</div>
+                        <div class="value">{{ param.value }}</div>
+                    </div>
+                </div>
+                <div v-else class="icon" :style="{backgroundImage: `url(${inventory.urlItemImg(currentItem.itemId)})`}"></div>
+                <div class="title">
+                    <div class="name">{{ inventory.itemsInfo[currentItem.itemId].name }}</div>
+                    <div class="button details" :class="{active: paramsShow}" @click="onClickDetails"><i class="fas fa-ellipsis-h"></i></div>
+                </div>
+                <div class="description">
+                    <div class="material-list">
+                        <div v-for="mat in currentItem.materials" class="material" :class="{deficit: isDeficit(mat)}">
+                            <div class="name">{{ inventory.itemsInfo[mat.itemId].name }}</div>
+                            <div class="count">{{ getMaterialCount(mat.itemId) }}/{{ mat.count }}</div>
+                        </div>
+                    </div>
+                    <div class="skill" :class="{deficit: isDeficitSkill}">
+                        <div class="title">
+                            <div>Навык</div>
+                            <div>{{ skillInfo(skill).level }}/{{ skillInfo(currentItem.skill).level }} lvl</div>
+                        </div>
+                        <div class="progress">
+                            <div class="fill" :style="progressSkillStyle"></div>
+                        </div>
+                    </div>
+                    <div>{{ inventory.itemsInfo[currentItem.itemId].description }}</div>
+                </div>
+                <div class="time" v-show="canCraft">{{ currentItem.time | time }}</div>
+                <div class="button make" :class="{disabled: !canCraft}" @click="onClickCraft">Изготовить</div>
+            </div>
+        </div>
+    </div>
+
     <div v-cloak="v-cloak" id="carSpecifications" v-if="show">
         <div class="header">Характеристики</div>
         <div class="body">
@@ -1095,7 +1182,7 @@
                         @mousemove="mousemove($event, record)"
                         @mouseout="mouseout">
                         <div class="first"><div class="record-align">{{ getDist(record) | km }}</div></div>
-                        <div><div class="record-align">{{ record.name }}</div></div>
+                        <div><div class="record-align">{{ record.name }}({{ record.num }})</div></div>
                         <div><div class="record-align">{{ record.description | textSplice(25) }}</div></div>
                         <div><div class="record-align btn" @click="onClickAccept(record)">Принять</div></div>
                     </div>
@@ -1831,6 +1918,57 @@
         </div>
     </div>
 
+    <div id="bugTracker" v-if="show" :style="{opacity: 1}">
+        <div class="left">
+            <div class="title">Очки помощи: {{ score }}</div>
+            <div class="bug-list" v-if="bugList.length">
+                <div v-for="(bug, i) in bugList" v-key="i" :class="{active: i == bugI}" @click="onClickBug(i)">{{ bug.name }}</div>
+            </div>
+            <div v-if="!bugList.length">Список пуст</div>
+        </div>
+        <div class="right">
+            <div class="bug" v-if="currentBug">
+                <div class="header">{{ currentBug.name }}</div>
+                <div class="info">
+                    <h3>Шаги воспроизведения:</h3>
+                    <div>
+                        <div v-for="step in currentBug.steps">{{ step }}</div>
+                    </div>
+                    <h3>Результат:</h3>
+                    <i>{{ currentBug.result }}</i>
+                    <h3>Ожидаемый результат:</h3>
+                    <i>{{ currentBug.expectedResult }}</i>
+                </div>
+                <div class="about">
+                    <div>Создатель: {{ currentBug.author }}</div>
+                    <div>Исполнитель: {{ currentBug.executor }}</div>
+                    <div>Состояние: {{ currentBug.state }}</div>
+                    <div>Сборка: #{{ currentBug.build }}</div>
+                    <div>Дата: {{ currentBug.date }}</div>
+                </div>
+            </div>
+            <div class="create-bug" v-else>
+                <div class="header">Новая ошибка</div>
+                <div class="info">
+                    <div>Название:</div>
+                    <input v-model="form.name" type="text" placeholder="Восстановление HP бронежилета" />
+                    <div>Шаги воспроизведения:</div>
+                    <div class="steps">
+                        <div v-for="(step, i) in form.steps">
+                            <input v-model="form.steps[i]" v-bind:key="i" type="text" :placeholder="getPlaceholder(i)" @keydown="onKeyDownStep($event, i)" />
+                        </div>
+                        <div class="button" @click="onClickAddStep">Добавить шаг</div>
+                    </div>
+                    <div>Результат:</div>
+                    <input v-model="form.result" type="text" placeholder="HP бронежилета откатывается на первоначальное значение" />
+                    <div>Ожидаемый результат:</div>
+                    <input v-model="form.expectedResult" type="text" placeholder="HP бронежилета не откатывается" @keydown.enter="onClickCreateBug" />
+                </div>
+                <div class="button" @click="onClickCreateBug">Создать</div>
+            </div>
+        </div>
+    </div>
+
     <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>
     <div id="root"></div>
@@ -1860,6 +1998,7 @@
     <script src="js/speedometer.js"></script>
     <script src="js/interactionMenu.js"></script>
     <script src="js/inventory.js"></script>
+    <script src="js/craft.js"></script>
     <script src="js/carSpecifications.js"></script>
     <script src="js/check.js"></script>
     <script src="js/inputWindow.js"></script>
@@ -1877,6 +2016,7 @@
     <script src="js/selectItems.js"></script>
     <script src="js/medicalCard.js"></script>
     <script src="js/governmentBadge.js"></script>
+    <script src="js/bugTracker.js"></script>
 
 </body>
 

@@ -1,5 +1,6 @@
-isInCarMarketColshape = false;
-
+let isInCarMarketColshape = false;
+let sellButtonPressed = false;
+let isSellMenuShown = false;
 mp.events.add('carmarket.colshape.enter', () => {
     isInCarMarketColshape = true;
 });
@@ -12,9 +13,12 @@ mp.events.add('carmarket.colshape.leave', () => {
 
 mp.keys.bind(0x45, true, () => {
     if (mp.game.ui.isPauseMenuActive()) return;
+    if (sellButtonPressed) return;
     if (isInCarMarketColshape) {
         if (!mp.players.local.vehicle) return;
         if (mp.players.local.vehicle.getPedInSeat(-1) != mp.players.local.handle) return;
+        if (isSellMenuShown) return;
+        isSellMenuShown = true;
         mp.events.callRemote('carmarket.sellmenu.show');
     }
 });
@@ -26,12 +30,10 @@ mp.events.add('carmarket.sellmenu.show', () => {
 });
 
 mp.events.add('carmarket.car.sell', () => {
-    mp.callCEFV(`loader.show = true;`);
+    sellButtonPressed = true;
     mp.events.callRemote('carmarket.car.sell');
-    mp.callCEFV(`selectMenu.show = false`);
 });
 mp.events.add('carmarket.car.sell.ans', (ans, price) => {
-    mp.callCEFV(`loader.show = false;`);
 
     switch (ans) {
         case 0:
@@ -48,11 +50,15 @@ mp.events.add('carmarket.car.sell.ans', (ans, price) => {
             mp.notify.success(`Вы продали т/с за $${price}`, 'Авторынок');
             break;
     }
+    sellButtonPressed = false;
+    isSellMenuShown = false;
+    mp.callCEFV(`selectMenu.loader = false;`);
 });
 
 mp.events.add('carmarket.sellmenu.close', () => {
     mp.busy.remove('carmarket.sellmenu');
     mp.callCEFV(`selectMenu.show = false`);
+    isSellMenuShown = false;
 });
 
 mp.events.add('carmarket.buymenu.show', (data) => {

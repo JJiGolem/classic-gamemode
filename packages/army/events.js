@@ -5,6 +5,7 @@ var inventory = require('../inventory');
 var logger = require('../logger');
 var money = require('../money');
 var notifs = require('../notifications');
+let vehicles = call('vehicles');
 
 module.exports = {
     "init": () => {
@@ -352,4 +353,33 @@ module.exports = {
 
         army.giveScore(killer, player, reason);
     },
+    "playerEnterColshape": (player, shape) => {
+        if (!player.character) return;
+
+        if (shape.isArmyFuelStation) {
+            player.call('army.fuelstation.enter', [true]);
+        }
+    },
+    "playerExitColshape": (player, shape) => {
+        if (!player.character) return;
+
+        if (shape.isArmyFuelStation) {
+            player.call('army.fuelstation.enter', [false]);
+        }
+    },
+    "army.fuelstation.fill": (player) => {
+        let vehicle = player.vehicle;
+        if (!vehicle) return notifs.error(player, 'Вы не в транспорте')
+        if (vehicle.fuel >= vehicle.properties.maxFuel) return notifs.warning(player, 'Автомобиль полностью заправлен');
+        if (vehicle.key != 'faction' || !factions.isArmyFaction(vehicle.owner)) return notifs.warning(player, 'Этот автомобиль нельзя заправить');
+
+        let toFill = parseInt(vehicle.properties.maxFuel - vehicle.fuel);
+        if (army.fuel < toFill) return notifs.warning(player, 'На заправке недостаточно топлива');
+        vehicles.setFuel(vehicle, vehicle.properties.maxFuel);
+        army.removeFuel(toFill);
+        notifs.success(player, `Автомобиль заправлен на ${toFill} л.`);
+    },
+    "economy.done": () => {
+        army.createFuelStation();
+    }
 }

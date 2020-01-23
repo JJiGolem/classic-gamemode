@@ -1011,4 +1011,19 @@ module.exports = {
             player.call('admin.stats.show', [JSON.stringify(data)]);
         }
     },
+    "/setnick": {
+        access: 5,
+        description: "Сменить ник игроку",
+        args: "[id]:n [имя]:s [фамилия]:s",
+        handler: (player, args, out) => {
+            let target = mp.players.at(args[0]);
+            if (!target || !target.character) out.error('Игрок не найден', player);
+            out.info(`${player.name} сменил ник игроку ${target.character.name} на ${args[1]} ${args[2]}`);
+            target.character.name = `${args[1]} ${args[2]}`;
+            target.character.save();
+            target.call('chat.message.push', [`!{#ffbe4f}Администратор ${player.name} сменил ваш ник на ${args[1]} ${args[2]}`]);
+            target.call('chat.message.push', [`!{#ffbe4f}Перезайдите в игру (F1)`]);
+            target.kick('kicked');
+        }
+    }
 }

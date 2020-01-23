@@ -173,6 +173,12 @@ mp.utils = {
         mp.game.streaming.requestIpl("vw_casino_garage");
         mp.game.streaming.requestIpl("vw_casino_carpark");
         mp.game.streaming.requestIpl("vw_casino_penthouse");
+
+        mp.game.streaming.removeIpl("rc12b_fixed");
+        mp.game.streaming.removeIpl("rc12b_destroyed");
+        mp.game.streaming.removeIpl("rc12b_default");
+        mp.game.streaming.removeIpl("rc12b_hospitalinterior_lod");
+        mp.game.streaming.removeIpl("rc12b_hospitalinterior");
     },
     // Получить позицию капота авто
     getHoodPosition(veh) {
@@ -291,6 +297,10 @@ mp.utils = {
         var rand = min - 0.5 + Math.random() * (max - min + 1);
         rand = Math.round(rand);
         return rand;
+    },
+    randomFloat(min, max) {
+        let rand = min + Math.random() * (max - min);
+        return parseFloat(rand);
     },
     // Рандомная точка внутри сферы
     randomSpherePoint(pos, radius) {
@@ -521,6 +531,7 @@ mp.events.add('render', () => {
         mp.game.controls.disableControlAction(1, 200, true); // esc
         mp.game.controls.disableControlAction(0, 140, true); /// удары R
         mp.game.controls.disableControlAction(24, 37, true); /// Tab
+        mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
 
         // for (let i = 157; i <= 165; i++) {
         //     mp.game.controls.disableControlAction(24, i, true); /// цифры 1-9

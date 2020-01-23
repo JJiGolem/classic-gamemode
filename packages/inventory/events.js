@@ -1,6 +1,7 @@
 let bands = call('bands');
 let bizes = call('bizes');
 let clubs = call('clubs');
+let craft = call('craft');
 let death = call('death');
 let factions = call('factions');
 let fuelstations = call('fuelstations');
@@ -169,6 +170,12 @@ module.exports = {
         }
         var cant = inventory.cantAdd(player, obj.item.itemId, inventory.getParamsValues(obj.item));
         if (cant) return notifs.error(player, cant, header);
+        var nextWeight = inventory.getCommonWeight(player);
+        obj.children.forEach(item => {
+            nextWeight += inventory.getInventoryItem(item.itemId).weight;
+        });
+        if (nextWeight > inventory.maxPlayerWeight) return notifs.error(player, `Превышение по весу (${nextWeight.toFixed(2)} из ${inventory.maxPlayerWeight} кг)`, header);
+
         var incorrectChild = obj.children.find(item => {
             var params = inventory.getParamsValues(item);
             if (params.weaponHash) {
@@ -195,7 +202,16 @@ module.exports = {
         obj.denyTake = true;
         inventory.addOldItem(player, obj.item, (e) => {
             delete obj.denyTake;
-            if (e) return notifs.error(player, e, header);
+            if (e) {
+                obj.children.forEach((item) => {
+                    item.playerId = null;
+                    // из-за paranoid: true
+                    item.destroy();
+                    var i = player.inventory.items.indexOf(item);
+                    if (i != -1) player.inventory.items.splice(item, 1);
+                });
+                return notifs.error(player, e, header);
+            }
 
             notifs.success(player, `Предмет ${inventory.getName(obj.item.itemId)} в инвентаре`, header);
             timer.remove(obj.destroyTimer);
@@ -280,7 +296,6 @@ module.exports = {
         rec.spawn(rec.position);
         rec.health = 10;
         death.removeKnocked(rec);
-        mp.events.call(`mapCase.ems.calls.remove`, rec, rec.character.id);
 
         count--;
         if (!count) inventory.deleteItem(player, adrenalin);
@@ -360,7 +375,11 @@ module.exports = {
         if (!smoke) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
         if (!inventory.isInHands(smoke)) return notifs.error(player, `${inventory.getName(smoke.itemId)} не в руках`, header);
         var count = inventory.getParam(smoke, 'count').value;
-        if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
+        if (!count) return notifs.error(player, `Сигарет: 0 ед.`, header);
+        var matches = inventory.getItemByItemId(player, 139);
+        if (!matches) return notifs.error(player, `Спички не найдены`, header);
+        var matchesCount = inventory.getParam(matches, 'count').value;
+        if (!matchesCount) return notifs.error(player, `Спичек: 0 ед.`, header);
         if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
         if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
         if (player.lastUseSmoke) {
@@ -375,6 +394,10 @@ module.exports = {
         count--;
         if (!count) inventory.deleteItem(player, smoke);
         else inventory.updateParam(player, smoke, 'count', count);
+
+        matchesCount--;
+        if (!matchesCount) inventory.deleteItem(player, matches);
+        else inventory.updateParam(player, matches, 'count', matchesCount);
 
         player.call(`effect`, ['FocusOut', 15000]);
         notifs.success(player, `Вы употребили сигарету`, header);
@@ -489,7 +512,7 @@ module.exports = {
     "inventory.item.use": (player, data) => {
         // debug(`item.use`)
         // debug(data)
-        data = JSON.parse(data);
+        if (typeof data == 'string') data = JSON.parse(data);
 
         var item = inventory.getItem(player, data.sqlId);
         if (!item) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
@@ -561,6 +584,28 @@ module.exports = {
                     inventory.updateParam(player, item, 'litres', 0);
                     notifs.success(player, `Содержимое канистры слито`, header);
                     inventory.notifyOverhead(player, `Слил канистру`);
+                }
+                break;
+            case 139: // спички
+                if (data.index == 0) { // костер
+                    var count = inventory.getParam(item, 'count').value;
+                    if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
+
+                    var firewoodCount = craft.getMaterialCount(player, craft.firewoodItemId);
+                    if (firewoodCount < 5) return notifs.error(player, `Недостаточно дерева`, header);
+
+                    count--;
+                    if (!count) inventory.deleteItem(player, item);
+                    else inventory.updateParam(player, item, 'count', count);
+
+                    craft.removeMaterials(player, [{
+                        itemId: craft.firewoodItemId,
+                        count: 5
+                    }]);
+
+                    data.pos.z += 0.1;
+                    craft.createBonfire(data.pos, new mp.Vector3(0, 0, player.heading));
+                    notifs.success(player, `Вы развели костер`, header);
                 }
                 break;
         }
@@ -700,7 +745,7 @@ module.exports = {
         }
     },
     "death.spawn": (player, groundZ, dimension) => {
-        if (!player.character) return;
+        if (!player.character || !player.character.inventory) return;
 
         var handsItem = inventory.getHandsItem(player);
         if (!handsItem || !inventory.isWeaponItem(handsItem)) return;
@@ -732,6 +777,11 @@ module.exports = {
             var param = inventory.getParam(item, 'weaponHash');
             if (param) {
                 inventory.updateParam(player, item, 'ammo', player.weaponAmmo);
+            }
+            if (player.getVariable("knocked") && inventory.isWeaponItem(item)) {
+                var pos = player.position;
+                pos.z--;
+                inventory.putGround(player, item, pos, player.dimension);
             }
         }
 

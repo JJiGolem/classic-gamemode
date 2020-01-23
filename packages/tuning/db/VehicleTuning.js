@@ -175,7 +175,11 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: -1,
             allowNull: false
         },
-
+        neon: {
+            type: DataTypes.INTEGER,
+            defaultValue: -1,
+            allowNull: false
+        },
     }, { timestamps: false });
 
     // model.associate = (models) => {

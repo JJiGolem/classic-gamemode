@@ -8,16 +8,14 @@ let timer = call('timer');
 let utils = call('utils');
 
 module.exports = {
-    // Общая информация о типах деревьев
-    treesInfo: null,
     // Позиция лесопилки
     storagePos: new mp.Vector3(-568.3031616210938, 5253.30322265625, 70.48751831054688 - 1),
     // Снаряжение лесопилки
     items: [{
-        itemId: 70,
+        itemId: 76,
         params: {
             health: 100,
-            weaponHash: mp.joaat('weapon_hatchet'),
+            weaponHash: mp.joaat('weapon_stone_hatchet'),
         },
         price: 100
     }],
@@ -131,12 +129,6 @@ module.exports = {
 
     async init() {
         this.createStorageMarker();
-        await this.loadTreesInfoFromDB();
-    },
-    async loadTreesInfoFromDB() {
-        this.treesInfo = await db.Models.Tree.findAll();
-
-        console.log(`[WOODMAN] Общая информация о деревьях загружена (${this.treesInfo.length} шт.)`);
     },
     createStorageMarker() {
         var pos = this.storagePos;
@@ -246,7 +238,7 @@ module.exports = {
             notifs.error(player, text, header);
         };
         var ax = inventory.getHandsItem(player);
-        if (!ax || ax.itemId != 70) return out(`Возьмите в руки топор`);
+        if (!this.isAx(ax)) return out(`Возьмите в руки топор`);
 
         var health = inventory.getParam(ax, 'health');
         if (!health || health.value <= 0) return out(`Топор сломан`);
@@ -308,7 +300,7 @@ module.exports = {
             notifs.error(player, text, header);
         };
         var ax = inventory.getHandsItem(player);
-        if (!ax || ax.itemId != 70) return out(`Возьмите в руки топор`);
+        if (!this.isAx(ax)) return out(`Возьмите в руки топор`);
 
         var health = inventory.getParam(ax, 'health');
         if (!health || health.value <= 0) return out(`Топор сломан`);
@@ -357,5 +349,8 @@ module.exports = {
     addJobExp(player) {
         var skill = jobs.getJobSkill(player, 7);
         jobs.setJobExp(player, skill, skill.exp + this.exp);
+    },
+    isAx(item) {
+        return item && [70, 76].includes(item.itemId);
     },
 };

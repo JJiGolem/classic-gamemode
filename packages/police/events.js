@@ -619,8 +619,13 @@ module.exports = {
 
         if (!rec.character.wanted) return notifs.error(player, `${rec.name} не преступник`, `Арест`);
 
+        var arrestType = "ls";
+
         var cell = police.getNearLSCell(player);
-        if (!cell) cell = police.getNearBCCell(player);
+        if (!cell) {
+            cell = police.getNearBCCell(player);
+            arrestType = "bc";
+        }
         if (!cell) return notifs.error(player, `Вы далеко от камеры`, `Арест`);
         if (rec.cuffs) {
             var params = {
@@ -634,7 +639,8 @@ module.exports = {
 
         var time = police.arrestTime * rec.character.wanted;
         rec.character.arrestTime = time;
-        police.startLSCellArrest(rec, cell, time);
+        if (arrestType == "ls") police.startLSCellArrest(rec, cell, time);
+        else police.startBCCellArrest(rec, cell, time);
         notifs.info(rec, `${player.name} посадил вас в КПЗ`, `Арест`);
         notifs.success(player, `Вы посадили ${rec.name} к КПЗ`, `Арест`);
 
@@ -779,6 +785,9 @@ module.exports = {
         if (factions.isPoliceFaction(killer.character.factionId) || factions.isFibFaction(killer.character.factionId) ||
             factions.isArmyFaction(killer.character.factionId)) return;
 
+        // Если убийца находится в авто
+        if (killer.vehicle) return;
+
         police.setWanted(killer, killer.character.wanted + 1, `Убийство мирного жителя`);
     },
     "playerQuit": (player) => {
@@ -790,7 +799,7 @@ module.exports = {
         }
 
         if (!player.character.arrestTime) {
-            if (player.character.wanted && player.getVariable("cuffs")) {
+            if (player.character.wanted && player.cuffs && player.cuffs.itemId == 28) {
                 player.character.arrestTime = police.arrestTime * player.character.wanted;
                 player.character.arrestType = police.getRandomArrestType();
                 mp.events.call('admin.notify.players', `!{#db5e4a}${player.name}[${player.id}] посажен в тюрьму за уход от ареста`);

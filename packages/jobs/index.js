@@ -105,4 +105,14 @@ module.exports = {
         if (job == null) return null;
         return job.name;
     },
+    sayRadio(player, text) {
+        let job = player.character.job;
+        if (!job) return;
+        let jobName = this.getJobNameById(job);
+        mp.players.forEach(current => {
+            if (!current.character) return;
+            if (current.character.job != job) return;
+            current.call('chat.action.walkietalkie', [player.name, player.id, jobName, text, true]);
+        });
+    },
 }

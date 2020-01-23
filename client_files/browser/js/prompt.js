@@ -140,6 +140,12 @@ var prompt = new Vue({
             "woodman_log_start_ax": {
                 text: "Нажмите <span>ЛКМ</span>, чтобы начать рубить бревно",
             },
+            "mason_take_pick": {
+                text: "Достаньте кирку, чтобы добыть камень",
+            },
+            "mason_start_pick": {
+                text: "Нажмите <span>ЛКМ</span>, чтобы начать добывать камень",
+            },
             "animations_stop": {
                 text: "Нажмите <span>SPACE</span>, чтобы остановить анимацию",
             },
@@ -148,6 +154,12 @@ var prompt = new Vue({
             },
             "winter_job": {
                 text: "Очищайте дорогу от снега",
+            },
+            "craft_exit": {
+                text: "Нажмите <span>Esc</span> для того, чтобы выйти",
+            },
+            "bugTracker_exit": {
+                text: "Нажмите <span>Esc</span> для того, чтобы выйти",
             },
         },
         text: null

@@ -27,7 +27,16 @@ module.exports = {
     gunAmmo: 100,
     // Кол-во боеприпасов, списываемое за выдачу патронов
     ammoAmmo: 1,
-
+    // Состояние заправки
+    fuel: 500,
+    // Макс. кол-вл топлива на заправке
+    maxFuel: 5000,
+    // Пополнение топлива за интервал
+    fuelPerInterval: 200,
+    // Интервал пополнения
+    fuelAddInterval: 60 * 60 * 1000,
+    // Позиция заправки
+    fuelStationPos: { x: -1742.7371826171875, y: 3123.53466796875, z: 32.82908248901367 },
     init() {
         factions = call('factions');
         notifs = call('notifications');
@@ -183,4 +192,73 @@ module.exports = {
             rec.call(`army.capture.score.set`, [teamId, score]);
         });
     },
+    createFuelStation() {
+        let shape = mp.colshapes.newSphere(this.fuelStationPos.x, this.fuelStationPos.y, this.fuelStationPos.z, 4);
+        shape.isArmyFuelStation = true;
+        mp.markers.new(1, new mp.Vector3(this.fuelStationPos.x, this.fuelStationPos.y, this.fuelStationPos.z - 4), 4, {
+            direction: new mp.Vector3(this.fuelStationPos.x, this.fuelStationPos.y, this.fuelStationPos.z),
+            rotation: 0,
+            color: [255, 114, 79, 128],
+            visible: true,
+            dimension: 0
+        });
+
+        let color = this.getFuelLabelColor();
+        let label = mp.labels.new(`${color}${this.fuel} ~w~из ~g~${this.maxFuel} л\n~w~Нажмите ~b~E~w~`, new mp.Vector3(this.fuelStationPos.x, this.fuelStationPos.y, this.fuelStationPos.z),
+            {
+                los: false,
+                font: 0,
+                drawDistance: 18,
+            });
+        label.isArmyFuelStation = true;
+
+        timer.addInterval(() => {
+            this.addFuel(this.fuelPerInterval);
+        }, this.fuelAddInterval);
+    },
+    async removeFuel(litres) {
+        let value = (this.fuel - litres) > 0 ? this.fuel - litres : 0;
+        let param = await db.Models.EconomicIndicator.findOne({
+            where: {
+                type: 'army.fuel'
+            }
+        });
+        if (param) {
+            param.value = value;
+            param.save();
+        }
+        this.fuel = value;
+        this.updateFuelLabel();
+    },
+    async addFuel(litres) {
+        let value = (this.fuel + litres) >= this.maxFuel ? this.maxFuel : this.fuel + litres;
+        let param = await db.Models.EconomicIndicator.findOne({
+            where: {
+                type: 'army.fuel'
+            }
+        });
+        if (param) {
+            param.value = value;
+            param.save();
+        }
+        this.fuel = value;
+        this.updateFuelLabel();
+    },
+    updateFuelLabel() {
+        let color = this.getFuelLabelColor();
+        mp.labels.forEach((current) => {
+            if (current.isArmyFuelStation) {
+                current.text = `${color}${this.fuel} ~w~из ~g~${this.maxFuel} л\n~w~Нажмите ~b~E~w~`;
+            }
+        });
+    },
+    getFuelLabelColor() {
+        let value = this.fuel / this.maxFuel;
+        if (value < 0.05)
+            return '~r~';
+        else if (value < 0.7)
+            return `~y~`;
+        else
+            return `~g~`;
+    }
 };

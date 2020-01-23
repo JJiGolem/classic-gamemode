@@ -72,7 +72,7 @@ module.exports = {
                 var p = promocodes[i];
                 text += `${i+1}) ${p.Character.name} - ${p.promocode} [${p.completed}/${p.invited}]<br/>`;
             }
-            out.log(text);
+            out.log(text, player);
         }
     },
 }

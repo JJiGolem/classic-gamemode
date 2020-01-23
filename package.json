@@ -42,6 +42,7 @@
     "request": "^2.88.0",
     "rimraf": "^3.0.0",
     "sequelize": "^5.21.2",
+    "trello-node-api": "0.0.7",
     "wrench": "^1.5.9"
   }
 }

@@ -484,7 +484,7 @@ module.exports = {
                 break;
         }
 
-        if (death.knockedList.includes(player.character.id)) death.addKnocked(player);
+        if (death.knockedList.includes(player.character.id)) mp.events.call("death.spawn", player);
     },
     getSocialStatus(character) {
         if (character.admin) return "Администратор";
