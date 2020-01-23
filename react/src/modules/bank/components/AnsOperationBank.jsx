@@ -18,6 +18,10 @@ class AnsOperationBank extends Component {
         } else if (answer == 2) {
             return 'Недостаточно денег на счете';
         } else if (answer == 3) {
+            return 'Недостаточно наличных денег';
+        } else if (answer == 4) {
+            return 'Недостаточно денег в кассе бизнеса';
+        } else if (answer == 5) {
             return 'Вам требуется отыграть 30 часов';
         }
     }
