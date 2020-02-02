@@ -4,9 +4,7 @@ let mood = call('mood');
 let walking = call('walking');
 
 module.exports = {
-    // Кол-во походок
     walkingCount: 7,
-    // Кол-во эмоций
     moodCount: 7,
 
     apply(player, modified = null) {

@@ -1,21 +1,11 @@
 "use strict";
 
-
-/*
-    Модуль анти-чита.
-
-    created 24.11.19 by Carter Slade
-*/
-
 mp.anticheat = {
-    // Параметры анти-чита
     weapon: false,
     jail: false,
-    // Анти-флуд
     lastTriggerTime: 0,
     waitTime: 10000,
 
-    // анти-чит на оружие
     checkWeapon() {
         if (!this.weapon) return;
         var player = mp.players.local;
@@ -24,7 +14,6 @@ mp.anticheat = {
 
         this.trigger(`weapon`, `Начитерил ган ${mp.weapons.getWeaponName(player.weapon) || ''}`);
     },
-    // анти-чит на побег из тюрьмы/КПЗ
     checkJail() {
         if (!this.jail) return;
         if (mp.police.arrestType != null) {
@@ -37,7 +26,6 @@ mp.anticheat = {
         if (Date.now() - this.lastTriggerTime < this.waitTime) return;
         this.lastTriggerTime = Date.now();
 
-        // mp.notify.warning(reason, `ANTICHEAT`);
         mp.events.callRemote(`anticheat.trigger`, name, reason);
     },
     enableParam(name, enable) {

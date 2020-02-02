@@ -2,7 +2,6 @@
 
 let notifs;
 
-/// Модуль реализующий админские функции
 let commands = {};
 
 let massTeleportData = {
@@ -11,14 +10,10 @@ let massTeleportData = {
 };
 
 module.exports = {
-    // Кол-во варнов, при которых игрок улетает в бан
     banWarns: 3,
-    // Время снятия бана за варны
     warnsBanDays: 30,
-    // Время снятия всех варнов от последнего
     warnDays: 14,
 
-    /// Инициализация админских команд из всех модулей
     init() {
         notifs = call('notifications');
 

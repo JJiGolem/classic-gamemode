@@ -1,17 +1,10 @@
 "use strict";
 
-
-/*
-    Модуль анимаций.
-
-    created 26.09.19 by Carter Slade
-*/
-
 mp.animations = {
     animatorActive: false,
     animId: 0,
     animationTimers: {},
-    isOwnPlayingAnimId: null, // анимация из меню на L
+    isOwnPlayingAnimId: null,
     animationData: require('animations/data.js'),
 
     playAnimation(player, a, time = null) {
@@ -46,24 +39,24 @@ mp.animations = {
     animator() {
         this.animatorActive = !this.animatorActive;
         if (this.animatorActive) {
-            mp.keys.bind(37, false, () => { //left
+            mp.keys.bind(37, false, () => {
                 this.animId--;
                 if (this.animId < 0) this.animId = 0;
                 mp.events.callRemote("animations.playById", this.animId);
             });
 
-            mp.keys.bind(39, false, () => { //right
+            mp.keys.bind(39, false, () => {
                 this.animId++;
                 mp.events.callRemote("animations.playById", this.animId);
             });
 
-            mp.keys.bind(38, false, () => { //up
+            mp.keys.bind(38, false, () => { 
                 this.animId -= 100;
                 if (this.animId < 0) this.animId = 0;
                 mp.events.callRemote("animations.playById", this.animId);
             });
 
-            mp.keys.bind(40, false, () => { //down
+            mp.keys.bind(40, false, () => {
                 this.animId += 100;
                 mp.events.callRemote("animations.playById", this.animId);
             });
@@ -118,7 +111,7 @@ mp.animations = {
 
 mp.events.add({
     "characterInit.done": () => {
-        mp.keys.bind(32, true, () => { // SPACE
+        mp.keys.bind(32, true, () => {
             if (mp.game.ui.isPauseMenuActive()) return;
             if (mp.busy.includes()) return;
             mp.animations.stopAnimHandler();
@@ -150,7 +143,6 @@ mp.events.add({
         mp.animations.playAnimation(mp.players.local, null);
     },
     "playerEnterVehicle": () => {
-        // чтобы игрока не скручивало по-всякому когда садится на мотик во время проигрывания анимации
         var player = mp.players.local;
         if (player.anim) {
             mp.animations.playAnimation(player, null);

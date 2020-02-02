@@ -1,11 +1,5 @@
 "use strict";
 
-/*
-    Модуль каменщика.
-
-    created 12.12.19 by Carter Slade
-*/
-
 mp.mason = {
     rockHealthBar: {
         width: 0.1,
@@ -116,7 +110,6 @@ mp.mason = {
         if (!this.isPickInHands()) return;
         if (this.rockHealth <= 0) return mp.notify.error(`Каменная порода исчерпала свой ресурс`, `Каменщик`);
 
-        // TODO: set correct heading
         mp.busy.add("jobProcess", false);
         mp.events.callRemote(`animations.playById`, 5523);
         this.rockTimer = mp.timer.add(() => {
@@ -175,10 +168,10 @@ mp.events.add({
                 if (pos2d) mp.mason.drawRockHealthBar(pos2d.x, pos2d.y);
             }
         } else {
-            mp.game.controls.disableControlAction(0, 24, true); /// удары
-            mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
-            mp.game.controls.disableControlAction(0, 140, true); /// удары R
-            mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
+            mp.game.controls.disableControlAction(0, 24, true);
+            mp.game.controls.disableControlAction(0, 25, true);
+            mp.game.controls.disableControlAction(0, 140, true);
+            mp.game.controls.disableControlAction(0, 257, true);
         }
 
         if (mp.mason.lastStartMelee && Date.now() > mp.mason.lastStartMelee + mp.mason.hitWaitTime) {

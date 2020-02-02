@@ -4,9 +4,9 @@ let weather = {};
 weather.isSet = false;
 
 const request = require("request");
-const WEATHER_LOADING = true; // Загрузка погоды с сайта
-const REQUEST_TIME = 30 * 60 * 1000; // Время повторного запроса в случае ошибки (в мс)
-const API_KEY = "dec51824772fb8b5c61f1964fc56370c"; // ключ с darksky.net
+const WEATHER_LOADING = true;
+const REQUEST_TIME = 30 * 60 * 1000;
+const API_KEY = "dec51824772fb8b5c61f1964fc56370c";
 const TIME_ZONE = "America/Los_Angeles";
 const DEFAULT_SUMMARY = "Ясно";
 const DEFAULT_TEMPERATURE = 20;

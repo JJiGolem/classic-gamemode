@@ -1,9 +1,7 @@
 "use strict";
-/// Подключение всех модулей на сервере
 
 mp.gui.cursor.show(true, false);
 
-/// Служебные модули
 require('base');
 require('utils');
 require('browser');
@@ -22,7 +20,6 @@ mp.events.add('render', () => {
     }
 });
 
-/// Автоподключение клиентских модулей
 mp.events.add('init', (activeModules) => {
     activeModules.forEach(moduleName => {
         require(moduleName);

@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },
-        // Место спавна (0 - улица, 1 - дом, 2 - организация)
         spawn: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
@@ -24,7 +23,6 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('spawn', val);
             },
         },
-        // Время в чате
         chatTimestamp: {
             type: DataTypes.TINYINT(1),
             defaultValue: 0,
@@ -34,7 +32,6 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('chatTimestamp', val);
             },
         },
-        // Размер чата
         chatSize: {
             type: DataTypes.TINYINT(1),
             defaultValue: 1,
@@ -44,7 +41,6 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('chatSize', val);
             },
         },
-        // Ники над головой
         nicknames: {
             type: DataTypes.TINYINT(1),
             defaultValue: 1,
@@ -54,7 +50,6 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('nicknames', val);
             },
         },
-        // Подсказки кнопок на экране
         hudKeys: {
             type: DataTypes.TINYINT(1),
             defaultValue: 1,
@@ -64,7 +59,6 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('hudKeys', val);
             },
         },
-        // Зоны гетто/бизваров на экране
         ghetto: {
             type: DataTypes.TINYINT(1),
             defaultValue: 1,
@@ -74,7 +68,6 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('ghetto', val);
             },
         },
-        // Походка
         walking: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
@@ -84,7 +77,6 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('walking', val);
             },
         },
-        // Эмоция
         mood: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,

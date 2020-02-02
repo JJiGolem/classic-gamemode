@@ -32,7 +32,6 @@
     <link rel="stylesheet" type="text/css" href="css/selectionWindow.css" />
     <link rel="stylesheet" type="text/css" href="css/acceptWindow.css" />
     <link rel="stylesheet" type="text/css" href="css/terminal.css" />
-    <!-- <link rel="stylesheet" type="text/css" href="css/playersList.css" /> -->
     <link rel="stylesheet" type="text/css" href="css/gunLicense.css" />
     <link rel="stylesheet" type="text/css" href="css/fishing.css" />
     <link rel="stylesheet" type="text/css" href="css/captureScore.css" />
@@ -57,8 +56,6 @@
 </head>
 
 <body>
-    <!-- ************************** VUE JS ************************** -->
-    <!-- v-cloak в контейнерах VUE используется для того, что бы решить проблему мерцания UI при запуске -->
     <div v-cloak="v-cloak" id="hud" v-show="show">
         <div v-show="keysShow && !selectMenu.show" class="keys">
             <div v-show="isKeyShow(key.name)" v-for="key in keys" v-bind:key="key.key"><span v-html="key.key"></span>{{ key.name }}</div>
@@ -1453,7 +1450,6 @@
         </div>
     </div>
 
-    <!-- ------------------------ ПЛАНШЕТ ПД ------------------------ -->
 
     <div v-cloak id="fishing" v-if="show">
         <!-- <button @click="fishFetch(40, 20, 3)">start</button> -->
@@ -1508,7 +1504,6 @@
         </div>
     </div>
 
-    <!-- ------------------------ МЕНЮ ИГРОКА ------------------------ -->
     <link rel="stylesheet" type="text/css" href="css/playerMenu.css" />
     <div id="player-menu" v-if="show" v-cloak>
         <img class="logo" src="img/logo.png" />
@@ -1969,10 +1964,9 @@
         </div>
     </div>
 
-    <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>
     <div id="root"></div>
-    <!-- ------------------------------------------------------------- -->
+    
     <script src="js/fontawesome.js"></script>
     <script src="js/hud.js"></script>
     <script src="js/mapCaseSvgPaths.js"></script>

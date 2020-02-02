@@ -1,12 +1,5 @@
 "use strict";
 
-
-/*
-    Модуль обновлений.
-
-    created 29.09.19 by Carter Slade
-*/
-
 mp.changelist = {
 
     enable(enable) {

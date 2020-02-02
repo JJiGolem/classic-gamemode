@@ -12,7 +12,6 @@ module.exports = {
 
         player.call('infopeds.info.show', [true]);
     },
-    // Временно отключено, потому что новичков будут выталкивать
     // "playerExitColshape": (player, shape) => {
     //     if (!shape.isInfoPointShape) return;
     //     player.call('infopeds.info.show', [false]);

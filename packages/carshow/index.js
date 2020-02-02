@@ -9,15 +9,14 @@ var dbCarShow;
 var carShow = [];
 var carList = [];
 
-const CARLIST_UPDATE_INTERVAL = 60 * 60 * 1000; /// Интервал заполнения автосалона автомобилями (в секундах)
-
+const CARLIST_UPDATE_INTERVAL = 60 * 60 * 1000;
 module.exports = {
     async init() {
         await this.loadCarShowsFromDB();
         await this.loadCarListsFromDB();
         this.startCarListUpdating();
     },
-    async loadCarShowsFromDB() { /// Загрузка автосалонов из БД
+    async loadCarShowsFromDB() {
         dbCarShow = await db.Models.CarShow.findAll();
         for (var i = 0; i < dbCarShow.length; i++) {
             carShow.push({
@@ -86,7 +85,7 @@ module.exports = {
             });
         }
 
-        for (var i = 0; i < carList.length; i++) { /// Устанавливаем характеристики для каждого автомобиля, расположенного в автосалоне
+        for (var i = 0; i < carList.length; i++) {
             carList[i] = this.setCarListProperties(carList[i]);
         }
         carList.sort((a, b) => { 
@@ -240,7 +239,6 @@ module.exports = {
                             }
 
                             inventory.fullDeleteItemsByParams(33, 'vehId', veh.db.id);
-                            // выдача ключей в инвентарь
                             inventory.addItem(player, 33, {
                                 owner: player.character.id,
                                 vehId: veh.db.id,

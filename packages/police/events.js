@@ -46,8 +46,8 @@ module.exports = {
 
         var hatParams, topParams, legsParams, feetsParams, tiesParams, masksParams, glassesParams;
         var f = character.factionId - 2;
-        if (character.gender == 0) { // муж.
-            hatParams = { // prop 0
+        if (character.gender == 0) {
+            hatParams = {
                 sex: 1,
                 variation: [
                     [58, 46, 46, -1, -1, 39, 46, 46],
@@ -58,9 +58,9 @@ module.exports = {
                     [2, 2, 2, 0, 5, 2, 2]
                 ][f][index]
             };
-            topParams = { // clothes 11 / 3 / 8
+            topParams = {
                 sex: 1,
-                torso: [ // /clothes 3
+                torso: [
                     [0, 0, 0, 11, 1, 17, 0, 0],
                     [0, 11, 14, 17, 11, 11, 11]
                 ][f][index],
@@ -68,7 +68,7 @@ module.exports = {
                     [-1, -1, -1, -1, -1, -1, -1, -1],
                     [-1, -1, -1, -1, -1, -1, -1]
                 ][f][index],
-                variation: [ // clothes 11
+                variation: [
                     [242, 55, 55, 13, 31, 53, 55, 55],
                     [242, 26, 230, 53, 26, 26, 13]
                 ][f][index],
@@ -76,11 +76,11 @@ module.exports = {
                     [4, 0, 0, 0, 2, 0, 0, 0],
                     [4, 2, 1, 2, 2, 2, 0]
                 ][f][index],
-                undershirt: [ // clothes 8
+                undershirt: [
                     [122, 58, 58, 130, 31, 130, 122, 130],
                     [122, 58, 27, 130, 58, 122, 130]
                 ][f][index],
-                decal: [ // clothes 10
+                decal: [
                     [-1, -1, 8, -1, -1, -1, -1, -1],
                     [-1, -1, -1, -1, -1, -1, -1]
                 ][f][index],
@@ -89,7 +89,7 @@ module.exports = {
                     [-1, -1, -1, -1, -1, -1, -1]
                 ][f][index],
             };
-            legsParams = { // clothes 4
+            legsParams = {
                 sex: 1,
                 variation: [
                     [25, 25, 25, 25, 25, 33, 25, 48],
@@ -100,7 +100,7 @@ module.exports = {
                     [6, 6, 6, 0, 0, 6, 6]
                 ][f][index]
             };
-            feetsParams = { // clothes 6
+            feetsParams = {
                 sex: 1,
                 variation: [
                     [25, 25, 25, 10, 10, 25, 25, 25],
@@ -111,7 +111,7 @@ module.exports = {
                     [0, 0, 0, 0, 0, 0, 0]
                 ][f][index]
             };
-            tiesParams = { // clothes 7
+            tiesParams = {
                 sex: 1,
                 variation: [
                     [-1, -1, -1, 38, 38, -1, -1, -1],
@@ -122,7 +122,7 @@ module.exports = {
                     [-1, -1, -1, -1, -1, 7, 1]
                 ][f][index]
             };
-            masksParams = { // clothes 1
+            masksParams = {
                 sex: 1,
                 variation: [
                     [-1, -1, -1, -1, -1, 122, -1, -1],
@@ -133,7 +133,7 @@ module.exports = {
                     [-1, -1, -1, -1, -1, -1, -1]
                 ][f][index]
             };
-            glassesParams = { // prop 1
+            glassesParams = {
                 sex: 1,
                 variation: [
                     [-1, -1, -1, -1, -1, 15, -1, -1],
@@ -145,7 +145,7 @@ module.exports = {
                 ][f][index]
             };
         } else {
-            hatParams = { // prop 0
+            hatParams = {
                 sex: 0,
                 variation: [
                     [85, 45, 45, -1, -1, 38, 45, 45],
@@ -156,9 +156,9 @@ module.exports = {
                     [2, 0, 0, 2, 5, 0, 0]
                 ][f][index]
             };
-            topParams = { // clothes 11 / 3 / 8
+            topParams = {
                 sex: 0,
-                torso: [ // /clothes 3
+                torso: [
                     [14, 14, 14, 0, 3, 18, 14, 14],
                     [14, 0, 0, 18, 0, 0, 0]
                 ][f][index],
@@ -166,7 +166,7 @@ module.exports = {
                     [-1, -1, -1, -1, -1, -1, -1, -1],
                     [-1, -1, -1, -1, -1, -1, -1]
                 ][f][index],
-                variation: [ // clothes 11
+                variation: [
                     [250, 48, 48, 27, 57, 46, 48, 48],
                     [250, 27, 240, 46, 27, 27, 27]
                 ][f][index],
@@ -174,12 +174,12 @@ module.exports = {
                     [4, 0, 0, 0, 2, 0, 0, 0],
                     [4, 2, 1, 2, 2, 2, 0]
                 ][f][index],
-                undershirt: [ // clothes 8
+                undershirt: [
                     [122, 35, 35, 160, 64, 160, 152, 152],
                     [159, 35, 38, 160, 35, 152, 160]
                 ][f][index]
             };
-            legsParams = { // clothes 4
+            legsParams = {
                 sex: 0,
                 variation: [
                     [37, 37, 37, 37, 37, 32, 37, 37],
@@ -190,7 +190,7 @@ module.exports = {
                     [6, 6, 6, 0, 0, 6, 6]
                 ][f][index]
             };
-            feetsParams = { // clothes 6
+            feetsParams = {
                 sex: 0,
                 variation: [
                     [27, 27, 27, 13, 13, 25, 13, 13],
@@ -201,7 +201,7 @@ module.exports = {
                     [0, 0, 0, 0, 0, 0, 0]
                 ][f][index]
             };
-            tiesParams = { // clothes 7
+            tiesParams = {
                 sex: 0,
                 variation: [
                     [-1, -1, -1, -1, -1, -1, -1, -1],
@@ -212,7 +212,7 @@ module.exports = {
                     [-1, -1, -1, -1, -1, -1, -1]
                 ][f][index]
             };
-            masksParams = { // clothes 1
+            masksParams = {
                 sex: 0,
                 variation: [
                     [-1, -1, -1, -1, -1, 122, -1, -1],
@@ -223,7 +223,7 @@ module.exports = {
                     [-1, -1, -1, 0, -1, -1, -1]
                 ][f][index]
             };
-            glassesParams = { // prop 1
+            glassesParams = {
                 sex: 0,
                 variation: [
                     [-1, -1, -1, -1, -1, 9, -1, -1],
@@ -304,7 +304,7 @@ module.exports = {
 
         inventory.fullDeleteItemsByParams(3, ["faction", "owner"], [character.factionId, character.id]);
         var params;
-        if (character.gender == 0) { // муж.
+        if (character.gender == 0) {
             params = {
                 variation: 12,
                 texture: 1
@@ -407,7 +407,7 @@ module.exports = {
             // faction: character.factionId,
             // owner: character.id
         };
-        if (index == 2) delete params.ammo; // for Stun Gun
+        if (index == 2) delete params.ammo;
 
         inventory.addItem(player, itemId, params, (e) => {
             if (e) return notifs.error(player, e, header);
@@ -450,7 +450,6 @@ module.exports = {
             factions.setAmmo(faction, faction.ammo - police.ammoAmmo * ammo);
         });
     },
-    // снять/надеть наручники
     "police.cuffs": (player, data) => {
         if (typeof data == 'string') data = JSON.parse(data);
 
@@ -543,7 +542,6 @@ module.exports = {
         if (player.inventory.search) return out(`Вы уже обыскиваете игрока`);
         if (player.character.factionRank < rank.id) return out(`Доступно с ранга ${rank.name}`);
         if (rec.vehicle) return out(`Игрок находится в авто`);
-        // TODO: check anti-flood
         if (!police.searchFactions.includes(character.factionId)) return out(`Нет прав для обыска`);
         if (inventory.getHandsItem(player)) return out(`Освободите руки`);
 
@@ -611,7 +609,6 @@ module.exports = {
 
         notifs.warning(player, `Ваш уровень розыска понизился`);
     },
-    // арестовать в КПЗ ЛСПД
     "police.cells.arrest": (player, recId) => {
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Арест`);
@@ -648,10 +645,7 @@ module.exports = {
             if (!res) return console.log(`[police] Ошибка выдачи ЗП за арест ${player.name}`);
             notifs.info(player, `+ $${police.arrestPay}`, `Бонус`);
         }, `Арест игрока ${rec.name} в КПЗ`);
-
-        //todo broadcast to radio
     },
-    // арестовать в тюрьму за городом
     "police.jail.arrest": (player, recId) => {
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Арест`);
@@ -686,8 +680,6 @@ module.exports = {
             if (!res) return console.log(`[police] Ошибка выдачи ЗП за арест ${player.name}`);
             notifs.info(player, `+ $${police.arrestPay}`, `Бонус`);
         }, `Арест игрока ${rec.name} в тюрьму`);
-
-        //todo broadcast to radio
     },
     "police.cells.forceArrest": (player) => {
         if (!player.character) return;
@@ -770,22 +762,17 @@ module.exports = {
         if (player.cuffs) police.setCuffs(player, false);
         if (!killer || killer.id == player.id) return;
 
-        // Если бандит убил бандита в гетто, то розыск не выдаем
         if (factions.isBandFaction(killer.character.factionId) && factions.isBandFaction(player.character.factionId) &&
             bands.isInBandZones(killer.position) && bands.isInBandZones(player.position)) return;
 
-        // Если мафия убила мафию в зоне для бизвара, то розыск не выдаем
         if (factions.isMafiaFaction(killer.character.factionId) && factions.isMafiaFaction(player.character.factionId) &&
             mafia.getZoneByPos(killer.position) && mafia.getZoneByPos(player.position)) return;
 
-        // Если убийство на учениях армии
         if (army.inWar(killer) && army.inWar(player)) return;
 
-        // Если полицейский/агент/военый убил любого, то розыск не выдаем
         if (factions.isPoliceFaction(killer.character.factionId) || factions.isFibFaction(killer.character.factionId) ||
             factions.isArmyFaction(killer.character.factionId)) return;
 
-        // Если убийца находится в авто
         if (killer.vehicle) return;
 
         police.setWanted(killer, killer.character.wanted + 1, `Убийство мирного жителя`);

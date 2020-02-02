@@ -50,7 +50,7 @@ module.exports = {
         });
         label.isCarMarket = true;
     },
-    async loadCarMarketData() { /// Загрузка точек спавна авто из БД
+    async loadCarMarketData() {
         carMarketData = await db.Models.CarMarketData.findAll();
         for (var i = 0; i < carMarketData.length; i++) {
             marketSpots.push({
@@ -68,7 +68,7 @@ module.exports = {
 
         console.log(`[CARMARKET] Загружено мест для авторынка: ${i}`);
     },
-    async loadCarMarketVehicles() { /// Загрузка точек спавна авто из БД
+    async loadCarMarketVehicles() {
 
         dbMarket = await db.Models.Vehicle.findAll({
             where: {

@@ -3,15 +3,13 @@
 let isEscDisabled = false;
 
 mp.events.add("render", () => {
-    /// Отключение не используемых клавиш
-    mp.game.controls.disableControlAction(1, 199, true); //Pause Menu (P)
-    mp.game.controls.disableControlAction(1, 243, true); //Cheat Code (~)
+    mp.game.controls.disableControlAction(1, 199, true);
+    mp.game.controls.disableControlAction(1, 243, true);
     if (isEscDisabled) {
-        mp.game.controls.disableControlAction(1, 200, true);    //ESC
+        mp.game.controls.disableControlAction(1, 200, true);
     }
 });
 
-// debug
 var d = (text) => {
     mp.notify.info(text);
 };
@@ -19,14 +17,11 @@ var debug = (text) => {
     mp.terminal.debug(text);
 };
 
-// Отображение в дискорде
 mp.events.add('time.minute.tick', () => {
     mp.discord.update('Classic Roleplay', 'classic-rp.ru');
 });
 
-// Чекер нагрузки render'ов в модулях
 mp.renderChecker = false;
-// Чекер нагрузки time.main.tick в модулях
 mp.timeMainChecker = {
     enable: false,
     modules: {
@@ -41,47 +36,10 @@ mp.events.add("render", () => {
     }
 });
 
-/// Осноные клиентские события
-/// auth.init
-/// characterInit.init
-/// characterInit.done
-
-
-/// Описание основных функций клиентской части:
-/// Вывод сообщения в чат
-/// mp.chat.debug(text);
-/// Вывод информации в серверную консоль(utils)
-/// mp.console(text);
-/// Модуль с сервисными функциями(подробнее см. в модуле)
-/// mp.utils
-/// Модуль войсчата(подробнее см. в модуле)
-/// mp.speechChanel
-/// Скрытие чата
-/// mp.callCEFR('setOpacityChat', [0.0]);
-/// Показ чата
-/// mp.callCEFR('setOpacityChat', [1.0]);
-/// Получение текущей сущности, с которой идет взаимодействие
-/// mp.getCurrentInteractionEntity()
-
-/// Описание основных клиентских переменных:
-/// 1)
-/// Массив, которые показывает "занят" ли игрок. Для примера, если занят, не может быть открыт чат или телефон и т.п.
 mp.busy = {};
 mp.busy.list = [];
 mp.busy.mouses = [];
-/// В данный массив добавляется название модуля, которым занят игрок, если игрок освобождается от данного модуля, то название модуля удаляется из массива
-/// Название модуля записывать маленькими буквами, модули которые учитывают занятость(вписать свои):
-/// LIST
-/// voicechat
-/// chat
-/// carshow
-/// phone
-/// interaction
-/// house.add
-/// biz.info
-/// economy
-/// END LIST
-/// Добавить модуль (true - операция провшла успешно, false - такой модуль уже содержится в массиве)
+
 mp.busy.add = function(name, mouse = true, nocef = false) {
     if (mp.game.ui.isPauseMenuActive()) return false;
     if (!nocef) mp.callCEFV(`busy.add(\`${name}\`)`);
@@ -94,8 +52,7 @@ mp.busy.add = function(name, mouse = true, nocef = false) {
     isEscDisabled = true;
     return true;
 };
-/// Содержит ли массив данный модуль
-/// В случае если name = null, содержит ли массив какой-либо модуль
+
 mp.busy.includes = function(name) {
     if (Array.isArray(name)) {
         for (let index = 0; index < name.length; index++) {
@@ -112,7 +69,7 @@ mp.busy.includes = function(name) {
         }
     }
 };
-/// Удалить модуль
+
 mp.busy.remove = function(name, nocef = false) {
     if (!nocef) mp.callCEFV(`busy.remove(\`${name}\`)`);
     let index = mp.busy.list.findIndex(x => x === name);
@@ -134,10 +91,6 @@ mp.events.add({
     }
 });
 
-/// 2)
-/// ...
-
-/// Событие для вызова серверного события из браузера
 mp.events.add("callRemote", (name, values) => {
     mp.events.callRemote(name, values);
 });

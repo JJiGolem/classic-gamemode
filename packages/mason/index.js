@@ -8,9 +8,7 @@ let timer = call('timer');
 let utils = call('utils');
 
 module.exports = {
-    // Позиция каменоломни
     storagePos: new mp.Vector3(2569.33203125, 2718.895263671875, 42.85560989379883 - 1),
-    // Снаряжение каменоломни
     items: [{
         itemId: 136,
         params: {
@@ -18,9 +16,8 @@ module.exports = {
         },
         price: 100
     }],
-    // Форма каменщика
     clothes: {
-        0: [ // муж.
+        0: [
             {
                 itemId: 7,
                 params: {
@@ -63,7 +60,7 @@ module.exports = {
                 price: 100,
             }
         ],
-        1: [ // жен.
+        1: [
             {
                 itemId: 7,
                 params: {
@@ -107,17 +104,17 @@ module.exports = {
             }
         ]
     },
-    // Урон по каменной породе
+
     rockDamage: 10,
-    // Урон по кирке
+
     pickDamage: 1,
-    // Стоимость продажи камня
+
     rockPrice: 10,
-    // Опыт скилла за добычу камня из породы
+
     exp: 0.05,
-    // Прибавка к цене предмета в % (0.0-1.0) при фулл скилле
+
     priceBonus: 0.5,
-    // Время, через которое у каменной породы пополнится ХП
+
     respawnRockTime: 30 * 60 * 1000,
 
     async init() {

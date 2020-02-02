@@ -155,7 +155,7 @@ var offerDialog = new Vue({
             "carrier_job": {
                 text: `Вы желаете арендовать рендовать грузовик за <span>100 $</span>?`,
                 price: 999,
-                name: "Parking", // TODO: Необходимо имя!
+                name: "Parking",
                 on(values) {
                     this.text = `Вы желаете арендовать грузовик за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
                     this.price = values.price;
@@ -350,10 +350,10 @@ var offerDialog = new Vue({
             if (!self.dialog) return;
             self.green = self.red = false;
             if (busy.includes(["chat", "terminal", "mapCase", "phone"])) return;
-            if (e.keyCode == 89) { // Y
+            if (e.keyCode == 89) {
                 self.dialog.yes();
                 self.hide();
-            } else if (e.keyCode == 78) { // N
+            } else if (e.keyCode == 78) {
                 self.dialog.no();
                 self.hide();
             }
@@ -361,9 +361,9 @@ var offerDialog = new Vue({
         window.addEventListener('keydown', function(e) {
             if (!self.dialog) return;
             if (busy.includes(["chat", "terminal", "mapCase", "phone"])) return;
-            if (e.keyCode == 89) { // Y
+            if (e.keyCode == 89) { 
                 self.green = true;
-            } else if (e.keyCode == 78) { // N
+            } else if (e.keyCode == 78) {
                 self.red = true;
             }
         });
@@ -375,6 +375,3 @@ var offerDialog = new Vue({
         }
     },
 });
-
-// for tests
- /*offerDialog.show("unarrest", {name: "Kir", price: "200000"});*/

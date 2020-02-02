@@ -1,12 +1,5 @@
 "use strict";
 
-
-/*
-    Модуль ферм.
-
-    created 07.09.19 by Carter Slade
-*/
-
 mp.farms = {
     jobType: null,
     vehAttachInfo: {
@@ -92,7 +85,6 @@ mp.farms = {
         if (this.jobType == null) return;
         if (this.isCropping()) return;
         if (mp.players.local.vehicle) return;
-        // TODO: проверка на состояние присмерти
         var object = mp.utils.getNearObject(mp.players.local.position, 3);
         if (object) mp.events.callRemote("farms.field.crop.take", object.remoteId);
     },
@@ -203,7 +195,6 @@ mp.farms = {
         mp.callCEFV(`selectMenu.setItems('farmSoilsWarehouseInfo', ${JSON.stringify(items)})`);
     },
     registerAttachments() {
-        // лопатка в руках при сборе урожка
         mp.attachmentMngr.register("farmTrowel", "prop_cs_trowel", 58867, new mp.Vector3(0.01, 0.03, 0),
             new mp.Vector3(-119, 10, 90), {
                 dict: "amb@world_human_gardener_plant@female@base",
@@ -212,7 +203,6 @@ mp.farms = {
                 flag: 1
             }
         );
-        // урожай А в руках
         mp.attachmentMngr.register("farmProductA", "prop_veg_crop_03_pump", 11363, new mp.Vector3(0.08, -0.15, -0.25),
             new mp.Vector3(-100, 0, 0), {
                 dict: "anim@heists@box_carry@",
@@ -222,7 +212,6 @@ mp.farms = {
             },
             true
         );
-        // урожай B в руках
         mp.attachmentMngr.register("farmProductB", "prop_veg_crop_03_cab", 11363, new mp.Vector3(0, -0.05, -0.28),
             new mp.Vector3(80, 85, 90), {
                 dict: "anim@heists@box_carry@",
@@ -232,7 +221,6 @@ mp.farms = {
             },
             true
         );
-        // урожай C в руках
         mp.attachmentMngr.register("farmProductC", "prop_weed_02", 11363, new mp.Vector3(0, 0, 0.15),
             new mp.Vector3(175, 7, 0), {
                 dict: "anim@heists@box_carry@",

@@ -52,7 +52,7 @@ module.exports = {
             if (args[0] == "newbie") {
                 args[1] = 0;
             }
-            if (veh.sqlId) { /// Если автомобиль уже загружен из БД, то обновляем его
+            if (veh.sqlId) {
                 await veh.db.update({
                     key: args[0],
                     owner: args[1],
@@ -67,7 +67,7 @@ module.exports = {
                     fuel: veh.properties.maxFuel * 0.7
                 });
             } else {
-                var data = await db.Models.Vehicle.create({ /// Если автомобиля нет в БД, то создаем запись в БД
+                var data = await db.Models.Vehicle.create({
                     key: args[0],
                     owner: args[1],
                     modelName: veh.modelName,
@@ -83,7 +83,7 @@ module.exports = {
                 veh.sqlId = data.id;
                 veh.db = data;
                 veh.inventory = {
-                    items: [], // предметы в багажнике
+                    items: [],
                 };
             }
             veh.key = args[0];
@@ -127,7 +127,7 @@ module.exports = {
             veh.setColor(color1, color2);
             veh.color1 = color1;
             veh.color2 = color2;
-            if (veh.db) { /// Если автомобиль уже загружен из БД, то обновляем его
+            if (veh.db) {
                 await veh.db.update({
                     color1: color1,
                     color2: color2

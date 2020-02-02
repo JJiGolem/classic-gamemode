@@ -2,14 +2,11 @@
 
 var child_process = require("child_process");
 
-// Версия сборки сервера (кол-во коммитов)
 let build = 0;
-// Текущая ветка
 let branch = "";
 
 
 module.exports = {
-    // Отображать сборку в худе на экране
     showBuild: true,
 
     init() {

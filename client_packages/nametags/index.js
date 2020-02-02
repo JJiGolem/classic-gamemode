@@ -121,7 +121,6 @@ mp.events.add({
     },
 });
 
-// TEMP
 let spriteOn = false;
 let testNick = "ID: 1";
 mp.events.add('chat.message.get', (type, message) => {

@@ -67,7 +67,7 @@ module.exports = {
             taxi.deleteOrder(orderId);
 
             let target = mp.players.at(player.currentTaxiDriverOrder.clientId);
-            if (!target) return; // todo
+            if (!target) return;
             target.currentTaxiClientOrder = {
                 driverId: player.id,
                 name: player.name,

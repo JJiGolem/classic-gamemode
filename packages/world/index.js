@@ -3,11 +3,8 @@
 let utils = call('utils');
 
 module.exports = {
-    // Двери
     doors: [],
-    // Объекты мира ГТА
     objects: {},
-    // Колшейпы объектов (objId: colshape)
     colshapes: {},
 
     async init() {

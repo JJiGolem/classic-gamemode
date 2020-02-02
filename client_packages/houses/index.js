@@ -65,7 +65,6 @@ mp.events.add('house.improvements.buy.ans', (ans) => {
 });
 
 
-/// Phone app events
 mp.events.add('house.lock', (id, isOpened) => {
     mp.events.callRemote('house.lock', id, isOpened);
 });
@@ -100,21 +99,16 @@ mp.events.add('house.sell.stop', () => {
     mp.events.callRemote('house.sell.stop');
 });
 
-
-/// Add house
 let addHouseInfo = {
     interiorId: null,
     price: null,
-    /// Enter
     pickupX: null,
     pickupY: null,
     pickupZ: null,
-    /// Spawn
     spawnX: null,
     spawnY: null,
     spawnZ: null,
     angle: null,
-    /// Car place
     carX: null,
     carY: null,
     carZ: null,
@@ -248,16 +242,13 @@ mp.events.add('house.add.create', (interiorIndex, price) => {
     addHouseInfo = {
         interiorId: null,
         price: null,
-        /// Enter
         pickupX: null,
         pickupY: null,
         pickupZ: null,
-        /// Spawn
         spawnX: null,
         spawnY: null,
         spawnZ: null,
         angle: null,
-        /// Car place
         carX: null,
         carY: null,
         carZ: null,
@@ -265,27 +256,18 @@ mp.events.add('house.add.create', (interiorIndex, price) => {
     };
 });
 
-
-
-
-
-
-/// Add Interior
 let addInteriorInfo = {
     garageId: null,
     class: null,
     numRooms: null,
     rent: null,
-    /// Exit
     exitX: null,
     exitY: null,
     exitZ: null,
-    /// Enter
     x: null,
     y: null,
     z: null,
     rotation: null,
-    /// Holder pos
     hX: null,
     hY: null,
     hZ: null
@@ -419,11 +401,9 @@ mp.events.add('house.add.interior.create', (garageId, className, numRooms, rent)
         class: null,
         numRooms: null,
         rent: null,
-        /// Exit
         exitX: null,
         exitY: null,
         exitZ: null,
-        /// Enter
         x: null,
         y: null,
         z: null,
@@ -436,19 +416,12 @@ mp.events.add('house.add.interior.create', (garageId, className, numRooms, rent)
 });
 
 
-
-
-
-
-/// Add Garage
 let addGarageInfo = {
     carPlaces: 0,
     GaragePlaces: [],
-    /// Exit
     exitX: null,
     exitY: null,
     exitZ: null,
-    /// Enter
     x: null,
     y: null,
     z: null,
@@ -586,11 +559,9 @@ mp.events.add('house.add.garage.create', () => {
     addGarageInfo = {
         carPlaces: 0,
         GaragePlaces: [],
-        /// Exit
         exitX: null,
         exitY: null,
         exitZ: null,
-        /// Enter
         x: null,
         y: null,
         z: null,

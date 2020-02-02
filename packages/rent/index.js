@@ -4,11 +4,8 @@ let points;
 let dbRentVehicles;
 
 module.exports = {
-    /// Множитель стоимости аренды от гос. цены
     rentPriceMultiplier: 0.05,
-    /// Время, спустя которое респавнится т/с
     respawnTime: 20 * 60 * 1000,
-    /// Максимальное количество транспорта, доступное для аренды за раз
     maxRentVehicles: 2,
     licenseConfig: {
         0: {
@@ -19,7 +16,7 @@ module.exports = {
             licType: 'bikeLicense',
             name: 'мотоциклы'
         },
-        2: null, // велосипеды
+        2: null,
     },
     async init() {
         vehicles = call("vehicles");

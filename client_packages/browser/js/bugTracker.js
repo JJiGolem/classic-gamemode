@@ -1,22 +1,16 @@
 var bugTracker = new Vue({
     el: "#bugTracker",
     data: {
-        // Показ интерфейса
         show: false,
-        // Очки помощи
         score: 0,
-        // Баги
         bugList: [],
-        // Выбранный баг
         bugI: -1,
-        // Форма создания бага
         form: {
             name: "",
             steps: [""],
             result: "",
             expectedResult: "",
         },
-        // Макс. кол-во шагов бага
         stepsMax: 20,
     },
     computed: {
@@ -112,23 +106,3 @@ var bugTracker = new Vue({
         });
     },
 });
-
-// for tests
-/*
-bugTracker.initBugList([{
-    name: "Баг с оружием",
-    steps: [
-        "Первый шаг такой",
-        "Второй шак вот такой",
-        "Ну а третий шаг в такой",
-    ],
-    result: "Получилось вот так вот неправильно",
-    expectedResult: "Получилось всё верно",
-    author: "Carter Slade",
-    executor: "Swifty Swift",
-    state: "в очереди",
-    build: 1121,
-    date: "27.12.20",
-}]);
-bugTracker.show = true;
-*/

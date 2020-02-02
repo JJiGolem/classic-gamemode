@@ -1,9 +1,7 @@
 "use strict";
 
 module.exports = {
-    // Параметры анти-чита
     params: [],
-    // Наказания
     punishments: ['notify', 'kick'],
 
     async init() {

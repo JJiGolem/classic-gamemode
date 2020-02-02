@@ -62,7 +62,7 @@ function getClosestPlayer(pos, range = INTERACTION_RANGE) {
     var closestPlayer;
     var minDist = 99999;
     mp.players.forEachInStreamRange((current) => {
-        if (current == mp.players.local) return; //for tests
+        if (current == mp.players.local) return;
         if (current.vehicle) return;
 
         let isVanished = current.getVariable('isVanished') || false;
@@ -236,7 +236,7 @@ mp.events.add('render', () => {
         if (dist > INTERACTION_RANGE && !personalInteractionEntity) {
             currentInteractionEntity = null;
             mp.events.call('interaction.menu.close');
-            mp.events.call('interaction.money.close'); // to be tested
+            mp.events.call('interaction.money.close');
         }
     } catch (err) {
         currentInteractionEntity = null;

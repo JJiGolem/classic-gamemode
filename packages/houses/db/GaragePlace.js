@@ -1,7 +1,6 @@
 "use strict";
 const Sequelize = require('sequelize');
 
-/// Модель мест в гараже
 module.exports = (sequelize, DataTypes) => {
     const model = sequelize.define("GaragePlace", {
         id: {

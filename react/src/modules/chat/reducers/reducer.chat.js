@@ -3,9 +3,7 @@ const initialState = {
     messages: [],
     opacity: 1,
     time: true,
-    tags: [
-        // { id: 1, name: 'Сказатьвфцвц' }
-    ],
+    tags: [],
     isFocus: false,
     size: 1
 };

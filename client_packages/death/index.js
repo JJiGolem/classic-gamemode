@@ -1,19 +1,13 @@
 "use strict";
 
-/*
-    Модуль смерти игрока. Состояние присмерти.
-
-    created 12.09.19 by Carter Slade
-*/
-
 mp.death = {
-    // Время ожидания предложения (ms)
+
     waitHurtTime: 4000,
-    // Время ожидания медиков (ms)
+
     medKnockTime: 10 * 60 * 1000,
-    // Время ожидания без медиков (ms)
+
     knockTime: 5 * 60 * 1000,
-    // Таймер ожидания медиков
+
     knockTimer: null,
 
     knock(player, enable) {

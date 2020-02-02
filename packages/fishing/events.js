@@ -43,7 +43,6 @@ module.exports = {
         clearTimeout(player.timeoutFetch);
 
         let rod = inventory.getHandsItem(player);
-        // console.log(inventory.getHandsItem(player));
         let health = inventory.getParam(rod, 'health').value;
 
         if (health <= 0) return mp.events.call('fishing.game.exit', player);

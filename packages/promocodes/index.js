@@ -5,20 +5,14 @@ let notifs = call("notifications");
 let utils = call("utils");
 
 module.exports = {
-    // Символы, используемые в промокоде
     symbols: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
         "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W",
         "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
     ],
-    // Длина промокода
     codeLength: 5,
-    // Свободные промокоды
     codes: [],
-    // Загружаемое кол-во промокодов за один раз
     codesCount: 100,
-    // Кол-во минут на сервере для получения награды за промокод
     completedMinutes: 10 * 60,
-    // Подарочные промокоды
     giftPromocodes: [],
 
     async init() {
@@ -72,7 +66,6 @@ module.exports = {
         };
         if (player.character.Promocode.promocode == code) return out(`Нельзя активировать свой промокод`);
 
-        // подарочный промкод
         var giftPromocode = this.giftPromocodes.find(x => x.promocode == code);
         if (giftPromocode) {
             this.activateGift(player, giftPromocode);
@@ -107,7 +100,7 @@ module.exports = {
     },
     activateGift(player, giftPromocode) {
         switch (giftPromocode.rewardId) {
-            case 1: // выдача наличных
+            case 1:
                 var count = giftPromocode.data.count;
                 money.addCash(player, count, (res) => {
                     if (!res) return notifs.error(player, `Ошибка начисления наличных`);

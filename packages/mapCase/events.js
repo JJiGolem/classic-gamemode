@@ -172,7 +172,6 @@ module.exports = {
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return out.error(player, `Игрок <span>#${recId}</span> не найден`);
 
-        // TODO: Лишний запрос в БД
         var character = await db.Models.Character.findByPk(rec.character.id, {
             attributes: ['id', 'name', 'gender', 'wanted', 'wantedCause', 'law', 'crimes'],
             include: [db.Models.Phone, db.Models.House, db.Models.Faction, db.Models.FactionRank, db.Models.Fine],
@@ -500,8 +499,6 @@ module.exports = {
         var header = `Установление личности`;
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return out.error(player, `Игрок <span>#${recId}</span> не найден`);
-
-        // TODO: Лишний запрос в БД
         var character = await db.Models.Character.findByPk(rec.character.id, {
             attributes: ['id', 'name', 'gender', 'wanted', 'wantedCause', 'law', 'crimes'],
             include: [db.Models.Phone, db.Models.House, db.Models.Faction, db.Models.FactionRank, db.Models.Fine],

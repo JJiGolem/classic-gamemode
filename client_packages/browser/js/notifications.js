@@ -7,11 +7,9 @@ var notifications = new Vue({
             { type: "success", header: "header", text: "text message", hash: 123 },
             { type: "error", header: "Бизнес", text: "Вы не оплатили налог 100$", hash: 122 },*/
         ],
-        // Время показа уведомления
         showTime: 10000,
-        // Макс. кол-во уведомлений на экране
-        maxCount: 5, // set #notifications .notif-box:nth-last-child in notifications.css
-        count: 0, //Для уникального ключа.
+        maxCount: 5,
+        count: 0,
     },
 
     methods: {
@@ -62,15 +60,3 @@ var notifications = new Vue({
         },
     }
 });
-
-// for tests
-// function PushPullNotif () {
-//     notifications.push("error", "зачисление + $500"+notifications.count, "Банк Maze");
-//     notifications.push("success", "зачисление + $500"+notifications.count, "Банк Maze");
-//     notifications.push("info", "зачисление + $500"+notifications.count, "Банк Maze");
-//     notifications.push("warning", "зачисление + $500"+notifications.count, "Банк Maze");
-//     notifications.push("add cash", "зачисление + $500"+notifications.count, "Банк Maze");
-//     notifications.push("add money", "зачисление + $500"+notifications.count, "Банк Maze");
-//     notifications.push("remove cash", "зачисление + $500"+notifications.count, "Банк Maze");
-//     notifications.push("remove money", "зачисление + $500"+notifications.count, "Банк Maze");
-// }

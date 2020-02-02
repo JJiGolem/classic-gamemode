@@ -56,7 +56,7 @@ module.exports = {
         access: 6,
         handler: (player, args, out) => {
 
-            let oldList = [ /// Список разрешенных social club'ов
+            let oldList = [
                 "kirswift",
                 "Alex_Cortez",
                 "Pigeon_Gangsta",
@@ -68,24 +68,24 @@ module.exports = {
                 "1d1ssarik",
                 "Stanger__W",
                 "Spros_mono",
-                "SashaDolgopolov", // dolgopolov
-                "Nensi_Pnf", // nensi
-                "_Deadly0_", // фракнки гаспаро саша
-                "MarcusBallevardo", // чед черри
-                "cyrax63", // захар курупт
-                "ImMoRTaL981", // slage
-                "_k_a_r_a_b_a_s_", // доне, карабас
-                "Ramdam1", // andrey
-                "Jack_Tekila", //  эдгар
-                "ScarlyS2", // roma
-                "QayRey", // юля
+                "SashaDolgopolov",
+                "Nensi_Pnf",
+                "_Deadly0_",
+                "MarcusBallevardo", 
+                "cyrax63",
+                "ImMoRTaL981",
+                "_k_a_r_a_b_a_s_", 
+                "Ramdam1", 
+                "Jack_Tekila",
+                "ScarlyS2",
+                "QayRey", 
                 "..Exi..",
                 "LLlBabPa",
                 "Edward_Melano",
-                "stefano_adderio", //adderio
+                "stefano_adderio", 
                 "lenyas",
                 "Rimskaya",
-                "RussianOfficer34" // mickey 
+                "RussianOfficer34"  
             ];
 
             oldList.forEach(async (rec) => {

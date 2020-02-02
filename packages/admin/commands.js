@@ -1,4 +1,3 @@
-/// Базовые админские команды, описание их структуры находится в модуле test
 let admin = require('./index.js');
 
 var chat = call("chat");
@@ -339,7 +338,7 @@ module.exports = {
             rec.character.warnNumber++;
             rec.character.warnDate = new Date();
 
-            if (rec.character.warnNumber >= admin.banWarns) { // баним игрока
+            if (rec.character.warnNumber >= admin.banWarns) {
                 rec.character.warnNumber = 0;
                 rec.character.warnDate = null;
                 rec.account.clearBanDate = new Date(Date.now() + admin.warnsBanDays * 24 * 60 * 60 * 1000);
@@ -426,7 +425,7 @@ module.exports = {
         description: "Кик игрока",
         args: "[ID] [причина]",
         handler: (player, args) => {
-            if (isNaN(parseInt(args[0]))) return; //temp
+            if (isNaN(parseInt(args[0]))) return;
             let target = mp.players.at(args[0]);
             if (!target || !mp.players.exists(target)) return notify.warning(player, 'Игрок не найден');
             // if (!target.character) return notify.warning(player, 'Игрок не найден');
@@ -441,7 +440,7 @@ module.exports = {
         description: "Тихий кик игрока",
         args: "[ID]",
         handler: (player, args) => {
-            if (isNaN(parseInt(args[0]))) return; //temp
+            if (isNaN(parseInt(args[0]))) return;
             let target = mp.players.at(args[0]);
             if (!target || !mp.players.exists(target)) return notify.warning(player, 'Игрок не найден');
             // if (!target.character) return notify.warning(player, 'Игрок не найден');

@@ -1,12 +1,12 @@
 var dbParkings;
 var parkings = [];
-var parkingVehicles = []; /// автомобили на парковке
+var parkingVehicles = [];
 var vehicles = call("vehicles");
 var houses = call("houses");
 let money = call('money');
 let timer = call('timer');
 
-const PARKING_PRICE = 7; /// цена парковки за час
+const PARKING_PRICE = 7;
 
 module.exports = {
     parkingBlips: [],

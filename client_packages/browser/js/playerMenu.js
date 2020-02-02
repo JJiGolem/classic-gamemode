@@ -20,9 +20,8 @@ function playerMenuMoneySplit(value) {
 }
 
 let convertWindowData = {
-    coefficient: 123, // API: Коеффициент конвертации.
+    coefficient: 123,
     acceptConvert(amount) {
-        // TODO: Конвертация валюты; amount - СС для обмена.
         if (isNaN(amount) || amount <= 0) return notifications.push("error", "Некорректное значение");
         mp.trigger(`callRemote`, `donate.convert`, parseInt(amount));
         playerMenu.coins -= amount;
@@ -30,9 +29,8 @@ let convertWindowData = {
 };
 
 let changenameWindowData = {
-    price: 120, // API: Стоимостть смены никнейма.
+    price: 120,
     acceptChange(firstname, lastname) {
-        // TODO: Смена никнейма;
         firstname = firstname[0].toUpperCase() + firstname.toLowerCase().substring(1, 20);
         lastname = lastname[0].toUpperCase() + lastname.toLowerCase().substring(1, 20);
         var name = firstname + " " + lastname;
@@ -42,22 +40,18 @@ let changenameWindowData = {
 };
 
 let warnWindowData = {
-    amountWarns: 1, // API: Кол-во варнов.
-    price: 120, // API: Стоимостть снятия варна.
+    amountWarns: 1,
+    price: 120,
     takeoffWarn() {
-        // TODO: Снятие варна;
         mp.trigger(`callRemote`, `donate.warns.clear`);
-
-        // warnWindowData.amountWarns--; //this не канает...
     }
 };
 
 let addslotWindowData = {
-    amountSlots: 2, // API: Кол-во слотов.
-    maxSlots: 5, // API: Максимальное кол-во слотов.
-    price: 120, // API: Стоимостть слота.
-    addSlot() {
-        // TODO: Добавление слота;
+    amountSlots: 2,
+    maxSlots: 5,
+    price: 120,
+    addSlot() {;
         mp.trigger(`callRemote`, `donate.slots.add`);
         // addslotWindowData.amountSlots++;
     }
@@ -122,7 +116,6 @@ let settingsmainWindowData = {
     },
 
     saveChanges(modifiedSettings) {
-        // TODO: Сохранение изменений;
 
         playerMenu.setSettings(modifiedSettings);
         mp.trigger(`callRemote`, `settings.set`, JSON.stringify(modifiedSettings));
@@ -130,10 +123,10 @@ let settingsmainWindowData = {
 }
 
 let protectionWindowData = {
-    email: "erf233423h4@324", // API: адрес почты.
-    isConfirmed: false, // API: Подверждена ли почта.
-    passMessage: "изменён 4 дня назад", // API: Сообщение о последнем изменени пароля.
-    maxWaiting: 60, // API: Время блока кнопки отмены.
+    email: "erf233423h4@324",
+    isConfirmed: false,
+    passMessage: "изменён 4 дня назад",
+    maxWaiting: 60,
 
     codeMod: false,
     wating: '',
@@ -141,24 +134,18 @@ let protectionWindowData = {
     seconds: 0,
 
     changeMail(mail) {
-        // TODO: Сохранить новый почтовый адрес
-
         mp.trigger(`callRemote`, `settings.email.set`, mail);
 
         // protectionWindowData.email = mail;
         // protectionWindowData.isConfirmed = 0;
     },
     sendCode() {
-        // TODO: Отправить код на почту
         mp.trigger(`callRemote`, `settings.email.confirm`);
     },
     checkCode(code) {
-        // TODO: Проверить код
         mp.trigger(`callRemote`, `settings.email.code.check`, code);
-        // Если код верный
         // protectionWindowData.isConfirmed = true;
         // console.log("чекнули");
-        // Что иначе, я хз...
     },
     changePassword(oldPass, newPass) {
         // TODO: Сменить пароль
@@ -236,9 +223,9 @@ let donateMenuData = {
 };
 
 let referenceData = {
-    code: "LDLSF3", // API: промокод.
-    amountInvitees: 4, // API: Кол-во приглашённых.
-    amountCompleted: 0, // API: Кол-во выполнивших.
+    code: "LDLSF3",
+    amountInvitees: 4,
+    amountCompleted: 0,
 }
 
 let menuBar = [{
@@ -296,7 +283,6 @@ let socialData = [{
 ];
 
 let statistics = {
-    // TODO: Заполнить структуру статистики
     "minutes": {
         head: "Времени на сервере",
         value: "-",
@@ -426,7 +412,6 @@ let skills = [
 ];
 
 let helpMessages = [
-    // TODO: Массив заполняется вопросами (которые в help)
     {
         question: "Можно ли иметь машину без дома?",
         answer: `Да, вы можете иметь одно любое транспортное средство без дома. Приобрести автомобиль можно в автосалоне,
@@ -512,11 +497,11 @@ var playerMenu = new Vue({
         menuBar: menuBar,
         socialData: socialData,
         menuBarFocus: menuBar[0],
-        name: "Cyrus Raider", // API: Имя игрока
+        name: "Cyrus Raider",
         admin: 1,
         factionId: 0,
         media: 0,
-        coins: 1000, // API: СС
+        coins: 1000,
         dateTimer: null,
         minutesTimer: null,
         time: '00:00',
@@ -531,7 +516,6 @@ var playerMenu = new Vue({
             return this.confirmation;
         },
         socialStatus() {
-            // API: социальный статус //0-гражданский/1-админ/2-госс/3-бандит/4-медиа
             if (this.admin) return 1;
             if (this.media) return 4;
             if (!this.factionId) return 0;
@@ -570,11 +554,10 @@ var playerMenu = new Vue({
             );
         },
         sendCode() {
-            // TODO: Отправка промокода .this.code
             // console.log(this.code);
             if (this.code) mp.trigger(`callRemote`, `promocodes.activate`, this.code);
 
-            this.codeMod = false; //Оставить!
+            this.codeMod = false;
         },
         init(data) {
             if (typeof data == 'string') data = JSON.parse(data);
@@ -946,7 +929,6 @@ Vue.component('player-menu-report', {
             mp.trigger(`callRemote`, `admin.report`, this.message);
             reportLastSentTime = Date.now();
 
-            // Что ниже, оставить!
             this.message = "";
             this.showHint = true;
             setTimeout(() => {
@@ -969,7 +951,6 @@ Vue.component('player-menu-help', {
     }),
     computed: {
         searchResult() {
-            // TODO: Более хитрая сортировка, если надо.
             return this.messages.filter(record => record.question.toLowerCase().includes(this.message.toLowerCase()))
         },
     },
@@ -985,7 +966,6 @@ Vue.component('player-menu-help', {
                 question: this.message,
                 answer: ""
             });
-            // TODO: Отправка на сервер this.message
 
             this.message = "";
         },
@@ -1390,7 +1370,3 @@ Vue.component('player-menu-settings-protection', {
         alert(32);
     }*/
 });
-
-//playerMenu.show = true;
-// playerMenu.name = "Looooooonnnnnng Naaaaaaammeeeeee";
-//playerMenu.showConfirmWindow("Head ex", "description <br /> description")

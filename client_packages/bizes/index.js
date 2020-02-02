@@ -5,7 +5,7 @@ let idBiz = null;
 let cost = null;
 
 
-mp.keys.bind(0x42, true, function() {           //B
+mp.keys.bind(0x42, true, function() {
     if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
     if (mp.players.local.vehicle) return;
@@ -46,8 +46,6 @@ mp.events.add("biz.app.update", (cashBox, productsCount, isFaction) => {
     mp.callCEFR("biz.products.update", [productsCount, isFaction]);
 });
 
-
-/// Actions
 let bizId = null;
 mp.events.add("biz.finance.show", (bizParameters) => {
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["bizEconomic"]);`);
@@ -84,7 +82,6 @@ mp.events.add("biz.finance.close", () => {
     bizId = null;
 });
 
-/// Phone app events
 mp.events.add("biz.sell.toGov", (id) => {
     mp.events.callRemote("biz.sell.toGov", id);
 });
@@ -131,7 +128,6 @@ mp.events.add("biz.statistics.update", (date, money, isFactionBis) => {
     !isFactionBis && mp.callCEFR("biz.statistics.update", [date, money]);
 });
 
-/// Faction phone app events
 mp.events.add("biz.faction.order.add", (id, productCount, productPrice) => {
     mp.events.callRemote("biz.order.add", id, productCount, productPrice, true);
 });

@@ -14,17 +14,11 @@ var out = {
 };
 
 module.exports = {
-    // Вызовы в планшете ПД
     policeCalls: [],
-    // Вызовы в планшете ФИБ
     // fibCalls: [],
-    // Вызовы в планшете ЕМС
     hospitalCalls: [],
-    // Объявления (в очереди) в планшете Ньюс
     newsAds: [],
-    // Объявления (готовые в эфир) в планшете Ньюс
     newsAdsEdited: [],
-    // Свободный ID новой новости
     adId: 1,
 
     convertCharactersToResultData(characters) {

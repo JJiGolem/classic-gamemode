@@ -62,7 +62,6 @@ module.exports = {
                 let vehicleId = player.vehicle.db.id;
                 carmarket.sellCar(player.vehicle);
                 player.call('carmarket.car.sell.ans', [3, price]);
-                // удаление ключей
                 // inventory.deleteByParams(player, 33, 'vehId', vehicleId);
                 inventory.fullDeleteItemsByParams(33, 'vehId', vehicleId);
             } else {
@@ -125,7 +124,6 @@ module.exports = {
             if (result) {
 
                 inventory.fullDeleteItemsByParams(33, 'vehId', params.vehId);
-                // выдача ключей в инвентарь
                 inventory.addItem(player, 33, params, (e) => {
                     if (e) player.call('carmarket.car.buy.ans', [5, {
                         text: e

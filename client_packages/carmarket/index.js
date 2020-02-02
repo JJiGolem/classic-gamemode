@@ -115,7 +115,7 @@ mp.events.add('carmarket.car.buy.ans', (ans, data) => {
         case 4:
             mp.notify.error('Достигнут лимит на т/с', 'Ошибка');
             break;
-        case 5: // нельзя выдать ключи в инвентарь
+        case 5:
             mp.notify.error(data.text, `Инвентарь`);
             break;
     }

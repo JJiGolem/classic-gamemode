@@ -5,7 +5,7 @@ mp.gui.chat.show(false);
 mp.chat = {
     clearMuteTime: 0,
 
-    debug: (message) => { /// выводит в чат строку белым цветом (для дебага)
+    debug: (message) => {
         mp.events.call('chat.message.push', `!{#ffffff} ${message}`);
     },
     correctName(name) {

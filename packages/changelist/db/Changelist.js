@@ -5,12 +5,10 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
-        // ID обновления
         changelistId: {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },
-        // Аккаунт, который поставил лайк
         likeAccountId: {
             type: DataTypes.INTEGER(11),
             allowNull: false

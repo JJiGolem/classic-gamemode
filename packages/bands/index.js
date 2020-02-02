@@ -7,57 +7,56 @@ let terminal;
 let timer;
 
 module.exports = {
-    // Зоны гетто
     bandZones: [],
-    // Мин. ранг, который может каптить
+    
     captureRank: 8,
-    // Мин. ранг, который может грабить
+    
     robRank: 8,
-    // Зоны, на которых происходит капт
+    
     wars: {},
-    // Время завершения последнего капта (ms)
+    
     lastWarTime: 0,
-    // Время отдыха между каптами (ms)
+    
     waitWarTime: 20 * 60 * 1000,
-    // Повторное участие в капте после убийства
+    
     reveangeKill: false,
-    // Время захвата территории (ms)
+    
     warTime: 5 * 60 * 1000,
-    // Промежуток часов, в который можно начать захват
+    
     captureInterval: [11, 20],
-    // ЗП за владение 100% гетто (PayDay)
+    
     bandZonesPrice: 100,
-    // Кол-во боеприпасов, списываемое за выдачу оружия
+    
     gunAmmo: 100,
-    // Кол-во боеприпасов, списываемое за выдачу патронов
+    
     ammoAmmo: 1,
-    // Наркопритон
+    
     drugsStashMarker: null,
-    // Цена за 1 г. нарко в наркопритоне (0% влияния в гетто)
+    
     drugsPrice: [20, 40, 60, 120],
-    // Мин. цена 1 г. нарко в наркопритоне (100% влияния в гетто)
+    
     drugsPriceMin: [10, 20, 30, 60],
-    // Прибавляемое кол-во здоровья от употребления 1 г. нарко
+    
     drugsHealth: [10, 20, 30, 60],
-    // Прибавляемое кол-во наркозависимости от употребления 1 г. нарко
+    
     drugsNarcotism: [1, 2, 3, 6],
-    // Время эффекта наркотика (ms)
+    
     drugsEffectTime: [10000, 20000, 30000, 60000],
-    // Визуальный эффект
+    
     drugsEffect: ['DrugsDrivingOut', 'RampageOut', 'DrugsMichaelAliensFightOut', 'DrugsTrevorClownsFightOut'],
-    // Повторное использование наркотика
+    
     drugsInterval: [10 * 6000, 20 * 6000, 30 * 6000, 60 * 6000],
-    // Процент от грабежа (0.00-1.00)
+    
     robK: 0.01,
-    // Макс. сумма грабежа с одного игрока
+    
     robMaxPrice: 500,
-    // Анти-флуд грабежа (вешается на грабителя)
+    
     robBandWaitTime: 60 * 60 * 1000,
-    // Анти-флуд грабежа (вешается на  жертву)
+    
     robVictimWaitTime: 60 * 60 * 1000,
-    // Сохраненные грабежи (characterId : time)
+    
     robLogs: {},
-    // Организации, авто которых можно грабить
+    
     robVehFactionIds: [2, 3],
 
     async init() {
@@ -114,7 +113,7 @@ module.exports = {
 
         return null;
     },
-    // влияние банды от 0 до 1 (min: 0 - ниодной зоны не захвачено, max: 1 - всё гетто захвачено)
+    
     getPowerBand(bandId) {
         var count = 0;
         for (var i = 0; i < this.bandZones.length; i++) {
@@ -300,7 +299,7 @@ module.exports = {
         };
         this.drugsStashMarker = marker;
     },
-    // сколько осталось для окончания капта (ms)
+    
     haveTime(war) {
         return this.warTime - (Date.now() - war.startTime);
     },

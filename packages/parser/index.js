@@ -6,7 +6,6 @@ let garages = require('./files/garages.json');
 
 let bizes = require('./files/biz.json');
 
-/// Функции модуля парсера JSON в БД
 module.exports = {
     async init() {
         console.log("[PARSE] start");

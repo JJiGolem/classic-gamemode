@@ -1,5 +1,4 @@
 "use strict";
-/// Глобальный таймер
 
 const duration = 1000;
 let timers = [];
@@ -9,7 +8,6 @@ let checker = null;
 
 let error = false;
 
-/// Функции глобального таймера
 module.exports = {
     setChecker(player) {
         checker = player;
@@ -57,9 +55,6 @@ module.exports = {
             if (checker != null) checker.call('timer.check.work', []);
         }, duration);
     },
-    /// Добавление нового таймера
-    /// handler желательно async
-    /// return timer
     add(handler, time, isInterval = false, isLog = false) {
         if (handler == null) throw new Error("handler is null");
         if (typeof handler != "function") throw new Error("handler is not a function");
@@ -92,7 +87,6 @@ module.exports = {
             id: id
         };
     },
-    /// Удаление существующего таймера, до его срабатывания
     remove(timer) {
         if (timer == null) return;
         if (timer.id == null) return;

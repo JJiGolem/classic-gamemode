@@ -2,12 +2,12 @@ var medicalCard = new Vue({
     el: "#medicalCard",
     data: {
         show: false,
-        identifier: 228133744323, // Номер карты
-        name: "Darian Rockfall", // Имя
-        occupation: "LSPD", // Место работы
-        gender: "M", // Пол
-        time: "18.11.2019", // Срок
-        sign: "D.Rockfall", // Подпись
+        identifier: 228133744323,
+        name: "Darian Rockfall", 
+        occupation: "LSPD",
+        gender: "M",
+        time: "18.11.2019",
+        sign: "D.Rockfall",
     },
     watch: {
         show(val) {
@@ -25,7 +25,3 @@ var medicalCard = new Vue({
         }
     }
 });
-
-// for tests
-
-//medicalCard.show = true;

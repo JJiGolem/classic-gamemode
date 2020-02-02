@@ -12,7 +12,6 @@ let bugsListId = "5dee9c59e5c0fd0fb823c8dd";
 let bugLabelId = "5e05f0a2a798871467ecf6d8";
 
 module.exports = {
-    // Карточки-баги из трелло
     bugCards: [],
 
     async init() {
@@ -43,7 +42,7 @@ module.exports = {
                 name: data.name,
                 desc: `**Шаги воспроизведения:**\n\n${steps}\n\n**Результат:**\n*${data.result}*\n\n**Ожидаемый результат:**\n*${data.expectedResult}*\n\n**Информация:**\nСоздатель: ${player.name}\nСборка: #${dev.getBuild()}`,
                 pos: 'top',
-                idList: bugsListId, //REQUIRED
+                idList: bugsListId,
                 due: null,
                 dueComplete: false,
                 idMembers: [],

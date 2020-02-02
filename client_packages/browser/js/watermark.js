@@ -9,6 +9,3 @@ var watermark = new Vue({
         },
     },
 });
-
-// for tests
-// watermark.id = "98715";

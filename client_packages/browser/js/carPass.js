@@ -32,6 +32,3 @@ var carPass = new Vue({
         },
     }
 });
-
-// for tests
-// carPass.show = true;

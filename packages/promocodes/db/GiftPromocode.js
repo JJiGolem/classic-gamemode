@@ -8,12 +8,10 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
-        // Промокод
         promocode: {
             type: DataTypes.STRING(20),
             allowNull: false,
         },
-        // Обработчик выдачи подарка
         rewardId: {
             type: DataTypes.INTEGER(11),
             defaultValue: 1,

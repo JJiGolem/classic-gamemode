@@ -118,13 +118,13 @@ mp.events.add('masks.buy.ans', (ans, data) => {
 
 mp.events.add('render', () => {
     if (controlsDisabled) {
-        mp.game.controls.disableControlAction(0, 21, true); /// бег
-        mp.game.controls.disableControlAction(0, 22, true); /// прыжок
-        mp.game.controls.disableControlAction(0, 31, true); /// вперед назад
-        mp.game.controls.disableControlAction(0, 30, true); /// влево вправо
-        mp.game.controls.disableControlAction(0, 24, true); /// удары
-        mp.game.controls.disableControlAction(1, 200, true); // esc
-        mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
+        mp.game.controls.disableControlAction(0, 21, true);
+        mp.game.controls.disableControlAction(0, 22, true);
+        mp.game.controls.disableControlAction(0, 31, true);
+        mp.game.controls.disableControlAction(0, 30, true);
+        mp.game.controls.disableControlAction(0, 24, true);
+        mp.game.controls.disableControlAction(1, 200, true);
+        mp.game.controls.disableControlAction(0, 257, true);
     }
 });
 

@@ -7,28 +7,25 @@ let notifs = call('notifications');
 let utils = call('utils');
 
 module.exports = {
-    // Место мониторинга складов бизнесов/ферм и заказа товара
     loadPos: new mp.Vector3(916.1118774414062, -1560.7391357421875, 30.748455047607422 - 13),
     // loadPos: new mp.Vector3(-77.97127532958984, -1784.080810546875, 28.418481826782227 - 1), // for tests
-    // Место разгрузки урожая
     cropUnloadPos: new mp.Vector3(85.55198669433594, 6331.1318359375, 31.225765228271484 - 1),
-    // Цена за 1 ед. товара/зерна
     productPrice: 4,
-    // Вместимость грузовика
+
     productsMax: 500,
-    // Доп. вместимость грузовика за 1% навыка
+
     skillProducts: 15,
-    // Коэффициент при списании товара назад на склад (productPrice * productSellK)
+
     productSellK: 0.8,
-    // Цена аренды грузовика
+
     vehPrice: 100,
-    // Опыт за доставку товара
+
     exp: 0.05,
-    // Заказы бизнесов
+
     bizOrders: [],
-    // Цена урожая при продаже
+
     cropPrice: 11,
-    // Модели авто и их типы товара
+
     vehModels: {
         "boxville2": [1, 2, 3, 4, 6, 7, 8, 10, 11],
         "boxville4": [1, 2, 3, 4, 6, 7, 8, 10, 11],
@@ -149,13 +146,11 @@ module.exports = {
             list.splice(i, 1);
             i--;
         }
-        // TODO: broadcast all carriers
     },
     removeBizOrder(order) {
         var list = this.bizOrders;
         var i = list.indexOf(order);
         if (i != -1) list.splice(i, 1);
-        // TODO: broadcast all carriers
     },
     takeBizOrder(player, veh, order, count) {
         if (typeof order == 'number') order = this.getBizOrder(order);
@@ -237,11 +232,9 @@ module.exports = {
             notifs.info(rec, text, `Грузоперевозчики`);
         });
     },
-    // получить арендованный грузовик игрока
     getVehByDriver(player) {
         return mp.vehicles.toArray().find(x => x.db && x.db.key == 'job' && x.db.owner == 4 && x.driver && x.driver.playerId == player.id && x.driver.characterId == player.character.id);
     },
-    // получить игрока, который арендовал грузовик
     getDriverByVeh(veh) {
         if (!veh.driver) return;
         var d = veh.driver;
@@ -252,7 +245,6 @@ module.exports = {
         if (!veh.products.bizOrder) return veh.products.name;
         return veh.products.bizOrder.prodName;
     },
-    // полностью очистить грузовик от товара и водителя
     clearVeh(veh) {
         var driver = this.getDriverByVeh(veh);
         if (driver) driver.call(`carrier.bizOrder.waypoint.set`);

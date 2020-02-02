@@ -29,7 +29,7 @@ mp.events.addDataHandler("engine", (entity) => {
 
 });
 
-mp.timer.addInterval(() => { /// Синхронизация двигателя
+mp.timer.addInterval(() => {
     try {
         var player = mp.players.local;
         if (player.vehicle && mp.vehicles.exists(player.vehicle)) {
@@ -48,7 +48,7 @@ let lastLightState;
 let lightState = 0;
 let lastLockStatus;
 
-speedometerUpdateTimer = mp.timer.addInterval(() => { /// Обновление спидометра
+speedometerUpdateTimer = mp.timer.addInterval(() => {
 
     try {
         if ((!mp.players.local.vehicle) || (mp.players.local.vehicle.getPedInSeat(-1) != mp.players.local.handle)) return;
@@ -68,7 +68,7 @@ speedometerUpdateTimer = mp.timer.addInterval(() => { /// Обновление �
         let speed = Math.floor(mp.players.local.vehicle.getSpeed() * 3.6);
         mp.callCEFV(`speedometer.speed = ${speed}`);
 
-        let lights = mp.players.local.vehicle.getLightsState(1, 1); /// Фары
+        let lights = mp.players.local.vehicle.getLightsState(1, 1);
 
         let low = lights.lightsOn;
         let high = lights.highbeamsOn;
@@ -279,7 +279,7 @@ mp.keys.bind(0x28, true, () => {
     }
 });
 
-mp.keys.bind(87, true, () => { // W
+mp.keys.bind(87, true, () => {
     var player = mp.players.local;
     if (!player.autopilot || !player.vehicle) return;
     delete player.autopilot;
@@ -363,8 +363,8 @@ mp.events.add('entityStreamIn', (entity) => {
         var rotation = entity.getVariable("rotation");
         if (rotation) entity.setRotation(rotation);
 
-        entity.setDoorBreakable(4, false); // hood
-        entity.setDoorBreakable(5, false); // trunk
+        entity.setDoorBreakable(4, false);
+        entity.setDoorBreakable(5, false);
     }
 });
 
@@ -603,11 +603,11 @@ mp.events.add('render', () => {
         }
     });
     if (mp.moduleVehicles.disabledControl) {
-        mp.game.controls.disableControlAction(0, 59, true); /// INPUT_VEH_MOVE_LR
-        mp.game.controls.disableControlAction(0, 60, true); /// INPUT_VEH_MOVE_UD
-        mp.game.controls.disableControlAction(0, 71, true); /// INPUT_VEH_ACCELERATE
-        mp.game.controls.disableControlAction(0, 72, true); /// INPUT_VEH_BRAKE
-        // mp.game.controls.disableControlAction(0, 75, true); /// INPUT_VEH_EXIT
+        mp.game.controls.disableControlAction(0, 59, true);
+        mp.game.controls.disableControlAction(0, 60, true);
+        mp.game.controls.disableControlAction(0, 71, true);
+        mp.game.controls.disableControlAction(0, 72, true); 
+        // mp.game.controls.disableControlAction(0, 75, true); 
     }
     if (mp.renderChecker) mp.utils.drawText2d(`vehicles rend: ${Date.now() - start} ms`, [0.8, 0.67]);
 });

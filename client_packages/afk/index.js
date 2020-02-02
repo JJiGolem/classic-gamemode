@@ -1,34 +1,24 @@
 "use strict";
 
-
-/*
-    Модуль AFK (бездействие в игре).
-
-    created 18.10.19 by Carter Slade
-*/
-
 mp.afk = {
-    // Время последней активности
     lastActiveTime: Date.now(),
-    // Мин. время бездействия для перехода в режим AFK (ms)
     minAfkTime: 15 * 60 * 1000,
-    // Значение прозрачности у игроков в режиме AFK
     alpha: 200,
 
     init() {
-        mp.keys.bind(87, true, () => { // W
+        mp.keys.bind(87, true, () => {
             this.action();
         });
-        mp.keys.bind(65, true, () => { // A
+        mp.keys.bind(65, true, () => { 
             this.action();
         });
-        mp.keys.bind(83, true, () => { // S
+        mp.keys.bind(83, true, () => {
             this.action();
         });
-        mp.keys.bind(68, true, () => { // D
+        mp.keys.bind(68, true, () => {
             this.action();
         });
-        mp.keys.bind(70, true, () => { // F
+        mp.keys.bind(70, true, () => { 
             this.action();
         });
     },

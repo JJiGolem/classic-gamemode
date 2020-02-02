@@ -5,7 +5,7 @@ mp.events.add('vehicles.garage', (state) => {
     if (state) mp.prompt.showByName('garage_control');
 });
 
-mp.keys.bind(0x45, true, () => { /// E
+mp.keys.bind(0x45, true, () => {
     if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
     if (!isInGarageVehicle) return;

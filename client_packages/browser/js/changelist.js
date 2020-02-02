@@ -1,13 +1,9 @@
 var changelist = new Vue({
     el: "#changelist",
     data: {
-        // Показ на экране
         show: false,
-        // Возможности открытия по кнопке и ставить лайки
         enable: false,
-        // Макс. длина строки в списке
         maxLength: 90,
-        // Список обновлений
         list: [{
                 build: 1200,
                 date: "Пн, Сен 16, 2019",
@@ -1197,6 +1193,3 @@ var changelist = new Vue({
         });
     },
 });
-
-// for tests
-// changelist.show = true;

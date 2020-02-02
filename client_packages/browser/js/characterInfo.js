@@ -3,17 +3,15 @@ var characterInfo = new Vue({
     data: {
         show: false,
 
-        coins: 0, // Коинсы в углу
-        showAddCoins: false, // Скрыть копку пополнения счёта.
+        coins: 0,
+        showAddCoins: false,
 
-        characters: [], // массив с данными о персонажах
-        slots: 1, // кол-во слотов
-        limitSlots: 3, // максимум слотов
-        // Индекс текущего персонажа
+        characters: [],
+        slots: 1,
+        limitSlots: 3,
         i: 0,
     },
     computed: {
-        // Возможность создать ещё одного персонажа
         canNewCharacter() {
             return this.slots > this.characters.length;
         },
@@ -27,38 +25,10 @@ var characterInfo = new Vue({
             this.characters.push(character);
         },
         addCoins() {
-            // TODO:
             console.log("characterInfo.addCoins()");
         }
     }
 });
-
-// for tests
-/*characterInfo.addCharacter({
-    name: "Benedictium Alfagrandsour",
-    cash: 13234,
-    bank: 52533,
-    status: "Администратор",
-    hours: 15,
-    faction: "Байкеры",
-    job: "Доктор наук",
-    house: "Ричман Глен (228)",
-    biz: "Парикмахерская (28)",
-    warns: 1
-});
-characterInfo.addCharacter({
-    name: "Carter Slade",
-    cash: 1000,
-    bank: 20000,
-    status: "Бывалый",
-    hours: 30,
-    faction: "Groove Street",
-    job: "Дальнобойщий",
-    house: "Грув Стрит (10)",
-    biz: "Автосалон (1)",
-    warns: 0
-});
-characterInfo.show = true;*/
 
 var characterSelector = new Vue({
     el: "#characterSelector",

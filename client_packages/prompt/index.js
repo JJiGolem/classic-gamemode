@@ -1,11 +1,5 @@
 "use strict";
 
-/*
-    Модуль игровых подсказок в GUI (VUE).
-
-    created 07.07.19 by Carter Slade
-*/
-
 mp.prompt = {
     show: (text) => {
         mp.events.call("prompt.show", text);

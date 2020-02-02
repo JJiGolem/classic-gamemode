@@ -87,6 +87,3 @@ var captureScore = new Vue({
         }
     }
 });
-
-// for tests
-// captureScore.show = true;

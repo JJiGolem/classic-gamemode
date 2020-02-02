@@ -8,7 +8,6 @@ let notifs;
 let walking;
 
 module.exports = {
-    // Инфо о бизнесе
     business: {
         type: 10,
         name: "Клуб",
@@ -17,11 +16,8 @@ module.exports = {
     },
     productPrice: 1,
     rentPerDayMultiplier: 0.01,
-    // Клубы
     clubs: [],
-    // Алкогольные напитки
     alcohol: {
-        // Багама (La Cosa Nostra)
         12: [{
                 price: 390,
                 params: {
@@ -65,7 +61,6 @@ module.exports = {
                 },
             },
         ],
-        // Текила (La Eme)
         13: [{
                 price: 390,
                 params: {
@@ -109,7 +104,6 @@ module.exports = {
                 },
             },
         ],
-        // Ванила (Russian Mafia)
         14: [{
                 price: 395,
                 params: {
@@ -154,9 +148,7 @@ module.exports = {
             },
         ],
     },
-    // Закуски
     snacks: {
-        // Багама (La Cosa Nostra)
         12: [{
                 price: 420,
                 params: {
@@ -186,7 +178,6 @@ module.exports = {
                 }
             }
         ],
-        // Текила (La Eme)
         13: [{
                 price: 450,
                 params: {
@@ -216,7 +207,6 @@ module.exports = {
                 }
             }
         ],
-        // Ванила (Russian Mafia)
         14: [{
                 price: 420,
                 params: {
@@ -247,9 +237,7 @@ module.exports = {
             }
         ],
     },
-    // Сигареты
     smoke: {
-        // Багама (La Cosa Nostra)
         12: [{
             price: 630,
             params: {
@@ -257,7 +245,6 @@ module.exports = {
                 count: 20,
             }
         }],
-        // Текила (La Eme)
         13: [{
             price: 630,
             params: {
@@ -265,7 +252,6 @@ module.exports = {
                 count: 20,
             }
         }],
-        // Ванила (Russian Mafia)
         14: [{
             price: 630,
             params: {
@@ -274,21 +260,14 @@ module.exports = {
             }
         }],
     },
-    // Ид предметов инвентаря
     alcoholItemId: 133,
     snackItemId: 134,
     smokeItemId: 16,
-    // Ид пьяной походки
     drunkWalkingId: 7,
-    // Мин. значение опьянения, при котором меняется походка
     walkingDrunkenness: 70,
-    // Мин. значение опьянения, при котором будет визуальный эффект
     vfxDrunkenness: 30,
-    // Визуальный эффект от опьянения
     vfxName: "DrugsDrivingOut",
-    // Ожидание снятия опьянения
     drunkennessWaitClear: 2 * 60 * 1000,
-    // Кол-во ед. опьянения, отнимаемых в таймере
     drunkennessDec: 10,
     minAlcoholPrice: 1,
     maxAlcoholPrice: 8,

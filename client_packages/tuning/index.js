@@ -184,17 +184,17 @@ data.colors.forEach((current) => {
     colorValues.push(current.value);
 });
 
-mp.events.add('mods.num', (type) => { // temp
+mp.events.add('mods.num', (type) => {
     let num = mp.players.local.vehicle.getNumMods(type);
     mp.chat.debug(num);
 });
 
-mp.events.add('mods.label', (type, index) => { // temp
+mp.events.add('mods.label', (type, index) => {
     let label = mp.players.local.vehicle.getModTextLabel(type, index);
     mp.chat.debug(mp.game.ui.getLabelText(label));
 });
 
-mp.events.add('mods.get', (type) => { // temp
+mp.events.add('mods.get', (type) => {
     let num = mp.players.local.vehicle.getMod(type);
     mp.chat.debug(num);
 });

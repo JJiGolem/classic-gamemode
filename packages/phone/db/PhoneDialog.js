@@ -1,7 +1,6 @@
 "use strict";
 const Sequelize = require('sequelize');
 
-/// Модель телефона персоонажа
 module.exports = (sequelize, DataTypes) => {
     const model = sequelize.define("PhoneDialog", {
         id: {

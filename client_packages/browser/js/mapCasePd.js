@@ -151,7 +151,6 @@ Vue.component('map-case-pd-profile', {
     }),
     methods: {
         showOnMap() {
-            // TODO: Показать претупника на карте.
             mp.trigger(`callRemote`, `mapCase.pd.wanted.search`, this.profileData[this.currentMenuFocus].id);
         },
         showOverWindow(winName) {
@@ -514,165 +513,54 @@ var mapCasePdData = {
     getProfile(data) {},
     emergencyCall() {},
 }
-//api
-/*
-    mapCase.showLoad(message, waitingTime);
 
-    message - отображаемое сообщение;
-    waitingTime - время в секундах.
-        Будет убывать, когда значение станет < 0 таймер исчезнет, но экран загрузки не пропадёт.
-        Если нет нужды в таймере, следует оставить пустым!
-
-    mapCase.hideLoad(); скрывает экран загрузки.
-*/
-/*
-    mapCase.showVerification (message, acceptCallback);
-
-    Показывает окно подтверждения
-    meesage - отображаемое соощение. Может содержать html-теги (span, br)
-    acceptCallback() - функция, срабатывающая при подтверждении
-*/
-/*
-    mapCase.hideVerification ();
-
-    Скрывает окно подтверждения
-*/
-/*
-    mapCase.showRedMessage (message);
-
-    показывает уведомление с красным крестиком (подойдёт для ошибок)
-    message - может содержать html-tags (span br)
-    само скрывает экран загрузки
-*/
-/*
-    mapCase.showGreenMessage (message);
-
-    показывает уведомление с зелёной галочкой (подойдёт для уведомления)
-    message - может содержать html-tags (span br)
-    само скрывает экран загрузки
-*/
-/*
-    mapCase.hidePopupMessage ()
-
-    скрывает экран уведомления/ошибки
-*/
-/*
-    mapCasePdProfileData.setProfileData ({ name, id, danger, cause, gender, property, phone, pass, faction, rank, veh });
-
-    Инициализирует страницу профиля, страница сразу будет отбражена. Экран загрузки автоматически скроется
-*/
-/*
-    mapCasePdDBResultData.setResult ([{ id, num, name, phone, address }]);
-
-    Принимает массив объектов
-    Инициализирует страницу со списком результата поиска по бд. Страница будет сразу
-    отображена, Экран загрузки автоматически скроется
-*/
-/*
-    mapCasePdCallsData.list = [{num, name, description}];
-
-    массив, отображающийся в списке вызовов
-*/
-/*
-    mapCasePdMembersData.list = [{ num, name, rank }];
-
-    массив, отображающийся в списке сотрудников
-*/
-/*
-    mapCasePdWantedData.list = [{ num, name, description, danger }]
-*/
-/*
-    mapCasePdIdentificationData.waitingTime = int
-
-    кол-во секунд. Время сколько будет отображаться экран загрузки при идентификации личности.
-
-    Загрузка прервётся при ответе от сервера.
-*/
-
-
-
-//Следущие функции необходимо реализовать
-//Для примера в них реализованы импровизированные ответы от сервера
-
-//Функция, срабатывающая при принятии вызова
-//data - данные о вызове
 mapCasePdCallsData.accept = (data) => {
     mp.trigger(`callRemote`, `mapCase.pd.calls.accept`, data.id);
 }
 
-
-//Функция, срабатывающая при поиске профиля по id
-//id - значение из input
 mapCasePdIdentificationData.searchById = (id) => {
     mp.trigger(`mapCase.pd.search.start`, id);
 }
 
-
-//Функция, срабатывающая при запросе профиля по записи из списка
-//data - данные из записи
 mapCasePdData.getProfile = (data) => {
     mp.trigger(`callRemote`, `mapCase.pd.getProfile`, data.id)
 }
 
-
-//Функция, срабатывающая при нажатии на Экстренный вызова+
 mapCasePdData.emergencyCall = () => {
     mp.trigger(`callRemote`, `mapCase.pd.emergency.call`);
 };
 
-
-//Функция, срабатывающая при поиске в базе данных по номеру телефона
-//value - значение из input
 mapCasePdDBSearchData.searchByPhone = (value) => {
     mp.trigger(`callRemote`, `mapCase.pd.searchByPhone`, value);
 };
 
-
-//Функция, срабатывающая при поиске в базе данных по имени
-//value - значение из input
 mapCasePdDBSearchData.searchByName = (value) => {
     mp.trigger(`callRemote`, `mapCase.pd.searchByName`, value);
 };
 
-
-//Функция, срабатывающая при поиске в базе данных по номеру машины
-//value - значение из input
 mapCasePdDBSearchData.searchByCar = (value) => {
     mp.trigger(`callRemote`, `mapCase.pd.searchByCar`, value);
 };
 
-
-//Функция, устанавливающая массив рангов (от младшего к старшему)
 mapCasePdMembersData.setRanks(["Старший Сержант", "Альпака", "Главный уборщик", "Старший Альпака"]);
 
 
-//Функция, срабатывающая при увольнение сотрудника
-//data - данные о сотруднике из записи в списке
 mapCasePdMembersData.dismiss = (data) => {
     mp.trigger(`callRemote`, `mapCase.pd.members.uval`, data.id);
 }
 
-
-//Функция, срабатывающая при понижении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
-//data - данные о сотруднике из записи в списке
 mapCasePdMembersData.lowerRank = (data) => {
     if (data.rank <= 1)
         return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет мин. ранг - ${mapCasePdMembersData.ranks[data.rank - 1]}`);
     mp.trigger(`callRemote`, `mapCase.pd.rank.lower`, data.id);
 }
 
-
-//Функция, срабатывающая при повышении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
-//data - данные о сотруднике из записи в списке
 mapCasePdMembersData.raiseRank = (data) => {
     if (data.rank >= mapCasePdMembersData.ranks.length)
         return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет макс. ранг - ${mapCasePdMembersData.ranks[data.rank - 1]}`);
     mp.trigger(`callRemote`, `mapCase.pd.rank.raise`, data.id);
 }
 
-
-//Функция, срабатывающая при выдаче штрафа
-//cause - причина; amount - сумма к уплате; profileData - данные профиля
 mapCasePdProfileData.giveFine = (cause, amount, profileData) => {
     var data = {
         recId: profileData.id,
@@ -683,9 +571,6 @@ mapCasePdProfileData.giveFine = (cause, amount, profileData) => {
     mp.trigger(`callRemote`, `mapCase.pd.fines.give`, JSON.stringify(data));
 }
 
-
-//Функция, срабатывающая при выдаче розыска
-//cause - причина; danger - уровень розыска; profileData - данные профиля
 mapCasePdProfileData.giveWanted = (cause, danger, profileData) => {
     var data = {
         recId: profileData.id,
@@ -702,4 +587,3 @@ mapCasePdProfileData.giveWanted = (cause, danger, profileData) => {
     mp.trigger(`callRemote`, `mapCase.pd.wanted.give`, JSON.stringify(data));
 }
 
-//mapCasePdIdentificationData.waitingTime = 5;

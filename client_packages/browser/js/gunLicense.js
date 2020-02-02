@@ -21,5 +21,3 @@ var gunLicense = new Vue({
     },
 });
 
-// for tests
-// gunLicense.show = true;

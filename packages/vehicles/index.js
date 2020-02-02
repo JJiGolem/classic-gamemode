@@ -19,16 +19,8 @@ let breakdownConfig = {
 
 let houses;
 
-// vehtypes:
-// 0 - автомобиль
-// 1 - мотоцикл
-// 2 - велосипед
-// 3 - электромобиль
-
 module.exports = {
-    // Время простоя авто, после которого оно будет заспавнено (ms) - точность ~0-5 мин
     vehWaitSpawn: 20 * 60 * 1000,
-    // Кол-во топлива при респавне авто (кроме рабочих - в них всегда полный бак)
     respawnFuel: 10,
     ownVehicleRespawnPrice: 300,
 
@@ -40,7 +32,7 @@ module.exports = {
         await this.loadCarPlates();
         mp.events.call('vehicles.loaded');
     },
-    async spawnVehicle(veh, source) { /// source: 0 - спавн автомобиля из БД, 1 - респавн любого автомобиля, null - спавн админского авто и т. д.
+    async spawnVehicle(veh, source) {
         let vehicle = mp.vehicles.new(veh.modelName, new mp.Vector3(veh.x, veh.y, veh.z), {
             heading: veh.h,
             engine: false,
@@ -55,13 +47,13 @@ module.exports = {
         vehicle.z = veh.z;
         vehicle.h = veh.h;
         vehicle.d = veh.d;
-        vehicle.key = veh.key; /// ключ показывает тип авто: faction, job, private, newbie
+        vehicle.key = veh.key;
         vehicle.owner = veh.owner;
         vehicle.fuel = veh.fuel;
         vehicle.mileage = veh.mileage;
         vehicle.parkingId = veh.parkingId;
         vehicle.parkingDate = veh.parkingDate;
-        vehicle.lastMileage = veh.mileage; /// Последний сохраненный пробег
+        vehicle.lastMileage = veh.mileage;
         vehicle.marketSpot = veh.marketSpot;
         vehicle.plate = veh.plate;
         vehicle.engineState = veh.engineState;
@@ -75,22 +67,21 @@ module.exports = {
         vehicle.multiplier = this.initMultiplier(veh);
         vehicle.setVariable("engine", false);
 
-        vehicle.numberPlate = veh.plate; /// устанавливаем номер
-
+        vehicle.numberPlate = veh.plate;
         vehicle.setVariable('isValid', true);
 
-        veh.d ? vehicle.dimension = veh.d : vehicle.dimension = 0; /// устанавливаем измерение
+        veh.d ? vehicle.dimension = veh.d : vehicle.dimension = 0;
 
         veh.isInGarage ? vehicle.isInGarage = veh.isInGarage : vehicle.isInGarage = false;
 
         veh.carPlaceIndex ? vehicle.carPlaceIndex = veh.carPlaceIndex : vehicle.carPlaceIndex = null;
 
-        if (source == 0) { /// Если авто спавнится из БД
+        if (source == 0) {
             vehicle.sqlId = veh.id;
             vehicle.db = veh;
             inventory.initVehicleInventory(vehicle);
         }
-        if (source == 1 && veh.sqlId) { /// Если авто респавнится (есть в БД)
+        if (source == 1 && veh.sqlId) {
             vehicle.sqlId = veh.sqlId;
             vehicle.db = veh.db;
             if (!veh.inventory) {
@@ -113,7 +104,7 @@ module.exports = {
             vehicle.fuel = parseInt(vehicle.properties.maxFuel / 2);
         }
 
-        if (veh.key == 'private' || veh.key == 'market') { // temp
+        if (veh.key == 'private' || veh.key == 'market') {
             if (!veh.tuning) {
                 await this.initTuning(vehicle);
             } else {
@@ -161,7 +152,7 @@ module.exports = {
     respawnVehicle(veh) {
         if (!mp.vehicles.exists(veh)) return;
         timer.remove(veh.fuelTimer);
-        if (veh.key == "admin") { /// Если админская, не респавним
+        if (veh.key == "admin") {
             veh.destroy();
             return;
         }
@@ -207,7 +198,7 @@ module.exports = {
         this.spawnVehicle(veh, 1);
         veh.destroy();
     },
-    async loadVehiclesFromDB() { /// Загрузка автомобилей фракций/работ из БД
+    async loadVehiclesFromDB() {
         var dbVehicles = await db.Models.Vehicle.findAll({
             where: {
                 key: {
@@ -500,7 +491,7 @@ module.exports = {
         player.carPlaces = places;
     },
     spawnHomeVehicle(player, vehicle) {
-        if (player.carPlaces.length == 1 && player.carPlaces[0].d == 0) { // TODO ПРОВЕРИТЬ С БИЧ ДОМОМ
+        if (player.carPlaces.length == 1 && player.carPlaces[0].d == 0) {
 
             let place = player.carPlaces[0];
             vehicle.x = place.x;
@@ -626,12 +617,10 @@ module.exports = {
             });
         }
     },
-    // Имеет ли игрок ключи от авто
     haveKeys(player, vehicle) {
         var items = inventory.getItemsByParams(player.inventory.items, 33, ['vehId', 'owner'], [vehicle.db.id, vehicle.db.owner]);
         return items.length > 0;
     },
-    // Получить всех игроков в авто
     getOccupants(vehicle) {
         var occupants = vehicle.getOccupants();
         mp.players.forEachInRange(vehicle.position, 10, rec => {
@@ -640,10 +629,8 @@ module.exports = {
             if (occupants.find(x => x.id == rec.id)) return;
             occupants.push(rec);
         });
-        // Обходим баги рейджа через проверку на player.vehicle в радиусе авто
         return occupants;
     },
-    // Убито ли авто
     isDead(vehicle) {
         return !vehicle.engineHealth || !vehicle.bodyHealth || vehicle.dead;
     },
@@ -665,7 +652,6 @@ module.exports = {
         delete veh.lastPlayerTime;
         mp.events.call("vehicle.respawned", veh);
     },
-    // Вкл/откл управление авто игроку
     disableControl(player, enable) {
         if (enable) player.vehicleDisabledControl = true;
         else delete player.vehicleDisabledControl;

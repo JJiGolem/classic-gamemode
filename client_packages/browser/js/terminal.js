@@ -3,25 +3,17 @@ var terminal = new Vue({
     data: {
         show: false,
         enable: false,
-        // Сообщения в терминале
         messages: [],
-        // Макс. кол-во сообщений в терминале
         maxCount: 50,
-        // Логирование введенных команд
         savedCmds: [],
-        // Макс. кол-во сохраненных команд
         maxCmdsCount: 50,
-        // Индекс показываемой команды
         savedCmdI: -1,
-        // Текст в поле ввода
         inputText: "",
-        // Позиция окна на экране
         pos: {
             x: window.innerWidth / 2,
             y: window.innerHeight / 2
         },
         dragging: {
-            // Перемещается ли сейчас окно за мышкой
             active: false,
             offset: {
                 x: 0,
@@ -126,12 +118,3 @@ var terminal = new Vue({
         });
     }
 });
-
-// for tests
-/*terminal.push("log", "Лог");
-terminal.push("info", "Информация");
-terminal.push("warning", "Внимание");
-terminal.push("error", "Ошибка");
-terminal.push("debug", "Дебаг");
-terminal.enable = true;
-terminal.show = true;*/

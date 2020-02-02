@@ -11,7 +11,7 @@ mp.events.add('hud.load', () => {
     mp.callCEFV(`hud.leftWeather = ${resolution.x * (anchor.rightX * 1.1)}`);
     mp.events.call('hud.enable', true);
 
-    mp.keys.bind(0x74, true, function() { /// Включение/отключение худа на F5
+    mp.keys.bind(0x74, true, function() {
         if (mp.busy.list.includes("carshow")) return;
         if (hudState) {
             mp.events.call('hud.enable', false);
@@ -26,7 +26,6 @@ mp.events.add('hud.load', () => {
         }
     });
 
-    // список игроков на F9
     mp.keys.bind(0x78, true, function() {
         if (mp.game.ui.isPauseMenuActive()) return;
         if (playersListState) {

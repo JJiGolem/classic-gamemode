@@ -1,12 +1,10 @@
 "use strict";
-/// Модуль телефона
 let phone = require("./index.js");
 let timer;
 let bizService;
 let factions;
 
 module.exports = {
-    /// Событие инициализации сервера
     "init": async () => {
         timer = call("timer");
         bizService = call("bizes");
@@ -33,7 +31,6 @@ module.exports = {
             }
         }
     },
-    /// Загрузка телефона после выбора персоонажа
     'characterInit.done': async (player) => {
         player.phone = await db.Models.Phone.findOne({
             where: {
@@ -80,7 +77,6 @@ module.exports = {
         }
         player.call('phone.app.remove', ["factionBiz"]);
     },
-    /// Покупка телефона
     "phone.buy": async (player) => {
         if (player.phone != null) return;
         let number = phone.generateNumber();
@@ -104,7 +100,6 @@ module.exports = {
         });
         phone.loadPhoneOnClient(player);
     },
-    /// Начало звонка игроку
     'phone.call.ask': (player, number) => {
         if (player.phone == null) return;
         if (player.phoneState.talkWithId != null) return player.call('phone.call.start.ans', [2]);
@@ -129,7 +124,6 @@ module.exports = {
             player.call('phone.call.start.ans', [4]);
         }
     },
-    /// Ответ на начало звонка игроку
     'phone.call.ans': (player, ans) => {
         if (player.phoneState.talkWithId == null) return;
         let callerPlayer = mp.players.at(player.phoneState.talkWithId);
@@ -147,7 +141,6 @@ module.exports = {
             callerPlayer.phoneState.talkWithId = null;
         }
     },
-    /// Окончание звонка с игроком
     'phone.call.end': (player) => {
         if (player.phoneState.talkWithId != null) {
             let playerTalkWith = mp.players.at(player.phoneState.talkWithId);
@@ -169,13 +162,11 @@ module.exports = {
             }
         }
     },
-    /// Отправка сообщения игроку данным номером
     'phone.message.send': async (player, message, number) => {
         if (player.phone == null) return;
         if (message.length > 100) return;
         if (!phone.isExists(number)) return player.call('phone.error', [1]);
 
-        /// Работа с отправителем
         let index = player.phone.PhoneDialogs.findIndex(x => x.number == number);
         if (index === -1) {
             let newDialog = db.Models.PhoneDialog.build({
@@ -204,7 +195,6 @@ module.exports = {
             player.phone.PhoneDialogs[index].PhoneMessages.push(result);
         }
 
-        /// Работа с получателем
         if (player.phone.number == number) return;
         let getterPlayer = mp.players.toArray().find(x => x.id !== player.id && x.phone != null && x.phone.number === number);
         if (getterPlayer != null) {

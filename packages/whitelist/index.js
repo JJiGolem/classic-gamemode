@@ -3,7 +3,7 @@
 let allowed;
 
 module.exports = {
-    enabled: true, /// Включение/отключение вайтлиста
+    enabled: true,
     isEnabled() {
         return this.enabled;
     },

@@ -1,13 +1,5 @@
 /* eslint-disable default-case */
 const initialState = {
-    // id: 3,
-    // name: 'Ponsonbys',
-    // type: 'Магазин одежды',
-    // cashBox: 732101,
-    // area: 'Палето Бэй',
-    // rent: 50,
-    // price: 112000,
-    // actions: ['finance']
 };
 
 export default function business(state = initialState, action) {

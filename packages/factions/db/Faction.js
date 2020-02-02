@@ -126,25 +126,21 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        // мин. ранг, который может принимать игрока в организацию
         inviteRank: {
             type: DataTypes.INTEGER(11),
             allowNull: false,
             defaultValue: 10,
         },
-        // мин. ранг, который может уволнять игрока из организации
         uvalRank: {
             type: DataTypes.INTEGER(11),
             allowNull: false,
             defaultValue: 10,
         },
-        // мин. ранг, который может повышать/понижать игрока в организации
         giveRankRank: {
             type: DataTypes.INTEGER(11),
             allowNull: false,
             defaultValue: 10,
         },
-        // мин. ранг, который может брать БП/Мед со своего склада
         ammoRank: {
             type: DataTypes.INTEGER(11),
             allowNull: false,

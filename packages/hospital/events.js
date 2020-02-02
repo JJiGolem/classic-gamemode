@@ -32,103 +32,103 @@ module.exports = {
         inventory.fullDeleteItemsByParams([6, 7, 8, 9, 10, 2, 14, 1], ["faction", "owner"], [character.factionId, character.id]);
 
         var hatParams, topParams, legsParams, feetsParams, earsParams, tiesParams, masksParams, glassesParams;
-        if (character.gender == 0) { // муж.
-            hatParams = { // prop 0
+        if (character.gender == 0) {
+            hatParams = {
                 sex: 1,
                 variation: [122, 122, 122, 122, -1, -1][index],
                 texture: [0, 1, 0, 1, -1, -1][index]
             };
-            topParams = { // clothes 11 / 3 / 8
+            topParams = {
                 sex: 1,
-                torso: // /clothes 3
+                torso:
                     [85, 85, 90, 90, 92, 11][index],
                 tTexture: [-1, -1, -1, -1, -1, -1][index],
-                variation: // clothes 11
+                variation:
                     [250, 250, 249, 249, 13, 25][index],
                 texture: [0, 1, 0, 1, 0, 7][index],
-                undershirt: // clothes 8
+                undershirt:
                     [129, 129, 74, 74, -1, 144][index],
                 uTexture: [-1, -1, 3, 3, -1, -1][index],
-                decal: // clothes 10
+                decal:
                     [58, 58, 57, 57, -1, -1][index],
                 dTexture: [1, 0, 0, 0, -1, -1][index]
             };
-            legsParams = { // clothes 4
+            legsParams = {
                 sex: 1,
                 variation: [96, 96, 96, 96, 96, 96][index],
                 texture: [0, 1, 0, 1, 1, 1][index]
             };
-            feetsParams = { // clothes 6
+            feetsParams = {
                 sex: 1,
                 variation: [51, 51, 51, 51, 10, 10][index],
                 texture: [0, 0, 0, 0, 0, 0][index]
             };
-            earsParams = { // prop 2
+            earsParams = {
                 sex: 1,
                 variation: [-1, -1, -1, -1, -1, -1][index],
                 texture: [-1, -1, -1, -1, -1, -1][index]
             };
-            tiesParams = { // clothes 7
+            tiesParams = {
                 sex: 1,
                 variation: [127, 126, 127, 126, 126, 126][index],
                 texture: [0, 0, 0, 0, 0, 0][index]
             };
-            masksParams = { // clothes 1
+            masksParams = {
                 sex: 1,
                 variation: [-1, -1, -1, -1, -1, -1][index],
                 texture: [-1, -1, -1, -1, -1, -1][index]
             };
-            glassesParams = { // prop 1
+            glassesParams = {
                 sex: 1,
                 variation: [-1, -1, -1, -1, -1, -1][index],
                 texture: [-1, -1, -1, -1, -1, -1][index]
             };
         } else {
-            hatParams = { // prop 0
+            hatParams = {
                 sex: 0,
                 variation: [121, 121, 121, 121, -1, -1][index],
                 texture: [0, 1, 0, 1, -1, -1][index]
             };
-            topParams = { // clothes 11 / 3 / 8
+            topParams = {
                 sex: 0,
-                torso: // /clothes 3
+                torso:
                     [109, 109, 104, 104, 98, 98][index],
                 tTexture: [-1, -1, -1, -1, -1, -1][index],
-                variation: // clothes 11
+                variation:
                     [73, 73, 106, 138, 27, 28][index],
                 texture: [1, 1, 2, 9, 0, 5][index],
-                undershirt: // clothes 8
+                undershirt:
                     [159, 159, 55, 55, -1, 24][index],
                 uTexture: [-1, -1, 6, 6, -1, 0][index],
-                decal: // clothes 10
+                decal:
                     [-1, -1, 65, 65, -1, -1][index],
             };
-            legsParams = { // clothes 4
+            legsParams = { 
                 sex: 0,
                 variation: [99, 99, 99, 99, 99, 99][index],
                 texture: [0, 1, 0, 1, 1, 1][index]
             };
-            feetsParams = { // clothes 6
+            feetsParams = {
                 sex: 0,
                 variation: [64, 64, 64, 64, 13, 13][index],
                 texture: [0, 0, 0, 0, 0, 0][index]
             };
-            earsParams = { // prop 2
+            earsParams = {
                 sex: 0,
                 variation: [-1, -1, -1, -1, -1, -1][index],
                 texture: [-1, -1, -1, -1, -1, -1][index]
             };
-            tiesParams = { // clothes 7
+            tiesParams = {
                 sex: 0,
                 variation: [97, 96, 97, 96, 96, 96][index],
                 texture: [0, 0, 0, 0, 0, 0][index]
             };
-            masksParams = { // clothes 1
+            masksParams = {
                 sex: 0,
                 variation: [-1, -1, -1, -1, -1, -1][index],
                 texture: [-1, -1, -1, -1, -1, -1][index]
             };
-            glassesParams = { // prop 1
+            glassesParams = {
                 sex: 0,
                 variation: [-1, -1, -1, -1, -1, -1][index],
                 texture: [-1, -1, -1, -1, -1, -1][index]
@@ -211,13 +211,13 @@ module.exports = {
             // faction: character.factionId,
             // owner: character.id
         };
-        if (itemId == 24) { // малая аптечка
+        if (itemId == 24) {
             params.count = 2;
-        } else if (itemId == 27) { // большая аптечка
+        } else if (itemId == 27) { 
             params.count = 5;
-        } else if (itemId == 25) { // пластырь
+        } else if (itemId == 25) {
             params.count = 5;
-        } else if (itemId == 26) { // адреналин
+        } else if (itemId == 26) { 
             params.count = 3;
         }
 
@@ -228,7 +228,7 @@ module.exports = {
             factions.setMedicines(faction, faction.medicines - hospital.itemMedicines);
         });
     },
-    // лечение игрока (пополнение ХП) | показ + принятие + отмена:
+
     "hospital.healing.show": (player, recId) => {
         var header = `Лечение`;
         var rec = mp.players.at(recId);

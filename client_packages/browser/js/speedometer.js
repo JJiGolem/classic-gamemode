@@ -9,18 +9,18 @@
         el: "#speedometer",
         data: {
             show: false,
-            isActive: true, //подсветка
-            headlights: 0, //0-выкл,1-габариты,2-ближний,3-дальний (фары)
-            lock: 1, //0-открыт,1-закрыт (двери)
+            isActive: true,
+            headlights: 0,
+            lock: 1,
             speed: 0,
             fuel: 0,
             maxFuel: 70,
             mileage: 0,
-            danger: 0, //0-выкл,1-вкл (движок)
+            danger: 0,
             maxSpeed: 480,
-            arrow: 0, //0-выкл,1-левый,2-правый (поворотики)
+            arrow: 0,
             emergency: 0,
-            isElectricCar: false, // Установить true для электрокаров.
+            isElectricCar: false,
 
             leftArrow: false,
             rightArrow: false,
@@ -30,7 +30,7 @@
             arrowInterval: null,
         },
         methods: {
-            flickerLight: function () { // 0, 1, 2, 3
+            flickerLight: function () {
                 if (this.arrowInterval)
                     clearInterval(this.arrowInterval);
 
@@ -75,6 +75,3 @@
 
 
     });
-
-    // for tests
-    // speedometer.show = true;

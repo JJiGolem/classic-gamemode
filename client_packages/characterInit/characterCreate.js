@@ -1,5 +1,5 @@
 "use strict";
-/// Создание персоонажа
+
 const Data = require("characterInit/data.js");
 const freemodeCharacters = [mp.game.joaat("mp_m_freemode_01"), mp.game.joaat("mp_f_freemode_01")];
 const creatorPlayerPos = new mp.Vector3(402.8664, -996.4108, -99.00027);
@@ -98,21 +98,15 @@ function colorForOverlayIdx(index) {
 
 function updateParents() {
     localPlayer.setHeadBlendData(
-        // shape
         charData.mother,
         charData.father,
         0,
-
-        // skin
         0,
         charData.skin,
         0,
-
-        // mixes
         charData.similarity,
         1.0,
         0.0,
-
         false
     );
 }
@@ -137,8 +131,8 @@ let rotateRight = function() {
 
 function binding(active) {
     if (active) {
-        mp.keys.bind(0x44, true, rotateRight);   // D
-        mp.keys.bind(0x41, true, rotateLeft);    // A
+        mp.keys.bind(0x44, true, rotateRight); 
+        mp.keys.bind(0x41, true, rotateLeft);  
     }
     else {
         mp.keys.unbind(0x44, true, rotateRight);
@@ -234,7 +228,6 @@ mp.events.add('characterInit.create.setGender', gender => {
 });
 
 
-//Hair events
 mp.events.add('characterInit.create.setHairstyle', hairStyleId => {
     hairStyleId = parseInt(hairStyleId);
     if (charData.gender === 0) {
@@ -314,7 +307,6 @@ mp.events.add('characterInit.create.setChestHairColor', colorId => {
     }
 });
 
-//Parents events
 mp.events.add('characterInit.create.setMother', motherId => {
     motherId = parseInt(motherId);
     if (Data.mothers.includes(motherId)) {
@@ -351,7 +343,7 @@ mp.events.add('characterInit.create.setSkin', value => {
 
 const FACE_FETURE_STEP = 0.1;
 
-//FaceFeatures events
+
 for (let i = 0; i < Data.faceFeaturesNames.length; i++) {
     const eventName = `characterInit.create.set${Data.faceFeaturesNames[i].replace(' ', '')}`;
     if ('characterInit.create.setNoseBroken' === eventName) {
@@ -377,7 +369,7 @@ for (let i = 0; i < Data.faceFeaturesNames.length; i++) {
     }
 }
 
-//HeadOverlays events
+
 for (let i = 0; i < Data.headOverlays.length; i++) {
     const eventName = `characterInit.create.set${Data.headOverlays[i].replace(' ', '')}`;
     mp.events.add(eventName, (value) => {

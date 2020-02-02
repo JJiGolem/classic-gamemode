@@ -8,13 +8,11 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
-        // Награда владельцу промокода
         ownerSum: {
             type: DataTypes.INTEGER(11),
             defaultValue: 10000,
             allowNull: false
         },
-        // Награда тому, кто выполнил условия
         playerSum: {
             type: DataTypes.INTEGER(11),
             defaultValue: 10000,

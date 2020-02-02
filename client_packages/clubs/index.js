@@ -1,18 +1,8 @@
 "use strict";
 
-
-/*
-    Модуль клубов для мафий.
-
-    created 14.11.19 by Carter Slade
-*/
-
 mp.clubs = {
-    // Барные стойки в клубах (полигоны)
     bars: {
-        // Багама (La Cosa Nostra)
         12: [
-            // первая стойка
             [{
                     x: -1390.869873046875,
                     y: -597.3942260742188
@@ -34,7 +24,6 @@ mp.clubs = {
                     y: -610.6476440429688
                 }
             ],
-            // вторая стойка
             [{
                     x: -1373.954345703125,
                     y: -624.114501953125
@@ -53,7 +42,6 @@ mp.clubs = {
                 }
             ],
         ],
-        // Текила (La Eme)
         13: [
             [{
                     x: -560.07470703125,
@@ -73,7 +61,6 @@ mp.clubs = {
                 }
             ]
         ],
-        // Ванила (Russian Mafia)
         14: [
             [{
                     x: 126.0940933227539,
@@ -94,21 +81,21 @@ mp.clubs = {
             ]
         ],
     },
-    // Игрок находится возле барной стойки
+
     isNearBar: false,
-    // Клуб, в котором находится игрок (ид организации клуба)
+
     currentClub: null,
-    // Последнее время синхронизации значения опьянения с сервером
+
     drunkennessLastSync: 0,
-    // Опьянение (0-100)
+
     drunkenness: 0,
-    // Мин. значение опьянения, при котором меняется походка
+
     walkingDrunkenness: 5,
-    // Мин. значение опьянения, при котором будет визуальный эффект
+
     vfxDrunkenness: 5,
-    // Визуальный эффект от опьянения
+
     vfxName: "DrugsDrivingOut",
-    // Ожидание снятия опьянения
+
     drunkennessWaitClear: 2 * 60 * 1000,
 
     initDrunkennessData(data) {
@@ -168,7 +155,7 @@ mp.events.add({
     "characterInit.done": () => {
         mp.keys.bind(69, true, () => {
             mp.clubs.barHandler();
-        }); // E
+        });
     },
     "clubs.drunkennessData.init": (data) => {
         mp.clubs.initDrunkennessData(data);

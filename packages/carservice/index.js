@@ -5,7 +5,6 @@ let jobs = call('jobs');
 let dbCarServices;
 
 module.exports = {
-    /// Объект который показывает, что данный модуль отвечает за конкретный бизнес
     business: {
         type: 3,
         name: "СТО",

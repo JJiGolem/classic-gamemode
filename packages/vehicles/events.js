@@ -84,7 +84,7 @@ module.exports = {
     "playerStartExitVehicle": (player) => {
         if (player.vehicle.engine) player.vehicle.engine = true;
     },
-    "vehicles.engine.toggle": (player) => { /// Включение/выключение двигателя
+    "vehicles.engine.toggle": (player) => {
         if (!player.vehicle) return;
         if (player.vehicleDisabledControl) return;
         if (player.vehicle.key == "market") return;
@@ -393,8 +393,6 @@ module.exports = {
                     vehicles.removeVehicleFromPlayerVehicleList(seller, vehId);
                     vehicles.removeVehicleFromCarPlace(seller, veh);
 
-
-                    // TODO на парковке или нет
                     let props = vehicles.getVehiclePropertiesByModel(veh.modelName)
                     target.vehicleList.push({
                         id: veh.sqlId,
@@ -410,7 +408,6 @@ module.exports = {
                     if (hasHouse && veh) vehicles.setVehicleHomeSpawnPlaceByVeh(player, veh);
 
                     inventory.fullDeleteItemsByParams(33, 'vehId', vehId);
-                    // выдача ключей в инвентарь
                     inventory.addItem(target, 33, {
                         owner: target.character.id,
                         vehId: vehId,
@@ -420,7 +417,6 @@ module.exports = {
                             text: e
                         }]);
                     });
-                    // удаление ключей у продавца
                     // inventory.deleteByParams(seller, 33, 'vehId', vehId);
 
                     delete target.sellCarTargetOffer;

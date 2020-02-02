@@ -149,7 +149,7 @@ mp.events.add("carshow.car.buy.ans", (ans, carInfo, parkingInfo) => {
             mp.events.call('chat.message.push', `!{#f3c800}Транспорт доставлен !{#009eec}к вашему дому`);
             mp.events.call('carshow.list.close');
             break;
-        case 7: // нельзя выдать ключи в инвентарь
+        case 7:
             mp.notify.error(carInfo.text, `Инвентарь`);
             break;
     }

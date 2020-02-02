@@ -4,22 +4,15 @@ let chat = call('chat');
 let notifs = call('notifications');
 
 module.exports = {
-    // Цена за 1 символ объявления
     symbolPrice: 5,
-    // Коэффициент при начислении ЗП за объявление (adPrice * adPayK)
     adPayK: 0.3,
-    // Анти-флуд на подачу объявления
     waitAddAd: 30 * 1000,
-    // Кол-во боеприпасов, списываемое за выдачу формы
     clothesAmmo: 0,
-    // Текущий прямой эфир
     liveStream: {
-        ownerId: null, // тот, кто начал эфир
-        memberIds: [], // члены эфира
+        ownerId: null,
+        memberIds: [],
     },
-    // Дистанция прослушки эфира
     streamDist: 3,
-    // Мин. ранг, который может начать эфир
     streamRank: 8,
 
     stream(player) {

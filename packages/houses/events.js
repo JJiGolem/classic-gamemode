@@ -1,5 +1,4 @@
 "use strict";
-/// Модуль системы домов
 let housesService = require("./index.js");
 let money;
 let timer;
@@ -9,7 +8,6 @@ let notifications;
 let carPlaceVehicle = [];
 
 module.exports = {
-    /// Событие инициализации сервера
     "init": () => {
         money = call('money');
         timer = call("timer");
@@ -56,7 +54,6 @@ module.exports = {
         player.house.place = shape.place;
         let house = housesService.getHouseById(shape.hId);
         let info = house.info;
-        /// На улице
         if (shape.place === 0) {
             let houseInfo = {};
 
@@ -87,7 +84,6 @@ module.exports = {
             player.house.id = shape.hId;
             player.call('house.menu',[houseInfo]);
         }
-        /// В доме / в гараже
         else {
             player.call('house.menu.enter',[shape.place, info.Interior.Garage != null]);
         }
@@ -156,7 +152,6 @@ module.exports = {
             notifications.info(player, "Оплатите имущество в банке в течение 24 часов, иначе оно будет продано", "Внимание");
         }, `Покупка дома #${info.id} у государства`);
     },
-    /// Phone app events
     "house.lock": (player, id, isOpened) => {
         if (player == null) return;
         id = parseInt(id);
@@ -277,7 +272,6 @@ module.exports = {
         });
     },
 
-    /// События для работы с экземплярами домов
     "house.add": (player, houseInfo) => {
         housesService.createHouse(JSON.parse(houseInfo));
     },

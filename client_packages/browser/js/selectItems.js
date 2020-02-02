@@ -2,7 +2,6 @@ var selectItems = new Vue({
     el: "#selectItems",
     data: {
         show: false,
-        // Время последнего открытия/закрытия (ms)
         lastShowTime: 0,
         items: inventory.hotkeys,
         // focus: 3,
@@ -126,7 +125,6 @@ var selectItems = new Vue({
 
         window.addEventListener('keyup', function(e) {
             if (e.keyCode != 9 || !self.show) return;
-            // TODO: Обработка выбора self.select id ячейки (жёлтой)
             // debug("selectItems.select: " + self.select);
             self.selectHandler();
             self.show = false;
@@ -134,7 +132,3 @@ var selectItems = new Vue({
         window.addEventListener('mousemove', self.mousemove);
     }
 });
-
-//for tests
-
-// selectItems.show = true;

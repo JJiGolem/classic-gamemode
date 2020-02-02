@@ -1,12 +1,5 @@
 "use strict";
 
-
-/*
-    Модуль эмоций.
-
-    created 07.10.19 by Carter Slade
-*/
-
 mp.mood = {
     set(player, mood) {
         if (!mood) player.clearFacialIdleAnimOverride();

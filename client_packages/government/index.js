@@ -1,12 +1,5 @@
 "use strict";
 
-
-/*
-    Модуль правительства (организации).
-
-    created 05.10.19 by Carter Slade
-*/
-
 mp.government = {
 
     showServiceSelectMenu(data) {

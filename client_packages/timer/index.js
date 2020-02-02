@@ -1,5 +1,4 @@
 "use strict";
-/// Глобальный таймер
 
 const duration = 100;
 let timers = [];
@@ -8,7 +7,6 @@ let gId = 0;
 
 mp.timer = {
     init() {
-        /// With interval
         setInterval(async function() {
             for (let i = 0; i < timers.length; i++) {
                 try {
@@ -67,8 +65,6 @@ mp.timer = {
         //     }
         // });
     },
-    /// Добавление нового таймера
-    /// handler желательно async
     /// return timer {id: id};
     add(handler, time, isInterval = false, isLog = false) {
         if (handler == null) throw new Error("handler is null");
@@ -100,7 +96,6 @@ mp.timer = {
         });
         return {id: id};
     },
-    /// Удаление существующего таймера, до его срабатывания
     remove(timer) {
         if (timer == null) return;
         if (timer.id == null) return;
@@ -118,8 +113,6 @@ mp.timer = {
 };
 mp.timer.init();
 
-
-/// Check server timer
 let timerCheckerServer = null;
 let isWork = true;
 mp.events.add('timer.check.start', (serverDuration) => {

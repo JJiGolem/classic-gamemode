@@ -1,25 +1,18 @@
 "use strict";
 
-
-/*
-    Модуль банд (организации).
-
-    created 15.09.19 by Carter Slade
-*/
-
 mp.bands = {
-    // Блипы зон гетто
+
     bandZones: [],
-    // Показ блипов на карте
+
     zonesShow: false,
-    // Цвета блипов (factionId: blipColor)
+
     colors: {
         8: 2,
         9: 27,
         10: 46,
         11: 3,
     },
-    // Нативки
+
     natives: {
         _GET_BLIP_INFO_ID_ITERATOR: "0x186E5D252FA50E7D",
         GET_FIRST_BLIP_INFO_ID: "0x1BEDE233E6CD2A1F",
@@ -117,7 +110,6 @@ mp.bands = {
         // рукопашка
         if (reason == 2725352035) return mp.callCEFV(`killList.add(\`${target}\`, \`${killer}\`, 'hand')`);
 
-        // огнестрел, либо что-то еще? :D
         var name = mp.weapons.getWeaponName(reason);
         mp.callCEFV(`killList.add(\`${target}\`, \`${killer}\`, \`${name}\`)`);
     },

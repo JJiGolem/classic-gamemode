@@ -1,21 +1,13 @@
 var craft = new Vue({
     el: "#craft",
     data: {
-        // Показ интерфейса
         show: false,
-        // Показ инфо об изготовителе
         helpShow: false,
-        // Показ параметров предмета
         paramsShow: false,
-        // Текуший изготовитель (станок, верстак и т.п.)
         crafter: null,
-        // Таймер очереди
         queueTimer: null,
-        // Таймер топлива
         destroyTimer: null,
-        // Скилл игрока
         skill: 0,
-        // Кол-во топлива
         firewoodCount: 0,
     },
     computed: {
@@ -225,109 +217,3 @@ var craft = new Vue({
         });
     },
 });
-
-// for tests
-/*
-craft.show = true;
-craft.initCrafter({
-    name: "Станок",
-    description: "Используется для изготовления предметов.",
-    destroyTime: 1000,
-    types: [{
-            name: "Тип1",
-            items: [{
-                    itemId: 1,
-                    params: {
-                        health: 100,
-                    },
-                    materials: [{
-                        itemId: 16,
-                        count: 20
-                    }],
-                    time: 60,
-                    skill: 0,
-                },
-                {
-                    itemId: 3,
-                    params: {
-                        health: 100
-                    },
-                    materials: [{
-                            itemId: 16,
-                            count: 15
-                        },
-                        {
-                            itemId: 7,
-                            count: 2
-                        },
-                        {
-                            itemId: 16,
-                            count: 15
-                        },
-                        {
-                            itemId: 7,
-                            count: 2
-                        },
-                    ],
-                    time: 60,
-                    skill: 0,
-                }
-            ],
-        },
-        {
-            name: "Тип2",
-            items: [{
-                    itemId: 18,
-                    params: {
-                        health: 100
-                    },
-                    materials: [{
-                        itemId: 16,
-                        count: 20
-                    }],
-                    time: 60,
-                    skill: 20,
-                },
-                {
-                    itemId: 21,
-                    params: {
-                        health: 100
-                    },
-                    materials: [{
-                            itemId: 16,
-                            count: 2
-                        },
-                        {
-                            itemId: 7,
-                            count: 4
-                        }
-                    ],
-                    time: 90,
-                    skill: 30,
-                }
-            ],
-        }
-    ],
-    queue: {
-        columns: [{
-                itemId: 1,
-                state: 'process',
-                time: 10,
-                maxTime: 180,
-                playerName: "Carter Slade",
-            },
-            {
-                itemId: 3,
-                state: 'completed',
-                playerName: "Cyrus Raider",
-            },
-            {
-                itemId: 7,
-                state: 'unsuccessfully',
-                playerName: "Carter Slade",
-            },
-            {}
-        ]
-    },
-});
-*/

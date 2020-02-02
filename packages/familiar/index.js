@@ -1,7 +1,6 @@
 "use strict";
 
 module.exports = {
-    // Макс. кол-во знакомых
     maxList: 100,
 
     async initList(player) {

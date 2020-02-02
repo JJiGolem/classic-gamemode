@@ -1,15 +1,8 @@
 "use strict";
 
-
-/*
-    Модуль организаций.
-
-    created 16.08.19 by Carter Slade
-*/
-
 mp.factions = {
     insideFactionWar: false,
-    enableTakeBox: false, // можно ли взять ящик на беск. складе
+    enableTakeBox: false,
     typeBox: "",
     faction: null,
     ranks: [],
@@ -71,19 +64,19 @@ mp.factions = {
         mp.callCEFV(`selectMenu.showByName('factionGiveRank')`);
     },
     showStorageSelectMenu(factionId) {
-        if (factionId == 1) { // Government
+        if (factionId == 1) {
             mp.callCEFV(`selectMenu.showByName('governmentStorage')`);
-        } else if (factionId == 2) { // LSPD
+        } else if (factionId == 2) {
             mp.callCEFV(`selectMenu.showByName('lspdStorage')`);
-        } else if (factionId == 3) { // LSSD
+        } else if (factionId == 3) {
             mp.callCEFV(`selectMenu.showByName('lssdStorage')`);
-        } else if (factionId == 4) { // FIB
+        } else if (factionId == 4) { 
             mp.callCEFV(`selectMenu.showByName('fibStorage')`);
-        } else if (factionId == 5) { // EMS
+        } else if (factionId == 5) { 
             mp.callCEFV(`selectMenu.showByName('hospitalStorage')`);
-        } else if (factionId == 6) { // ARMY
+        } else if (factionId == 6) { 
             mp.callCEFV(`selectMenu.showByName('armyStorage')`);
-        } else if (factionId == 7) { // NEWS
+        } else if (factionId == 7) { 
             mp.callCEFV(`selectMenu.showByName('newsStorage')`);
         } else if (this.isBandFaction(factionId)) {
             mp.callCEFV(`selectMenu.showByName('bandStorage')`);
@@ -169,7 +162,6 @@ mp.factions = {
         return [0, 567, 175, 175, 175, 498, 175, 498, 110, 110, 110, 110, 110, 110, 110][this.faction];
     },
     registerAttachments() {
-        // коробка с боеприпасами в руках
         mp.attachmentMngr.register("ammoBox", "prop_box_ammo04a", 11363, new mp.Vector3(0.05, 0, -0.25),
             new mp.Vector3(-15, 100, 95), {
                 dict: "anim@heists@box_carry@",
@@ -179,7 +171,7 @@ mp.factions = {
             },
             true
         );
-        // коробка с медикаментами в руках
+
         mp.attachmentMngr.register("medicinesBox", "ex_office_swag_pills4", 11363, new mp.Vector3(0.2, 0, -0.2),
             new mp.Vector3(-100, 0, 20), {
                 dict: "anim@heists@box_carry@",
@@ -205,7 +197,7 @@ mp.events.add({
         mp.keys.bind(69, true, () => {
             if (mp.game.ui.isPauseMenuActive()) return;
             mp.factions.boxHandler();
-        }); // E
+        });
     },
     "factions.insideWarehouse": (inside, type) => {
         mp.factions.insideWarehouse(inside, type);

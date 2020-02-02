@@ -1,4 +1,3 @@
-/// credits to Morbo
 let getNormalizedVector = function(vector) {
     let mag = Math.sqrt(
         vector.x * vector.x + vector.y * vector.y + vector.z * vector.z

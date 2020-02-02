@@ -14,7 +14,7 @@ var hud = new Vue({
         temperature: 17,
         city: "San Andreas",
         weather: "clear-day",
-        mute: false, // Блокировка голосового чата
+        mute: false,
         voice: false,
         show: false,
         showOnline: true,
@@ -27,7 +27,7 @@ var hud = new Vue({
         playerId: -1,
         cold: false,
         heat: false,
-        arrestTime: 0, // секунды
+        arrestTime: 0,
         arrestTimeMax: 0,
         arrestTimer: null,
         keys: [{
@@ -73,7 +73,7 @@ var hud = new Vue({
     computed: {
         arrestProgressStyle() {
             return {
-                strokeDasharray: `${this.arrestProgress * 1.57}% 157%`, //78.5% 157%;
+                strokeDasharray: `${this.arrestProgress * 1.57}% 157%`,
             }
         },
         arrestProgress() {
@@ -139,6 +139,3 @@ var hud = new Vue({
         this.setDate();
     },
 });
-
-// for tets
-// hud.show = true;

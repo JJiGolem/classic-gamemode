@@ -4,7 +4,7 @@ mp.events.add('chargestations.shape.enter', (enter) => {
     isInChargeStationColshape = enter;
 });
 
-mp.keys.bind(0x45, true, () => { /// E
+mp.keys.bind(0x45, true, () => {
     if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
     if (!isInChargeStationColshape) return;

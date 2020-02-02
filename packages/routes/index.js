@@ -1,7 +1,6 @@
 "use strict";
 
 module.exports = {
-    // Настройки чекпоинта по-умолчанию
     defaultCheckpointData: {
         type: 1,
         position: null,
@@ -10,7 +9,6 @@ module.exports = {
         color: [255, 255, 255, 100],
         isMarker: false,
     },
-    // Настройки чекпоинта
     // checkpointData: {
     //     type: 1,
     //     position: null,

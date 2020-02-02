@@ -1,12 +1,5 @@
 "use strict";
 
-
-/*
-    Модуль баг-трекера.
-
-    created 27.23.19 by Carter Slade
-*/
-
 mp.bugTracker = {
 
     initBugList(list) {

@@ -1,13 +1,5 @@
 "use strict";
 
-/*
-    Модуль инфо-окон в GUI (VUE).
-    Используется для отображения информации в виде прогресс-бара и не только.
-    Например: навыки персонажа, хар-ки авто, статистика бизнеса и пр.
-
-    created 07.07.19 by Carter Slade
-*/
-
 mp.infoTable = {
     setValues: (name, values) => {
         mp.events.call("infoTable.setValues", name, values);

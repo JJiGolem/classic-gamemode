@@ -2,19 +2,13 @@ var selectMenu = new Vue({
     el: "#selectMenu",
     data: {
         show: false,
-        // Текущее меню
         menu: null,
-        // Макс. количество пунктов на экране
         maxItems: 5,
-        // Макс. количество цветов в селекторе
         maxColorValues: 10,
-        // Доступные структуры меню для использования
         menus: {
-            /// characterInit
-            /// Меню для создания персоонажа
             "characterCreateMainMenu": {
                 name: "charactercreatemain",
-                header: "Главное меню", // заголовок меню, видимый на экране
+                header: "Главное меню",
                 items: [{
                         text: "Пол",
                         values: ["Мужской", "Женский"],
@@ -36,25 +30,23 @@ var selectMenu = new Vue({
                         text: "Выйти без сохранения",
                     }
                 ],
-                i: 0, // индекс выбранного пункта
-                j: 0, // индекс первого видимого пункта
-                handler(eventName) { // обработчик взаимодействия с меню
+                i: 0,
+                j: 0,
+                handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
-                        menuName: this.name, // название меню
-                        itemName: item.text, // текст пункта меню
-                        itemIndex: this.i, // индекс пункта меню
-                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
-                        valueIndex: item.i, // индекс значения пункта меню
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, 
+                        valueIndex: item.i, 
                     };
                     if (eventName == "onItemValueChanged" && e.itemName == "Пол") {
                         selectMenu.menus["characterCreateMainMenu"].items[0].i = e.valueIndex;
-                        /// Возвращение наследственности к базовому виду
                         selectMenu.menus["characterCreateParentsMenu"].items[0].i = 0;
                         selectMenu.menus["characterCreateParentsMenu"].items[1].i = 0;
                         selectMenu.menus["characterCreateParentsMenu"].items[2].i = e.valueIndex == 0 ? 0 : 4;
                         selectMenu.menus["characterCreateParentsMenu"].items[3].i = 0;
-                        /// Возвращение внешности к базовому виду
                         selectMenu.menus["characterCreateViewMenu"].items = (e.valueIndex == 0) ? cloneObj(selectMenu.menus["characterCreateViewMenu"].defaultItemsMale) : cloneObj(selectMenu.menus["characterCreateViewMenu"].defaultItemsFemale);
 
                         mp.trigger('characterInit.create.setGender', e.valueIndex);
@@ -87,7 +79,7 @@ var selectMenu = new Vue({
             },
             "characterCreateParentsMenu": {
                 name: "charactercreateparents",
-                header: "Наследственность", // заголовок меню, видимый на экране
+                header: "Наследственность",
                 items: [{
                         text: "Мать",
                         values: ["Ханна", "Обри", "Жасмин", "Жизель", "Амелия", "Изабелла", "Зоуи", "Ава", "Камила", "Вайолет", "София", "Эвелин", "Николь", "Эшли", "Грейси", "Брианна", "Натали", "Оливия", "Элизабет", "Шарлотта", "Эмма", "Мисти"],
@@ -113,16 +105,16 @@ var selectMenu = new Vue({
                         text: "Назад",
                     },
                 ],
-                i: 0, // индекс выбранного пункта
-                j: 0, // индекс первого видимого пункта
-                handler(eventName) { // обработчик взаимодействия с меню
+                i: 0,
+                j: 0,
+                handler(eventName) { 
                     var item = this.items[this.i];
                     var e = {
-                        menuName: this.name, // название меню
-                        itemName: item.text, // текст пункта меню
-                        itemIndex: this.i, // индекс пункта меню
-                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
-                        valueIndex: item.i, // индекс значения пункта меню
+                        menuName: this.name, 
+                        itemName: item.text,
+                        itemIndex: this.i, 
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
                     };
                     if (eventName == "onEscapePressed" || eventName == 'onBackspacePressed') {
                         selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
@@ -158,7 +150,7 @@ var selectMenu = new Vue({
             },
             "characterCreateViewMenu": {
                 name: "charactercreateview",
-                header: "Внешность", // заголовок меню, видимый на экране
+                header: "Внешность",
 
                 defaultItemsMale: [{
                         text: "Прическа",
@@ -226,15 +218,15 @@ var selectMenu = new Vue({
                         text: "Высота бровей",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Выше", // слово слева от ползунка
-                        max: "Ниже", // слово справа от ползунка
+                        min: "Выше", 
+                        max: "Ниже",
                     },
                     {
                         text: "Глубина бровей",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Внутрь", // слово слева от ползунка
-                        max: "Наружу", // слово справа от ползунка
+                        min: "Внутрь",
+                        max: "Наружу",
                     },
                     {
                         text: "Цвет бровей",
@@ -254,8 +246,8 @@ var selectMenu = new Vue({
                         text: "Размер глаз",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Шире", // слово слева от ползунка
-                        max: "Уже", // слово справа от ползунка
+                        min: "Шире",
+                        max: "Уже",
                     },
                     {
                         text: "Цвет глаз",
@@ -267,113 +259,113 @@ var selectMenu = new Vue({
                         text: "Глубина переносицы",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Округлая", // слово слева от ползунка
-                        max: "Впалая", // слово справа от ползунка
+                        min: "Округлая",
+                        max: "Впалая",
                     },
                     {
                         text: "Сдвиг переносицы",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Левее", // слово слева от ползунка
-                        max: "Правее", // слово справа от ползунка
+                        min: "Левее",
+                        max: "Правее",
                     },
                     {
                         text: "Высота расположения носа",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Выше", // слово слева от ползунка
-                        max: "Ниже", // слово справа от ползунка
+                        min: "Выше",
+                        max: "Ниже",
                     },
                     {
                         text: "Ширина носа",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Уже", // слово слева от ползунка
-                        max: "Шире", // слово справа от ползунка
+                        min: "Уже", 
+                        max: "Шире", 
                     },
                     {
                         text: "Длина кончика носа",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Больше", // слово слева от ползунка
-                        max: "Меньше", // слово справа от ползунка
+                        min: "Больше", 
+                        max: "Меньше", 
                     },
                     {
                         text: "Высота кончика носа",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Выше", // слово слева от ползунка
-                        max: "Ниже", // слово справа от ползунка
+                        min: "Выше", 
+                        max: "Ниже", 
                     },
                     {
                         text: "Ширина скул",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Уже", // слово слева от ползунка
-                        max: "Шире", // слово справа от ползунка
+                        min: "Уже", 
+                        max: "Шире", 
                     },
                     {
                         text: "Глубина щек",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Округлые", // слово слева от ползунка
-                        max: "Впалые", // слово справа от ползунка
+                        min: "Округлые",
+                        max: "Впалые", 
                     },
                     {
                         text: "Толщина губ",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Шире", // слово слева от ползунка
-                        max: "Уже", // слово справа от ползунка
+                        min: "Шире", 
+                        max: "Уже",
                     },
                     {
                         text: "Форма челюсти",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Меньше", // слово слева от ползунка
-                        max: "Больше", // слово справа от ползунка
+                        min: "Меньше", 
+                        max: "Больше",
                     },
                     {
                         text: "Ширина челюсти",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Уже", // слово слева от ползунка
-                        max: "Шире", // слово справа от ползунка
+                        min: "Уже",
+                        max: "Шире", 
                     },
                     {
                         text: "Высота подбородка",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Выше", // слово слева от ползунка
-                        max: "Ниже", // слово справа от ползунка
+                        min: "Выше",
+                        max: "Ниже", 
                     },
                     {
                         text: "Глубина подбородка",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Короткий", // слово слева от ползунка
-                        max: "Длинный", // слово справа от ползунка
+                        min: "Короткий", 
+                        max: "Длинный",
                     },
                     {
                         text: "Ширина подбородка",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Уже", // слово слева от ползунка
-                        max: "Шире", // слово справа от ползунка
+                        min: "Уже", 
+                        max: "Шире", 
                     },
                     {
                         text: "Выступ подбородка",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Наружу", // слово слева от ползунка
-                        max: "Внутрь", // слово справа от ползунка
+                        min: "Наружу", 
+                        max: "Внутрь", 
                     },
                     {
                         text: "Ширина шеи",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Уже", // слово слева от ползунка
-                        max: "Шире", // слово справа от ползунка
+                        min: "Уже", 
+                        max: "Шире",
                     },
                     {
                         text: "Дефекты кожи",
@@ -466,15 +458,15 @@ var selectMenu = new Vue({
                         text: "Высота бровей",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Выше", // слово слева от ползунка
-                        max: "Ниже", // слово справа от ползунка
+                        min: "Выше",
+                        max: "Ниже",
                     },
                     {
                         text: "Глубина бровей",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Внутрь", // слово слева от ползунка
-                        max: "Наружу", // слово справа от ползунка
+                        min: "Внутрь",
+                        max: "Наружу",
                     },
                     {
                         text: "Цвет бровей",
@@ -494,8 +486,8 @@ var selectMenu = new Vue({
                         text: "Размер глаз",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Шире", // слово слева от ползунка
-                        max: "Уже", // слово справа от ползунка
+                        min: "Шире", 
+                        max: "Уже",
                     },
                     {
                         text: "Цвет глаз",
@@ -507,64 +499,64 @@ var selectMenu = new Vue({
                         text: "Глубина переносицы",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Округлая", // слово слева от ползунка
-                        max: "Впалая", // слово справа от ползунка
+                        min: "Округлая",
+                        max: "Впалая",
                     },
                     {
                         text: "Сдвиг переносицы",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Левее", // слово слева от ползунка
-                        max: "Правее", // слово справа от ползунка
+                        min: "Левее", 
+                        max: "Правее",
                     },
                     {
                         text: "Высота расположения носа",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Выше", // слово слева от ползунка
-                        max: "Ниже", // слово справа от ползунка
+                        min: "Выше", 
+                        max: "Ниже", 
                     },
                     {
                         text: "Ширина носа",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Уже", // слово слева от ползунка
-                        max: "Шире", // слово справа от ползунка
+                        min: "Уже", 
+                        max: "Шире",
                     },
                     {
                         text: "Длина кончика носа",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Больше", // слово слева от ползунка
-                        max: "Меньше", // слово справа от ползунка
+                        min: "Больше", 
+                        max: "Меньше",
                     },
                     {
                         text: "Высота кончика носа",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Выше", // слово слева от ползунка
-                        max: "Ниже", // слово справа от ползунка
+                        min: "Выше", 
+                        max: "Ниже", 
                     },
                     {
                         text: "Ширина скул",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Уже", // слово слева от ползунка
-                        max: "Шире", // слово справа от ползунка
+                        min: "Уже",
+                        max: "Шире",
                     },
                     {
                         text: "Глубина щек",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Округлые", // слово слева от ползунка
-                        max: "Впалые", // слово справа от ползунка
+                        min: "Округлые",
+                        max: "Впалые",
                     },
                     {
                         text: "Толщина губ",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Шире", // слово слева от ползунка
-                        max: "Уже", // слово справа от ползунка
+                        min: "Шире",
+                        max: "Уже",
                     },
                     {
                         text: "Помада",
@@ -597,50 +589,50 @@ var selectMenu = new Vue({
                         text: "Форма челюсти",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Меньше", // слово слева от ползунка
-                        max: "Больше", // слово справа от ползунка
+                        min: "Меньше", 
+                        max: "Больше", 
                     },
                     {
                         text: "Ширина челюсти",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Уже", // слово слева от ползунка
-                        max: "Шире", // слово справа от ползунка
+                        min: "Уже", 
+                        max: "Шире", 
                     },
                     {
                         text: "Высота подбородка",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Выше", // слово слева от ползунка
-                        max: "Ниже", // слово справа от ползунка
+                        min: "Выше", 
+                        max: "Ниже", 
                     },
                     {
                         text: "Глубина подбородка",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Короткий", // слово слева от ползунка
-                        max: "Длинный", // слово справа от ползунка
+                        min: "Короткий", 
+                        max: "Длинный", 
                     },
                     {
                         text: "Ширина подбородка",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Уже", // слово слева от ползунка
-                        max: "Шире", // слово справа от ползунка
+                        min: "Уже",
+                        max: "Шире", 
                     },
                     {
                         text: "Выступ подбородка",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Наружу", // слово слева от ползунка
-                        max: "Внутрь", // слово справа от ползунка
+                        min: "Наружу", 
+                        max: "Внутрь", 
                     },
                     {
                         text: "Ширина шеи",
                         values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         i: 10,
-                        min: "Уже", // слово слева от ползунка
-                        max: "Шире", // слово справа от ползунка
+                        min: "Уже",
+                        max: "Шире", 
                     },
                     {
                         text: "Дефекты кожи",
@@ -667,16 +659,16 @@ var selectMenu = new Vue({
                     },
                 ],
                 items: null,
-                i: 0, // индекс выбранного пункта
-                j: 0, // индекс первого видимого пункта
-                handler(eventName) { // обработчик взаимодействия с меню
+                i: 0,
+                j: 0, 
+                handler(eventName) { 
                     var item = this.items[this.i];
                     var e = {
-                        menuName: this.name, // название меню
-                        itemName: item.text, // текст пункта меню
-                        itemIndex: this.i, // индекс пункта меню
-                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
-                        valueIndex: item.i, // индекс значения пункта меню
+                        menuName: this.name, 
+                        itemName: item.text, 
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, 
+                        valueIndex: item.i, 
                     };
                     if (eventName == "onEscapePressed" || eventName == 'onBackspacePressed') {
                         selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
@@ -809,18 +801,18 @@ var selectMenu = new Vue({
             },
             "characterCreateNameMenu": {
                 name: "charactercreatename",
-                header: "Имя персоонажа", // заголовок меню, видимый на экране
+                header: "Имя персоонажа", 
                 items: [{
                         text: "Имя",
                         values: [""],
                         i: 0,
-                        type: "editable" // возможность редактирования значения пункта меню
+                        type: "editable"
                     },
                     {
                         text: "Фамилия",
                         values: [""],
                         i: 0,
-                        type: "editable" // возможность редактирования значения пункта меню
+                        type: "editable" 
                     },
                     {
                         text: "Принять",
@@ -829,16 +821,16 @@ var selectMenu = new Vue({
                         text: "Назад",
                     },
                 ],
-                i: 0, // индекс выбранного пункта
-                j: 0, // индекс первого видимого пункта
-                handler(eventName) { // обработчик взаимодействия с меню
+                i: 0, 
+                j: 0, 
+                handler(eventName) { 
                     var item = this.items[this.i];
                     var e = {
-                        menuName: this.name, // название меню
-                        itemName: item.text, // текст пункта меню
-                        itemIndex: this.i, // индекс пункта меню
-                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
-                        valueIndex: item.i, // индекс значения пункта меню
+                        menuName: this.name, 
+                        itemName: item.text,
+                        itemIndex: this.i, 
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, 
+                        valueIndex: item.i,
                     };
                     if (eventName == "onEscapePressed" || eventName == 'onBackspacePressed') {
                         mp.trigger('characterInit.create.back');
@@ -864,54 +856,10 @@ var selectMenu = new Vue({
                     }
                 }
             },
-            // "characterCreateResetMenu": {
-            //     name: "charactercreatereset",
-            //     header: "Сбросить все изменения?", // заголовок меню, видимый на экране
-            //     items: [{
-            //             text: "Да",
-            //         },
-            //         {
-            //             text: "Нет",
-            //         },
-            //     ],
-            //     i: 0, // индекс выбранного пункта
-            //     j: 0, // индекс первого видимого пункта
-            //     handler(eventName) { // обработчик взаимодействия с меню
-            //         var item = this.items[this.i];
-            //         var e = {
-            //             menuName: this.name, // название меню
-            //             itemName: item.text, // текст пункта меню
-            //             itemIndex: this.i, // индекс пункта меню
-            //             itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
-            //             valueIndex: item.i, // индекс значения пункта меню
-            //         };
-            //         if (eventName == "onEscapePressed" || eventName == 'onBackspacePressed') {
-            //             selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
-            //         }
-            //         if (eventName == "onItemSelected") {
-            //             switch (e.itemName) {
-            //                 case "Да":
-            //                     selectMenu.menus["characterCreateMainMenu"].items[0].i = 0;
-            //                     /// Возвращение наследственности к базовому виду
-            //                     selectMenu.menus["characterCreateParentsMenu"].items[0].i = 0;
-            //                     selectMenu.menus["characterCreateParentsMenu"].items[1].i = 0;
-            //                     selectMenu.menus["characterCreateParentsMenu"].items[2].i = 0;
-            //                     selectMenu.menus["characterCreateParentsMenu"].items[3].i = 0;
-            //                     /// Возвращение внешности к базовому виду
-            //                     selectMenu.menus["characterCreateViewMenu"].items = cloneObj(selectMenu.menus["characterCreateViewMenu"].defaultItemsMale);
-
-            //                     mp.trigger('characterInit.create.reset');
-            //                     break;
-            //                 case "Нет":
-            //                     selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
-            //                     break;
-            //             }
-            //         }
-            //     }
-            // },
+        
             "characterCreateExitMenu": {
                 name: "charactercreateexit",
-                header: "Хотите выйти?", // заголовок меню, видимый на экране
+                header: "Хотите выйти?", 
                 items: [{
                         text: "Да",
                     },
@@ -919,16 +867,16 @@ var selectMenu = new Vue({
                         text: "Нет",
                     },
                 ],
-                i: 0, // индекс выбранного пункта
-                j: 0, // индекс первого видимого пункта
-                handler(eventName) { // обработчик взаимодействия с меню
+                i: 0, 
+                j: 0, 
+                handler(eventName) { 
                     var item = this.items[this.i];
                     var e = {
-                        menuName: this.name, // название меню
-                        itemName: item.text, // текст пункта меню
-                        itemIndex: this.i, // индекс пункта меню
-                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
-                        valueIndex: item.i, // индекс значения пункта меню
+                        menuName: this.name, 
+                        itemName: item.text, 
+                        itemIndex: this.i, 
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, 
+                        valueIndex: item.i, 
                     };
                     if (eventName == "onEscapePressed" || eventName == 'onBackspacePressed') {
                         selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
@@ -937,12 +885,10 @@ var selectMenu = new Vue({
                         switch (e.itemName) {
                             case "Да":
                                 selectMenu.menus["characterCreateMainMenu"].items[0].i = 0;
-                                /// Возвращение наследственности к базовому виду
                                 selectMenu.menus["characterCreateParentsMenu"].items[0].i = 0;
                                 selectMenu.menus["characterCreateParentsMenu"].items[1].i = 0;
                                 selectMenu.menus["characterCreateParentsMenu"].items[2].i = 0;
                                 selectMenu.menus["characterCreateParentsMenu"].items[3].i = 0;
-                                /// Возвращение внешности к базовому виду
                                 selectMenu.menus["characterCreateViewMenu"].items = cloneObj(selectMenu.menus["characterCreateViewMenu"].defaultItemsMale);
                                 mp.trigger('characterInit.create.exit');
                                 selectMenu.show = false;
@@ -954,11 +900,9 @@ var selectMenu = new Vue({
                     }
                 }
             },
-            /// КОНЕЦ меню для создания персоонажа
-            /// ****************************************************************************************************************************************************************
             "parkingMenu": {
                 name: "parking",
-                header: "Парковка", // заголовок меню, видимый на экране
+                header: "Парковка", 
                 items: [{
                         text: "Забрать транспорт",
                     },
@@ -966,16 +910,16 @@ var selectMenu = new Vue({
                         text: "Закрыть меню",
                     }
                 ],
-                i: 0, // индекс выбранного пункта
-                j: 0, // индекс первого видимого пункта
-                handler(eventName) { // обработчик взаимодействия с меню
+                i: 0,
+                j: 0, 
+                handler(eventName) { 
                     var item = this.items[this.i];
                     var e = {
-                        menuName: this.name, // название меню
-                        itemName: item.text, // текст пункта меню
-                        itemIndex: this.i, // индекс пункта меню
-                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
-                        valueIndex: item.i, // индекс значения пункта меню
+                        menuName: this.name, 
+                        itemName: item.text, 
+                        itemIndex: this.i, 
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, 
+                        valueIndex: item.i, 
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Забрать транспорт') {
@@ -1015,16 +959,16 @@ var selectMenu = new Vue({
                         text: "Выход"
                     },
                 ],
-                i: 0, // индекс выбранного пункта
-                j: 0, // индекс первого видимого пункта
-                handler(eventName) { // обработчик взаимодействия с меню
+                i: 0,
+                j: 0, 
+                handler(eventName) { 
                     var item = this.items[this.i];
                     var e = {
-                        menuName: this.name, // название меню
-                        itemName: item.text, // текст пункта меню
-                        itemIndex: this.i, // индекс пункта меню
-                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
-                        valueIndex: item.i, // индекс значения пункта меню
+                        menuName: this.name, 
+                        itemName: item.text, 
+                        itemIndex: this.i, 
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, 
+                        valueIndex: item.i, 
                     };
                     if (eventName == 'onItemValueChanged') {
                         if (e.itemName == 'Модель') {
@@ -1172,7 +1116,7 @@ var selectMenu = new Vue({
                     {
                         text: "Введите стоимость",
                         values: [""],
-                        type: "editable" // возможность редактирования значения пункта меню
+                        type: "editable" 
                     },
                     {
                         text: "Поставить вход в дом",
@@ -1246,17 +1190,17 @@ var selectMenu = new Vue({
                     {
                         text: "Введите класс",
                         values: [""],
-                        type: "editable" // возможность редактирования значения пункта меню
+                        type: "editable" 
                     },
                     {
                         text: "Введите кол-во комнат",
                         values: [""],
-                        type: "editable" // возможность редактирования значения пункта меню
+                        type: "editable" 
                     },
                     {
                         text: "Введите коэффициент аренды",
                         values: [""],
-                        type: "editable" // возможность редактирования значения пункта меню
+                        type: "editable" 
                     },
                     {
                         text: "Поставить спавн в интерьере",
@@ -5002,16 +4946,16 @@ var selectMenu = new Vue({
                         text: "Назад"
                     }
                 ],
-                i: 0, // индекс выбранного пункта
-                j: 0, // индекс первого видимого пункта
-                handler(eventName) { // обработчик взаимодействия с меню
+                i: 0,
+                j: 0,
+                handler(eventName) { 
                     var item = this.items[this.i];
                     var e = {
-                        menuName: this.name, // название меню
-                        itemName: item.text, // текст пункта меню
-                        itemIndex: this.i, // индекс пункта меню
-                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
-                        valueIndex: item.i, // индекс значения пункта меню
+                        menuName: this.name,
+                        itemName: item.text, 
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
                     };
                     if (eventName == 'onItemValueChanged') {
                         if (e.itemName == 'Основной цвет') {
@@ -9525,53 +9469,53 @@ var selectMenu = new Vue({
                 }
             },
         },
-        // Уведомление
+
         notification: null,
-        // Время показа уведомления
+
         showNotifTime: 10000,
-        // Таймер показа уведомления
+
         showNotifTimer: null,
-        // Показ колесика загрузка
+
         loader: false,
-        // Макс. время показа колесика загрузки (ms)
+
         loaderMaxTime: 10 * 1000,
-        // Таймер колесика загрузки
+
         loaderTimer: null,
     },
     methods: {
         onKeyDown(e) {
             if (!this.show || this.loader) return;
-            if (e.keyCode == 38) { // UP
+            if (e.keyCode == 38) { 
                 if (this.menu.i == 0) return;
                 this.menu.i = Math.clamp(this.menu.i - 1, 0, this.menu.items.length - 1);
                 if (this.menu.i < this.menu.j) this.menu.j--;
                 this.onItemFocusChanged();
-            } else if (e.keyCode == 40) { // DOWN
+            } else if (e.keyCode == 40) {
                 if (this.menu.i == this.menu.items.length - 1) return;
                 this.menu.i = Math.clamp(this.menu.i + 1, 0, this.menu.items.length - 1);
                 if (this.menu.i - this.menu.j == this.maxItems) this.menu.j++;
                 this.onItemFocusChanged();
-            } else if (e.keyCode == 37) { // LEFT
+            } else if (e.keyCode == 37) {
                 var item = this.menu.items[this.menu.i];
                 if (!item.values || item.i == 0) return;
                 item.i = Math.clamp(item.i - 1, 0, item.values.length - 1);
                 if (item.i < item.j) item.j--;
                 this.onItemValueChanged();
-            } else if (e.keyCode == 39) { // RIGHT
+            } else if (e.keyCode == 39) {
                 var item = this.menu.items[this.menu.i];
                 if (!item.values || item.i == item.values.length - 1) return;
                 item.i = Math.clamp(item.i + 1, 0, item.values.length - 1);
                 if (item.i - item.j == this.maxColorValues) item.j++;
                 this.onItemValueChanged();
-            } else if (e.keyCode == 13) { // ENTER
+            } else if (e.keyCode == 13) {
                 this.onItemSelected();
             }
         },
         onKeyUp(e) {
             if (!this.show || this.loader) return;
-            if (e.keyCode == 8) { // BACKSPACE
+            if (e.keyCode == 8) {
                 this.onBackspacePressed();
-            } else if (e.keyCode == 27) { // ESCAPE
+            } else if (e.keyCode == 27) {
                 this.onEscapePressed();
             }
         },
@@ -9587,7 +9531,6 @@ var selectMenu = new Vue({
             return index >= item.j && index <= item.j + this.maxColorValues - 1;
         },
         valuesType(index) {
-            // 0 - обычное значение, 1 - цвет, 2 - ползунок, 3 - ввод текста, -1 - нет значений
             var values = this.menu.items[index].values;
             if (this.menu.items[index].type == "editable") return 3;
             if (!values || values[0] === "") return -1;
@@ -9598,24 +9541,19 @@ var selectMenu = new Vue({
             }
             return 2;
         },
-        // ************** События взаимодействия с меню **************
-        // Выбран пункт меню
         onItemSelected() {
             this.notification = null;
             this.menu.handler("onItemSelected");
             mp.trigger(`selectMenu.selectSound.play`);
         },
-        // Изменено значение пункта меню
         onItemValueChanged() {
             this.menu.handler("onItemValueChanged");
             mp.trigger(`selectMenu.focusSound.play`);
         },
-        // Изменен фокус пункта меню
         onItemFocusChanged() {
             this.menu.handler("onItemFocusChanged");
             mp.trigger(`selectMenu.focusSound.play`);
         },
-        // Нажата клавиша 'Назад'
         onBackspacePressed() {
             if (this.isEditing) return;
             this.menu.handler("onBackspacePressed");
@@ -9709,7 +9647,7 @@ var selectMenu = new Vue({
             return result;
         },
         leftNumberType() {
-            var offset = 3.5; // половина от ширины шарика ползунка
+            var offset = 3.5;
             if (this.menu.items[this.menu.i].i == 0) return 0 - offset + '%';
             var values = this.menu.items[this.menu.i].values;
             var minValue = values[0];
@@ -9740,7 +9678,7 @@ var selectMenu = new Vue({
         },
         'menu.i': function(val) {
             setTimeout(() => {
-                if (this.valuesType(val) == 3) { // editable
+                if (this.valuesType(val) == 3) {
                     setCursor(true)
                     var itemText = this.menu.items[val].text;
                     if (this.$refs[itemText]) this.$refs[itemText].focus();
@@ -9784,105 +9722,3 @@ var selectMenu = new Vue({
         });
     }
 });
-
-// for tests
-// Для своего меню необходимо создать след. структуру (комментарии внутри):
-/*var testMenu = {
-    name: "test", // название меню, необходимо для отловки событий
-    // header: "Меню выбора", // заголовок меню, видимый на экране
-    headerImg: "ammunation.png",
-    items: [{
-            text: "Выборочный тип 1", // текст пункта меню, видимый на экране
-            // если ОДНО ИЗ значений начинается с '#', то снизу появится селектор цветов
-            // если ВСЕ значения - числа, то снизу появится селектор с ползунком
-            // в любом другом случае, появится обычный селектор со значениями
-            values: ['Выбор 1', 'Выбор 2', 'Выбор 3', 'Выбор 4', 'Выбор 5', 'Выбор 6'], // доступные значения пункта меню
-            // i: 0, // индекс выбранного значения пункта меню (необяз.)
-        },
-        {
-            text: "Ввод 1",
-            values: ["Текст 1"],
-            // i: 0,
-            type: "editable" // возможность редактирования значения пункта меню
-        },
-        {
-            text: "Выбор цвета 2",
-            values: ['#0bf', '#fb0', '#bf0', '#fb0', '#fb0', '#fb0', '#bf0', '#0fe', '#cd3', 'yellow', 'pink'],
-            // i: 0, // индекс выбранного значения пункта меню (необяз.)
-            // j: 0, // индекс первого видимого значения пункта меню (актуально только для цветов) (необяз.)
-        },
-        {
-            text: "Ползунок 2.5",
-            values: [0, 10, 20, 30, 40, 50],
-            // i: 0,
-            min: "Минимум", // слово слева от ползунка
-            max: "Максимум", // слово справа от ползунка
-        },
-        {
-            text: "Ввод 2",
-            values: ["Текст 2"],
-            // i: 0,
-            type: "editable" // возможность редактирования значения пункта меню
-        },
-        {
-            text: "Ползунок 3.5",
-            values: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100],
-            // i: 0,
-            min: "Округлые", // слово слева от ползунка
-            max: "Впалые", // слово справа от ползунка
-        },
-        {
-            text: "Выборочный тип 4",
-            values: ['Выбор 1', 'Выбор 2', 'Выбор 3'],
-            // i: 0,
-        },
-        {
-            text: "Выбор цвета 5",
-            values: ['#0bf', '#fb0', '#bf0'],
-            // i: 0, // индекс выбранного значения пункта меню
-            // j: 0, // индекс первого видимого значения пункта меню (актуально только для цветов)
-        },
-        {
-            text: "Центр",
-            location: "center" // расположение кнопки (left | center | right)
-        },
-        {
-            text: "Справа",
-            location: "right" // расположение кнопки (left | center | right)
-        },
-        {
-            text: "Выборочный тип 7",
-            values: ['Выбор 1'],
-            // i: 0,
-        },
-        {
-            text: "Выбор цвета 8",
-            values: ['#0bf', '#fb0', '#bf0'],
-            // i: 0, // индекс выбранного значения пункта меню
-            // j: 0, // индекс первого видимого значения пункта меню (актуально только для цветов)
-        },
-        {
-            text: "Обычный тип 9",
-        },
-    ],
-    // i: 1, // индекс выбранного пункта (необяз.)
-    // j: 0, // индекс первого видимого пункта (необяз.)
-    handler(eventName) { // обработчик взаимодействия с меню
-        var item = this.items[this.i];
-        var e = {
-            menuName: this.name, // название меню
-            itemName: item.text, // текст пункта меню
-            itemIndex: this.i, // индекс пункта меню
-            itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
-            valueIndex: item.i, // индекс значения пункта меню
-        };
-        console.log(`Событие: ${eventName}`);
-        console.log(e);
-    }
-};
-// Далее, присвоить эту структуру модулю selectMenu:
-selectMenu.menu = testMenu;
-// Показываем меню:
-selectMenu.show = true;
-selectMenu.notification = "Здесь короче тестовое уведомление. У Вас неправильный ник или город прописки!";*/
-// selectMenu.loader = true/false - включить/выключить колесико загрузки

@@ -2,14 +2,12 @@ var interactionMenu = new Vue({
     el: "#interactionMenu",
     data: {
         show: false,
-        // Возможность использования
         enable: true,
-        left: 80, /// сдвиг от левой части экрана
-        // Текущее меню
+        left: 80,
         menu: null,
         menus: {
             "vehicle": {
-                name: "vehicle", // название меню
+                name: "vehicle",
                 items: [{
                         text: "Двери",
                         icon: "key.png"
@@ -51,7 +49,7 @@ var interactionMenu = new Vue({
                 }
             },
             "vehicle_inside": {
-                name: "vehicle_inside", // название меню
+                name: "vehicle_inside",
                 items: [{
                         text: "Двери",
                         icon: "key.png"
@@ -595,7 +593,7 @@ var interactionMenu = new Vue({
                 icon: "faction.svg"
             });
 
-            if (val == 1) { // government
+            if (val == 1) {
                 this.addItems("player_interaction", {
                     text: "Government",
                     icon: "government.svg"
@@ -603,14 +601,14 @@ var interactionMenu = new Vue({
             } else this.deleteItem("player_interaction", "Government");
 
 
-            if (val == 2 || val == 3) { // police
+            if (val == 2 || val == 3) {
                 this.addItems("player_interaction", {
                     text: "Police",
                     icon: "police.svg"
                 });
             } else this.deleteItem("player_interaction", "Police");
 
-            if (val == 4) { // fib
+            if (val == 4) {
                 this.addItems("player_interaction", {
                     text: "FIB",
                     icon: "fib.svg"
@@ -624,14 +622,14 @@ var interactionMenu = new Vue({
                 this.deleteItem("vehicle", "FIB");
             }
 
-            if (val == 5) { // hospital
+            if (val == 5) {
                 this.addItems("player_interaction", {
                     text: "Hospital",
                     icon: "hospital.svg"
                 });
             } else this.deleteItem("player_interaction", "Hospital");
 
-            if (val == 6) { // army
+            if (val == 6) {
                 this.addItems("player_interaction", {
                     text: "Army",
                     icon: "army.svg"
@@ -645,7 +643,7 @@ var interactionMenu = new Vue({
                 this.deleteItem("player_ownmenu", "Учения");
             }
 
-            if (val == 7) { // news
+            if (val == 7) {
                 this.addItems("player_interaction", {
                     text: "Weazel News",
                     icon: "news.svg"
@@ -659,7 +657,7 @@ var interactionMenu = new Vue({
                 this.deleteItem("player_ownmenu", "Эфир");
             }
 
-            if (val >= 8 && val <= 11) { // bands
+            if (val >= 8 && val <= 11) {
                 this.addItems("player_interaction", {
                     text: "Band",
                     icon: "band.svg"
@@ -678,7 +676,7 @@ var interactionMenu = new Vue({
                 this.deleteItem("vehicle", "Ограбить");
             }
 
-            if (val >= 12 && val <= 14) { // mafia
+            if (val >= 12 && val <= 14) {
                 this.addItems("player_interaction", {
                     text: "Mafia",
                     icon: "mafia.svg"
@@ -707,32 +705,3 @@ var interactionMenu = new Vue({
         },
     },
 });
-
-// for tests
-// Для своего меню необходимо создать след. структуру (комментарии внутри):
-/*var testMenu = {
-    name: "test", // название меню
-    items: [{
-            text: "Познакомиться", // текст пункта меню
-            icon: "handshake.png" // иконка пункта меню (необяз.)
-        },
-        {
-            text: "Обмен"
-        },
-        {
-            text: "Документы",
-            icon: "doc.png"
-        },
-        {
-            text: "Новый пункт"
-        }
-    ],
-    handler(index) { // обработчик кликов на пункт меню
-        var item = this.items[index];
-        console.log(`Кликнули на пункт: ${item.text}`);
-    }
-};
-// Далее, присвоить эту структуру модулю interactionMenu:
-interactionMenu.menu = testMenu;
-// Показываем меню:
-interactionMenu.show = true;*/

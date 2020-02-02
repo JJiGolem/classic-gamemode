@@ -10,106 +10,21 @@ const initialState = {
         //             text: 'ты как',
         //             isMine: false,
         //             date: Date.now()
-        //         },
-        //         {
-        //             text: '?',
-        //             isMine: false
-        //         },
-        //         {
-        //             text: 'пиздец меня разъебало вчера',
-        //             isMine: true
-        //         },
-        //         {
-        //             text: 'ну ясен хуй епт',
-        //             isMine: false
-        //         },
-        //         {
-        //             text: 'унесло так унесло',
-        //             isMine: true,
-        //         },
-        //         {
-        //             text: 'я думал вообще откинусь ))000 ладно хоть не блевал',
-        //             isMine: true
-        //         },
-        //         {
-        //             text: 'ввхвхвхdgshhssssssskkdawawd',
-        //             isMine: true
-        //         },
+        //         }
         //     ]
         // },
         // {
         //     name: null,
         //     number: '1212333',
         //     PhoneMessages: [
-        //         {
-        //             text: 'ты как',
-        //             isMine: false
-        //         },
-        //         {
-        //             text: '?',
-        //             isMine: false
-        //         },
-        //         {
-        //             text: 'пиздец меня разъебало вчера',
-        //             isMine: true
-        //         },
-        //         {
-        //             text: 'ну ясен хуй епт',
-        //             isMine: false
-        //         },
-        //         {
-        //             text: 'унесло так унесло',
-        //             isMine: true
-        //         },
-        //         {
-        //             text: 'я думал вообще откинусь ))000 ладно хоть не блевал',
-        //             isMine: true
-        //         },
-        //         {
-        //             text: '121в',
-        //             isMine: true
-        //         },
+        //         
         //     ]
         // },
         // {
         //     name: 'Влад',
         //     number: '0982',
         //     PhoneMessages: [
-        //         {
-        //             text: 'ты как',
-        //             isRead: true,
-        //             isMine: false
-        //         },
-        //         {
-        //             text: '?',
-        //             isRead: true,
-        //             isMine: false
-        //         },
-        //         {
-        //             text: 'пиздец меня разъебало вчера',
-        //             isRead: true,
-        //             isMine: true
-        //         },
-        //         {
-        //             text: 'ну ясен хуй епт',
-        //             isRead: true,
-        //             isMine: false
-        //         },
-        //         {
-        //             text: 'унесло так унесло',
-        //             isRead: true,
-        //             isMine: true
-        //         },
-        //         {
-        //             text: 'я думал вообще откинусь ))000 ладно хоть не блевал',
-        //             isRead: false,
-        //             isMine: false
-        //         },
-        //         {
-        //             text: 'в',
-        //             isMine: false,
-        //             isRead: false
-        //         },
+        //         
         //     ]
         // },
     ]
@@ -179,7 +94,7 @@ export default function dialogs(state = initialState, action) {
                         {
                             text: payload.text,
                             isMine: payload.isMine,
-                            date:Date.now(),
+                            date: Date.now(),
                             isRead: payload.isRead
                         }
                     ]

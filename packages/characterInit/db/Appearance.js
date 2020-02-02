@@ -1,7 +1,6 @@
 "use strict";
 const Sequelize = require('sequelize');
 
-/// Модель персоонажа аккаунта
 module.exports = (sequelize, DataTypes) => {
     const model = sequelize.define("Appearance", {
         id: {

@@ -1,6 +1,5 @@
 let promocodes = call("promocodes");
 
-// TODO: Временное решение
 let tempWinters = [];
 
 module.exports = {
@@ -13,7 +12,6 @@ module.exports = {
         promocodes.check(player);
     },
     "promocodes.activate": (player, code) => {
-        // TODO: Временное решение
         if (code.toLowerCase() == 'winter') {
             var notifs = call("notifications");
             var utils = call("utils");

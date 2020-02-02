@@ -4,12 +4,12 @@ var inputWindow = new Vue({
         show: false,
         name: '',
         header: '',
-        description: '', //Текст под заголовком.
-        hint: '', //Текст над полем ввода.
-        inputHint: '', //Текст-подсказка в поле ввода.
-        leftWord: 'Принять', //Слово на зелёном фоне.
-        rightWord: 'Отменить', //Слово на красном фоне.
-        value: '', //Значеие из поя ввода.
+        description: '',
+        hint: '',
+        inputHint: '',
+        leftWord: 'Принять',
+        rightWord: 'Отменить',
+        value: '',
         windows: {
             "mafia_power_sell": {
                 name: `mafia_power_sell`,
@@ -115,13 +115,3 @@ var inputWindow = new Vue({
         }
     },
 });
-
-//for tests
-//inputWindow.show = true;
-// inputWindow.name = 'money_giving';
-// inputWindow.header = "Перевод денег Swift Dunhill";
-// inputWindow.description = "Вы желаете перевести <span class='money'>мильйон $</span>?"
-// inputWindow.hint = "Введите сумму перевода";
-// inputWindow.inputHint = "Введите сумму...";
-// inputWindow.leftWord = "Подтвердить";
-// inputWindow.showByName("mafia_power_sell");

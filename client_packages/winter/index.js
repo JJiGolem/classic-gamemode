@@ -1,11 +1,5 @@
 "use strict";
 
-/*
-    Модуль зимы.
-
-    created 30.11.19 by Carter Slade
-*/
-
 mp.winter = {
     lastTakeSnowballTime: 0,
     waitSnowballTime: 3000,

@@ -8,9 +8,7 @@ let timer = call('timer');
 let utils = call('utils');
 
 module.exports = {
-    // Позиция лесопилки
     storagePos: new mp.Vector3(-568.3031616210938, 5253.30322265625, 70.48751831054688 - 1),
-    // Снаряжение лесопилки
     items: [{
         itemId: 76,
         params: {
@@ -19,9 +17,8 @@ module.exports = {
         },
         price: 100
     }],
-    // Форма дровосека
     clothes: {
-        0: [ // муж.
+        0: [
             {
                 itemId: 7,
                 params: {
@@ -65,7 +62,7 @@ module.exports = {
                 price: 100,
             }
         ],
-        1: [ // жен.
+        1: [
             {
                 itemId: 7,
                 params: {
@@ -110,21 +107,13 @@ module.exports = {
             }
         ]
     },
-    // Урон по дереву
     treeDamage: 10,
-    // Урон по бревну
     logDamage: 25,
-    // Урон по топору
     axDamage: 1,
-    // Бревна на земле
     logObjects: [],
-    // Стоимость продажи дерева
     treePrice: 10,
-    // Опыт скилла за срубленное дерево/бревно
     exp: 0.05,
-    // Прибавка к цене предмета в % (0.0-1.0) при фулл скилле
     priceBonus: 0.5,
-    // Время, через которое у дерева пополнится ХП
     respawnTreeTime: 30 * 60 * 1000,
 
     async init() {

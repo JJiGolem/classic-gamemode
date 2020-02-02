@@ -133,7 +133,7 @@ let debugText;
 mp.events.add({
     'clothingShop.enter': (shopData) => {
         getInputClothes();
-        player.setComponentVariation(1, 0, 0, 0); /// убираем маску
+        player.setComponentVariation(1, 0, 0, 0);
         bindKeys(true);
         setHeaders(shopData.bType);
         initCurrentHair(shopData.appearance);
@@ -262,15 +262,15 @@ mp.events.add({
 
 function bindKeys(bind) {
     if (bind) {
-        mp.keys.bind(0x41, true, startRotationLeft); // A
-        mp.keys.bind(0x41, false, stopRotationLeft); // A
-        mp.keys.bind(0x44, true, startRotationRight); // D
-        mp.keys.bind(0x44, false, stopRotationRight); // D
+        mp.keys.bind(0x41, true, startRotationLeft); 
+        mp.keys.bind(0x41, false, stopRotationLeft); 
+        mp.keys.bind(0x44, true, startRotationRight); 
+        mp.keys.bind(0x44, false, stopRotationRight); 
     } else {
-        mp.keys.unbind(0x41, true, startRotationLeft); // A
-        mp.keys.unbind(0x41, false, stopRotationLeft); // A
-        mp.keys.unbind(0x44, true, startRotationRight); // D
-        mp.keys.unbind(0x44, false, stopRotationRight); // D
+        mp.keys.unbind(0x41, true, startRotationLeft); 
+        mp.keys.unbind(0x41, false, stopRotationLeft); 
+        mp.keys.unbind(0x44, true, startRotationRight); 
+        mp.keys.unbind(0x44, false, stopRotationRight); 
         rotation.left = false;
         rotation.right = false;
     }

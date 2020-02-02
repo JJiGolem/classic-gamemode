@@ -1,14 +1,6 @@
 "use strict";
 
-
-/*
-    Модуль терминала для разработчиков.
-
-    created 14.08.19 by Carter Slade
-*/
-
 mp.terminal = {
-    // Макс. кол-во сохраненных команд
     maxCmdsCount: 50,
 
     enable(enable) {

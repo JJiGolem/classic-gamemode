@@ -166,10 +166,10 @@ mp.events.add("entityStreamOut", (entity) => {
 
 mp.events.add("render", () => {
     if (mp.busy.includes("lostAttach")) {
-        mp.game.controls.disableControlAction(0, 24, true); /// удары
-        mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
-        mp.game.controls.disableControlAction(0, 140, true); /// удары R
-        mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
+        mp.game.controls.disableControlAction(0, 24, true);
+        mp.game.controls.disableControlAction(0, 25, true);
+        mp.game.controls.disableControlAction(0, 140, true); 
+        mp.game.controls.disableControlAction(0, 257, true);
     }
     var player = mp.players.local;
     if (!player.__attachmentObjects) return;
@@ -209,14 +209,12 @@ mp.events.addDataHandler("attachmentsData", (entity, data) => {
             entity.__attachmentObjects = {};
         }
 
-        // process outdated first
         for (let attachment of oldAttachments) {
             if (newAttachments.indexOf(attachment) === -1) {
                 mp.attachmentMngr.removeFor(entity, attachment);
             }
         }
 
-        // then new attachments
         for (let attachment of newAttachments) {
             if (oldAttachments.indexOf(attachment) === -1) {
                 mp.attachmentMngr.addFor(entity, attachment);
@@ -245,7 +243,6 @@ function InitAttachmentsOnJoin() {
 
 InitAttachmentsOnJoin();
 
-// для настройки аттачей
 mp.events.add({
     "attaches.test": (model, bone, x, y, z, rX, rY, rZ) => {
         var player = mp.players.local;

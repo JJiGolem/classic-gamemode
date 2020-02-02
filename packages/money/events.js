@@ -1,5 +1,5 @@
 "use strict";
-/// Модуль системы финансов игрока
+
 let money = require("./index.js");
 
 module.exports = {

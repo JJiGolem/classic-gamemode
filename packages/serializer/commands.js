@@ -1,7 +1,5 @@
 "use strict";
 
-// При сохранении/загрузке отдельной таблицы указывать название в единственном числе, как модель (House, PhoneContact)
-
 module.exports = {
     "/savedb": {
         access: 6,
@@ -13,7 +11,7 @@ module.exports = {
     },
     "/savetable": {
         access: 6,
-        description: "Сохранение выбранной таблицы БД", // "/savetable House"
+        description: "Сохранение выбранной таблицы БД",
         args: "",
         handler: (player, args) => {
             mp.events.call("serializer.save.table", player, args[0]);

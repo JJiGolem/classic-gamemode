@@ -5,21 +5,6 @@ let fs = require('fs');
 let bizes = [];
 let bizesModules = [];
 
-/// biz types
-/// 0 - АЗС
-/// 1 - Супермаркет
-/// 2 - Закусочная
-/// 3 - СТО
-/// 4 - Магазин одежды
-/// 5 - Магазин оружия
-/// 6 - Парикмахерская
-/// 7 - Магазин масок
-/// 8 - Тату-салон
-/// 9 - Los Santos Customs
-/// 10 - Клубы
-/// 11 - Зарядочная станция
-
-
 let utils;
 let timer;
 let money;
@@ -514,7 +499,6 @@ module.exports = {
         });
         return nearBiz;
     },
-    // получить бизнесы с заказами
     getOrderBizes() {
         let list = [];
         bizes.forEach(biz => {
@@ -524,8 +508,6 @@ module.exports = {
         return list;
     },
     setTimer: setTimer,
-    /// Функция пополняющая кассу биза
-    /// После каждой покупки передавать в нее стоимость покупки и id бизнеса
     bizUpdateCashBox: bizUpdateCashBox,
 
     addProducts: addProducts,

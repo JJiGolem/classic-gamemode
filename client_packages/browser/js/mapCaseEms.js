@@ -91,100 +91,26 @@ var mapCaseEmsData =  {
         },
     },
 }
-/*mapCaseEmsCallsData.list.push({num: 32, name: "Cyrus Rader", description: "Раненный, требуется медицинская помощь!", pos: {x: 10, y: 10 }});
-mapCaseEmsCallsData.list.push({num: 32, name: "Cyrus Rader", description: "Раненный, требуется медицинская помощь!", pos: {x: 10, y: 10 }});
-mapCaseEmsCallsData.list.push({num: 32, name: "Cyrus Rader", description: "Раненный, требуется медицинская помощь!", pos: {x: 10, y: 10 }});
-mapCaseEmsCallsData.list.push({num: 32, name: "Cyrus Rader", description: "Раненный, требуется медицинская помощь!", pos: {x: 10, y: 10 }});
-mapCaseEmsCallsData.list.push({num: 32, name: "Cyrus Rader", description: "Раненный, требуется медицинская помощь!", pos: {x: 10, y: 10 }});*/
-//api
-/*
-    mapCaseEmsCallsData.list = [{num, name, description, pos: {x, y}}];
 
-    массив, отображающийся в списке вызовов
-*/
-/*
-    mapCaseEmsMembersData.list = [{ num, name, rank }];
-
-    массив, отображающийся в списке сотрудников
-*/
-
-
-//Следущие функции необходимо реализовать
-//Для примера в них реализованы импровизированные ответы от сервера
-
-//Функция, срабатывающая при принятии вызова
-//data - данные о вызове
 mapCaseEmsCallsData.accept = (data) => {
     mp.trigger(`callRemote`, `mapCase.ems.calls.accept`, data.id);
 }
 
-//Функция, устанавливающая массив рангов (от младшего к старшему)
 mapCaseEmsMembersData.setRanks(["Старший медик", "Альпака", "Главный уборщик", "Старший Альпака"]);
 
 
-//Функция, срабатывающая при увольнение сотрудника
-//data - данные о сотруднике из записи в списке
 mapCaseEmsMembersData.dismiss = (data) => {
     mp.trigger(`callRemote`, `mapCase.ems.members.uval`, data.id);
 }
 
-
-//Функция, срабатывающая при понижении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
-//data - данные о сотруднике из записи в списке
 mapCaseEmsMembersData.lowerRank = (data) => {
     if (data.rank <= 1)
         return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет мин. ранг - ${mapCaseEmsMembersData.ranks[data.rank - 1]}`);
     mp.trigger(`callRemote`, `mapCase.ems.rank.lower`, data.id);
 }
 
-
-//Функция, срабатывающая при повышении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
-//data - данные о сотруднике из записи в списке
 mapCaseEmsMembersData.raiseRank = (data) => {
     if (data.rank >= mapCaseEmsMembersData.ranks.length)
         return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет макс. ранг - ${mapCaseEmsMembersData.ranks[data.rank - 1]}`);
     mp.trigger(`callRemote`, `mapCase.ems.rank.raise`, data.id);
 }
-
-
-//for tests
-/*mapCaseEmsCallsData.list = [
-    {
-        num: 2,
-        name: "Curys Raider",
-        description: "ПАльпака покусал",
-    },
-    {
-        num: 1,
-        name: "ACurysirusew Raiderderder",
-        description: "Альпака покусал",
-    },
-    {
-        num: 3,
-        name: "Curysirusew Raiderderder",
-        description: "Альпака покусал",
-    },
-    {
-        num: 4,
-        name: "Curys Raider",
-        description: "Альпака покусал",
-    },
-];*/
-
-/*mapCaseEmsMembersData.list = [
-    {
-        num: 1,
-        name: "Curys Raider",
-        rank: 2,
-    },
-    {
-        num: 2,
-        name: "Curysirusew Raiderderder",
-        rank: 1,
-    },
-    {
-        num: 3,
-        name: "Curysirusew Raiderderder",
-        rank: 1,
-    },
-];*/

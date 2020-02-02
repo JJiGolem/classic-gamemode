@@ -1,5 +1,4 @@
 "use strict";
-/// Модуль для взаимодействия со всеми экономическими показателями на сервере
 
 let economicIndicators = [];
 module.exports = {
@@ -46,7 +45,6 @@ module.exports = {
     getAll() {
         return economicIndicators;
     },
-    /// Функция смены значения по типу
     setByType(array) {
         array.forEach(element => {
             let economicIndicator = economicIndicators.find( x => x.type == element.type);

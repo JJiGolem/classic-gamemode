@@ -1,4 +1,3 @@
-// Основной игровой худ - погода, деньги, онлайн
 let factions = call('factions');
 
 module.exports = {

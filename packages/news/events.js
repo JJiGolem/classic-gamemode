@@ -29,96 +29,96 @@ module.exports = {
         inventory.fullDeleteItemsByParams([6, 7, 8, 9, 10, 2, 14, 1], ["faction", "owner"], [character.factionId, character.id]);
 
         var hatParams, topParams, legsParams, feetsParams, earsParams, tiesParams, masksParams, glassesParams;
-        if (character.gender == 0) { // муж.
-            hatParams = { // prop 0
+        if (character.gender == 0) {
+            hatParams = {
                 sex: 1,
                 variation: [-1, -1, -1, -1][index],
                 texture: [-1, -1, -1, -1][index]
             };
-            topParams = { // clothes 11 / 3 / 8
+            topParams = {
                 sex: 1,
-                torso: // /clothes 3
+                torso: 
                     [12, 11, 4, 6][index],
                 tTexture: [-1, -1, -1, -1][index],
-                variation: // clothes 11
+                variation: 
                     [41, 43, 23, 28][index],
                 texture: [3, 0, 1, 2][index],
-                undershirt: // clothes 8
+                undershirt: 
                     [15, 15, 31, 31][index]
             };
-            legsParams = { // clothes 4
+            legsParams = {
                 sex: 1,
                 variation: [1, 0, 10, 10][index],
                 texture: [1, 12, 0, 2][index]
             };
-            feetsParams = { // clothes 6
+            feetsParams = { 
                 sex: 1,
                 variation: [4, 4, 21, 21][index],
                 texture: [1, 1, 0, 0][index]
             };
-            earsParams = { // prop 2
+            earsParams = {
                 sex: 1,
                 variation: [-1, -1, -1, -1][index],
                 texture: [-1, -1, -1, -1][index]
             };
-            tiesParams = { // clothes 7
+            tiesParams = { 
                 sex: 1,
                 variation: [-1, -1, -1, 38][index],
                 texture: [-1, -1, -1, 10][index]
             };
-            masksParams = { // clothes 1
+            masksParams = { 
                 sex: 1,
                 variation: [-1, -1, -1, -1][index],
                 texture: [-1, -1, -1, -1][index]
             };
-            glassesParams = { // prop 1
+            glassesParams = {
                 sex: 1,
                 variation: [-1, -1, -1, -1][index],
                 texture: [-1, -1, -1, -1][index]
             };
         } else {
-            hatParams = { // prop 0
+            hatParams = {
                 sex: 0,
                 variation: [-1, -1, -1, -1][index],
                 texture: [-1, -1, -1, -1][index]
             };
-            topParams = { // clothes 11 / 3 / 8
+            topParams = { 
                 sex: 0,
-                torso: // /clothes 3
+                torso:
                     [0, 0, 3, 1][index],
                 tTexture: [-1, -1, -1, -1][index],
-                variation: // clothes 11
+                variation: 
                     [14, 27, 7, 6][index],
                 texture: [2, 5, 0, 2][index],
-                undershirt: // clothes 8
+                undershirt: 
                     [15, 15, 37, 37][index]
             };
-            legsParams = { // clothes 4
+            legsParams = {
                 sex: 0,
                 variation: [4, 64, 8, 6][index],
                 texture: [8, 0, 0, 2][index]
             };
-            feetsParams = { // clothes 6
+            feetsParams = {
                 sex: 0,
                 variation: [1, 1, 0, 0][index],
                 texture: [0, 0, 0, 0][index]
             };
-            earsParams = { // prop 2
+            earsParams = { 
                 sex: 0,
                 variation: [-1, -1, -1, -1][index],
                 texture: [-1, -1, -1, -1][index]
             };
-            tiesParams = { // clothes 7
+            tiesParams = { 
                 sex: 0,
                 variation: [-1, -1, -1, -1][index],
                 texture: [-1, -1, -1, -1][index]
             };
-            masksParams = { // clothes 1
+            masksParams = {
                 sex: 0,
                 variation: [-1, -1, -1, -1][index],
                 texture: [-1, -1, -1, -1][index]
             };
-            glassesParams = { // prop 1
+            glassesParams = {
                 sex: 0,
                 variation: [-1, -1, -1, -1][index],
                 texture: [-1, -1, -1, -1][index]

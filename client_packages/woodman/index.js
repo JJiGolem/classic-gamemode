@@ -1,11 +1,5 @@
 "use strict";
 
-/*
-    Модуль лесоруба.
-
-    created 25.10.19 by Carter Slade
-*/
-
 mp.woodman = {
     treeHealthBar: {
         width: 0.1,
@@ -47,7 +41,6 @@ mp.woodman = {
     logFocusSlotI: -1,
     lastStartMelee: 0,
     hitWaitTime: 500,
-    // Высота и ширина бревна
     logSize: {
         height: 0.3,
         width: 4.4,
@@ -195,7 +188,6 @@ mp.woodman = {
         if (!this.isAxInHands()) return;
         if (!this.logSquats[this.logFocusSlotI]) return mp.notify.error(`Перейдите к другой части бревна`, `Лесоруб`);
 
-        // TODO: set correct heading
         mp.busy.add("jobProcess", false);
         mp.events.callRemote(`animations.playById`, 5523);
         this.logTimer = mp.timer.add(() => {
@@ -249,10 +241,10 @@ mp.events.add({
                 if (pos2d) mp.woodman.drawTreeHealthBar(pos2d.x, pos2d.y);
             }
         } else {
-            mp.game.controls.disableControlAction(0, 24, true); /// удары
-            mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
-            mp.game.controls.disableControlAction(0, 140, true); /// удары R
-            mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
+            mp.game.controls.disableControlAction(0, 24, true); 
+            mp.game.controls.disableControlAction(0, 25, true); 
+            mp.game.controls.disableControlAction(0, 140, true);
+            mp.game.controls.disableControlAction(0, 257, true); 
         }
         if (mp.objects.exists(mp.woodman.logObj) && mp.woodman.logObj) {
             var slots = mp.woodman.getLogSlots(mp.woodman.logObj);
@@ -273,10 +265,10 @@ mp.events.add({
                 if (pos2d) mp.woodman.drawLogHealthBar(pos2d.x, pos2d.y, i);
             }
 
-            mp.game.controls.disableControlAction(0, 24, true); /// удары
-            mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
-            mp.game.controls.disableControlAction(0, 140, true); /// удары R
-            mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
+            mp.game.controls.disableControlAction(0, 24, true); 
+            mp.game.controls.disableControlAction(0, 25, true); 
+            mp.game.controls.disableControlAction(0, 140, true);
+            mp.game.controls.disableControlAction(0, 257, true); 
 
             // var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
             // var endPos = player.getOffsetFromInWorldCoords(0, 0.5, -1);

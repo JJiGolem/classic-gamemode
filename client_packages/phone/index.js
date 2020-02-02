@@ -22,52 +22,38 @@ mp.events.add('phone.load', function (phoneInfo, phoneDialogs, apps) {
     bindButtons(phoneInfo.isHave);
 });
 
-/// Добавление приложения
-/// house
-/// biz
-/// factionBiz
-/// taxi
 mp.events.add('phone.app.add', function (appName, info) {
     if (info != null) {
         info.area = mp.game.ui.getLabelText(mp.game.zone.getNameOfZone(info.pos[0], info.pos[1], info.pos[2]));
     }
     mp.callCEFR('phone.app.add', [appName, info]);
 });
-/// Удаление приложения
+
 mp.events.add('phone.app.remove', function (appName, index) {
-    /// index - номер дропнутого дома(для возможности иметь несколько домов)
     mp.callCEFR('phone.app.remove', [appName]);
 });
 
 mp.events.add('characterInit.done', function () {
-    /// Добавление канала в войсчат
     mp.speechChanel.addChannel("phone");
 });
 
-/// Начало разговора на нашем конце
 mp.events.add('phone.call.start', function (number) {
     mp.events.callRemote('phone.call.ask', number);
     //playHoldAnimation(false);
     playCallAnimation(true);
 });
 
-/// Ответ на наше начало разговора
-/// 0 Вызов принят, 1 Нет номера, 2 Занято, 3 Сброс вызова, 4 Не поднял трубку
 mp.events.add('phone.call.start.ans', function (ans) {
-    //playCallAnimation(false);
     playHoldAnimation(true, 1000);
-    /// Ответ на звонок
     mp.callCEFR('phone.call.ans', [ans]);
 });
 
-/// Сброс на нашем конце
 mp.events.add('phone.call.end', function () {
     mp.events.callRemote('phone.call.end');
     //playCallAnimation(false);
     playHoldAnimation(true);
 });
 
-/// Сброс звонка на другом конце
 mp.events.add('phone.call.end.in', function () {
     isCall = false;
     mp.callCEFR('phone.call.end', []);
@@ -75,14 +61,11 @@ mp.events.add('phone.call.end.in', function () {
     playHoldAnimation(true);
 });
 
-/// Уведомление о том, что нам звонят
 mp.events.add('phone.call.in', function (startedPlayerNumber) {
     isCall = true;
-    /// Звонок игроку на телефон
     mp.callCEFR('phone.call.in', [startedPlayerNumber]);
 });
 
-/// Когда звонят нам и мы принимаем/отклоняем звонок
 mp.events.add('phone.call.in.ans', function (ans) {
     mp.events.callRemote('phone.call.ans', ans);
     if (ans == 1) {
@@ -99,47 +82,35 @@ mp.events.add("playerDeath", (player) => {
     }
 });
 
-/// Отправка сообщения
 mp.events.add('phone.message.send', function (message, number) {
     mp.events.callRemote('phone.message.send', message, number);
 });
 
-/// Получение сообщения
 mp.events.add('phone.message.set', function (message, number) {
     mp.notify.info("Новое сообщение", "Телефон");
     mp.callCEFR('phone.message.set', [message, number]);
 });
 
-/// Прочтение диалога
 mp.events.add('phone.dialog.read', function (dialogNumber) {
     mp.events.callRemote('phone.dialog.read', dialogNumber);
 });
 
-/// Добавить контакт
 mp.events.add('phone.contact.add', function (name, number) {
     mp.events.callRemote('phone.contact.add', name, number);
 });
 
-/// Изменить контакт
 mp.events.add('phone.contact.rename', function (number, name) {
     mp.events.callRemote('phone.contact.rename', number, name);
 });
 
-/// Удалить контакт
 mp.events.add('phone.contact.remove', function (number) {
     mp.events.callRemote('phone.contact.remove', number);
 });
 
-/// Изменить мой номер
 mp.events.add('phone.contact.mine.update', function (oldNumber, newNumber) {
     mp.callCEFR('phone.contact.mine.update', [oldNumber, newNumber]);
 });
 
-/// Передать сообщение об ошибке на телефон
-/// 1) Номера не существует
-/// 2) Абонент вне зоны действия сети
-/// 3) Запись с таким имененем уже существует
-/// 4) Запись не найдена
 mp.events.add('phone.error', function (number) {
     mp.callCEFR('phone.error', [number]);
 });
@@ -150,14 +121,14 @@ let bindButtons = (state) => {
     if (state) {
         if (isBinding) return;
         isBinding = true;
-        mp.keys.bind(0x26, true, showPhone);        // UP ARROW key
-        mp.keys.bind(0x28, true, hidePhone);        // DOWN ARROW key
+        mp.keys.bind(0x26, true, showPhone);        
+        mp.keys.bind(0x28, true, hidePhone);       
     }
     else {
         if (!isBinding) return;
         isBinding = false;
-        mp.keys.unbind(0x26, true, showPhone);        // UP ARROW key
-        mp.keys.unbind(0x28, true, hidePhone);        // DOWN ARROW key
+        mp.keys.unbind(0x26, true, showPhone);        
+        mp.keys.unbind(0x28, true, hidePhone);        
     }
 };
 mp.events.add("phone.show", (state) => {
@@ -199,7 +170,7 @@ let hidePhone = () => {
     }
 };
 
-function playHoldAnimation(state, timeout) { /// Анимация держания телефона
+function playHoldAnimation(state, timeout) {
     if (mp.players.local.vehicle) return;
     if (state) {
         if (!timeout) timeout = 0;
@@ -214,7 +185,7 @@ function playHoldAnimation(state, timeout) { /// Анимация держани
     }
 }
 
-function playCallAnimation(state) { /// Анимация разговора
+function playCallAnimation(state) {
     if (mp.players.local.vehicle) return;
     if (state) {
         mp.attachmentMngr.removeLocal("takePhone");

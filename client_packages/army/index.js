@@ -1,24 +1,14 @@
 "use strict";
 
-
-/*
-    Модуль армии (организации).
-
-    created 12.10.19 by Carter Slade
-*/
-
 mp.army = {
-    // Цвета блипов (teamId: blipColor)
     colors: {
         1: 1,
         2: 2,
     },
-    // Цвета ников (teamId: nameColor)
     nameColors: {
         1: [255, 59, 59, 255],
         2: [0, 181, 0, 255],
     },
-    // Нативки
     natives: {
         _GET_BLIP_INFO_ID_ITERATOR: "0x186E5D252FA50E7D",
         GET_FIRST_BLIP_INFO_ID: "0x1BEDE233E6CD2A1F",
@@ -90,14 +80,10 @@ mp.army = {
 
         if (typeof target == 'object') target = JSON.stringify(target);
         if (typeof killer == 'object') killer = JSON.stringify(killer);
-        // самоубийство
         if (reason == 3452007600) return mp.callCEFV(`killList.add(\`${target}\`)`);
-        // на авто
         if (reason == 2741846334) return mp.callCEFV(`killList.add(\`${target}\`, \`${killer}\`, 'car')`);
-        // рукопашка
         if (reason == 2725352035) return mp.callCEFV(`killList.add(\`${target}\`, \`${killer}\`, 'hand')`);
 
-        // огнестрел, либо что-то еще? :D
         var name = mp.weapons.getWeaponName(reason);
         mp.callCEFV(`killList.add(\`${target}\`, \`${killer}\`, \`${name}\`)`);
     },
@@ -158,7 +144,7 @@ mp.events.add({
     },
 });
 
-mp.keys.bind(0x45, true, () => { /// E
+mp.keys.bind(0x45, true, () => {
     if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
     if (!mp.army.isInFuelStationShape) return;

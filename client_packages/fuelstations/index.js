@@ -11,7 +11,7 @@ mp.events.add('fuelstations.shape.leave', () => {
     mp.events.call('fuelstations.menu.close');
 });
 
-mp.keys.bind(0x45, true, () => { /// E
+mp.keys.bind(0x45, true, () => {
     if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
     if (isInFuelStationColshape) {
@@ -41,7 +41,6 @@ mp.events.add('fuelstations.menu.close', () => {
 
 mp.events.add('fuelstations.fill.litres.show', () => {
     mp.events.call('fuelstations.menu.close');
-    //if (mp.busy.includes()) return;
     mp.busy.add('fuelstations.litres', true);
     mp.callCEFV(`inputWindow.name = 'fuelstations_litres';
 inputWindow.header = "Заправка";

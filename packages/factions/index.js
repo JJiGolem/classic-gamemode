@@ -8,47 +8,29 @@ var vehicles = call('vehicles');
 var utils = call('utils');
 
 module.exports = {
-    // Организации
     factions: [],
-    // Маркеры организаций
     markers: [],
-    // Блипы организаций
     blips: [],
-    // Маркеры складов организаций
     warehouses: [],
-    // Маркеры выдачи предметов организаций
     storages: [],
-    // Маркеры шкафов организаций
     holders: [],
-    // Склад нескончаемых боеприпасов (навешен blip)
     ammoWarehouse: null,
-    // Склад нескончаемых медикаментов (навешен blip)
     medicinesWarehouse: null,
-    // Кол-во боеприпасов в ящике
     ammoBox: 500,
-    // Кол-во медикаментов в ящике
     medicinesBox: 500,
-    // TODO: Добавить адекватные модели авто
-    // Модели авто, в которые можно грузить боеприпасы
     ammoVehModels: ["barracks", "barracks3", "moonbeam", "youga2", "insurgent2"],
-    // Модели авто, в которые можно грузить медикаменты
     medicinesVehModels: ["granger", "fbi2"],
-    // Макс. кол-во боеприпасов в авто
     ammoVehMax: 3000,
-    // Макс. кол-во медикаментов в авто
     medicinesVehMax: 3000,
-    // Белый лист организаций, которые могут пополнять склады
     whiteListWarehouse: {
         "ammo": {
             2: [4],
             3: [4],
             6: [1, 2, 3, 6],
-            // банды
             8: [8],
             9: [9],
             10: [10],
             11: [11],
-            // мафии
             12: [8, 9, 10, 11, 12],
             13: [8, 9, 10, 11, 13],
             14: [8, 9, 10, 11, 14],
@@ -57,13 +39,9 @@ module.exports = {
             5: [2, 3, 4, 5, 6]
         }
     },
-    // Кол-во минут онлайна, необходимых для получения ЗП
     payMins: 15,
-    // Стоимость респавна авто
     vehRespawnPrice: 1000,
-    // Мин. время простоя, чтобы авто зареспавнилось лидером
     vehWaitSpawn: 5 * 60 * 1000,
-    // Бонус к ЗП (1 - x1)
     bonusPay: 1,
 
     async init() {
@@ -196,7 +174,7 @@ module.exports = {
             dimension: faction.hD
         });
         holder.inventory = {
-            items: {}, // предметов игроков в шкафе
+            items: {},
         };
         this.holders.push(holder);
 
@@ -613,9 +591,7 @@ module.exports = {
         return this.whiteListWarehouse[boxType][player.character.factionId].includes(faction.id)
     },
     canTakeWarehouse(player, boxType, faction) {
-        // банды тырят у армейцев
         if (this.isBandFaction(player.character.factionId) && this.isArmyFaction(faction)) return true;
-        // игрок может брать в своей организации с определенного ранга
         return player.character.factionId == faction.id && player.character.factionRank >= this.getRank(faction, faction.ammoRank).id;
     },
     canInvite(player) {
@@ -661,7 +637,6 @@ module.exports = {
         if (this.isMafiaFaction(faction)) {
             if (faction.cash < pay) return notifs.error(player, `В общаке недостаточно средств для получения зарплаты`, faction.name);
 
-            // TODO: не многовато запросов в БД получится?
             // faction.cash -= pay;
             // faction.save();
         } else if (this.isBandFaction(faction)) pay += parseInt(bands.bandZonesPrice * bands.getPowerBand(faction.id));

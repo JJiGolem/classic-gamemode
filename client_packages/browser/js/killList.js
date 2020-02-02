@@ -46,32 +46,3 @@ var killList = new Vue({
         }
     }
 });
-
-// for tests
-/*killList.add({
-        name: "Swifty Swift",
-        factionId: 8
-    }, {
-        name: "Carter Slade",
-        factionId: 9
-    },
-    "car");
-killList.add({
-    name: "Swifty Swift",
-    factionId: 11
-}, {
-    name: "Carter Slade",
-    factionId: 10
-}, "Pistol");
-killList.add({
-    name: "Swifty Swift",
-    factionId: 8
-}, {
-    name: "Carter Slade",
-    factionId: 1
-}, "hand");
-
-killList.add({
-    name: "Swifty Swift",
-    factionId: 9
-});*/

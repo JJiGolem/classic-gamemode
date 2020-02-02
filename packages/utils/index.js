@@ -1,9 +1,7 @@
 "use strict";
 let util = require('util');
 
-/// Утилиты и функции использующиеся в нескольких модулях
 let utils = {
-    /// Отправка писем на почту
     sendMail(to, subject, message) {
         var nodemailer = require("nodemailer");
         var transporter = nodemailer.createTransport({
@@ -31,7 +29,6 @@ let utils = {
         return rand;
     },
     randomFloat(min, max, number) {
-        // number - количество знаков после запятой
         let rand = min + Math.random() * (max - min);
         return parseFloat(rand).toFixed(number);
     },
@@ -57,7 +54,6 @@ let utils = {
 
         return pointsOnInterval;
     },
-    // Глубокое логирование JS-объекта без свёрток [Object], [Array] и пр.
     logObject(obj) {
         console.log(util.inspect(obj, {
             showHidden: false,
@@ -132,24 +128,20 @@ let utils = {
     vdist(posA, posB) {
         return (posA.x - posB.x) * (posA.x - posB.x) + (posA.y - posB.y) * (posA.y - posB.y) + (posA.z - posB.z) * (posA.z - posB.z);
     },
-    // Получить расстояние между двумя точками без учета Z
     vdistSqr(posA, posB) {
         return Math.sqrt(Math.pow((posB.x - posA.x), 2) + Math.pow((posB.y - posA.y), 2));
     },
-    // Сумма чисел в массиве
     arraySum(array) {
         var sum = 0;
         array.forEach(num => sum += num);
         return sum;
     },
-    // Добавить текст над головой игрока
     addOverheadText(player, text, color = [255, 255, 255, 255]) {
         mp.players.forEachInRange(player.position, 20, rec => {
             if (rec.id == player.id) return;
             rec.call(`addOverheadText`, [player.id, text, color]);
         });
     },
-    // принадлежит ли позиция полигону
     inPolygon(pos, polygon) {
         var parity = 0;
         for (var i = 0; i < polygon.length - 1; i++) {
@@ -187,7 +179,6 @@ let utils = {
 };
 module.exports = utils;
 
-// для удобства использования
 console.logObject = utils.logObject;
 Math.clamp = utils.clamp;
 mp.players.getBySqlId = utils.getPlayerBySqlId;
@@ -196,7 +187,6 @@ mp.players.getNear = utils.getNearPlayer;
 mp.vehicles.getBySqlId = utils.getVehicleBySqlId;
 mp.vehicles.getNear = utils.getNearVehicle;
 
-// ребро касается, пересекается или пох
 let edgeType = (vector, a) => {
     switch (classify(vector, a.x, a.y)) {
         case 1:
@@ -211,7 +201,6 @@ let edgeType = (vector, a) => {
     }
 };
 
-// слева от вектора, справа от вектора, или принадлежит вектору
 let classify = (vector, x1, y1) => {
     var pr = (vector.x2 - vector.x1) * (y1 - vector.y1) - (vector.y2 - vector.y1) * (x1 - vector.x1);
     if (pr > 0)

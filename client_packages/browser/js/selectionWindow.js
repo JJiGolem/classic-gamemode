@@ -28,5 +28,3 @@ var selectionWindow = new Vue({
         }
     }
 });
-
-//selectionWindow.show = true;

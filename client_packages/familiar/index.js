@@ -1,14 +1,7 @@
 "use strict";
 
 
-/*
-    Модуль знакомст.
-
-    created 12.09.19 by Carter Slade
-*/
-
 mp.familiar = {
-    // Список имен знакомых
     list: [],
 
     init(list) {

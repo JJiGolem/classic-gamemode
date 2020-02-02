@@ -1,24 +1,18 @@
 var timer = new Vue({
     el: "#timer",
     data: {
-        // текущий таймер
         timer: null,
-        // список таймеров
         timers: {
             "death": {
                 icon: "death.svg",
                 text: "До смерти осталось"
             }
         },
-        // общее время жизни таймера
         allTime: 0,
-        // оставшееся время жизни таймера
         time: 0,
-        // таймер отсчета времени
         updateTimer: null,
     },
     computed: {
-        // ширина прогрессбара (от 0 до 100)
         width() {
             return this.time / this.allTime * 100;
         },
@@ -53,6 +47,3 @@ var timer = new Vue({
         },
     }
 });
-
-// for tests
-// timer.start("death", 180000);

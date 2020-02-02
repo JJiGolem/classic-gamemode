@@ -1,5 +1,5 @@
 "use strict";
-/// Модуль выбора и создания персоонажа
+
 let admin;
 let characterInit = require("./index.js");
 let logger = call("logger");
@@ -67,13 +67,11 @@ module.exports = {
             player.call("characterInit.slot.buy.ans", [2, player.account.slots, player.account.donate]);
         }
     },
-    /// Разморозка игрока после выбора персоонажа
     "characterInit.done": (player) => {
         player.call('characterInit.done');
         player.authTime = Date.now();
         logger.log(`Авторизовал персонажа (IP: ${player.ip})`, "characterInit", player);
     },
-    /// События создания персоонажа
     "characterInit.create.check": (player, fullname, charData) => {
         characterInit.save(player, fullname, charData);
     },

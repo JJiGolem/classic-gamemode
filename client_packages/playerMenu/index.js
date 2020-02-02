@@ -1,12 +1,5 @@
 "use strict";
 
-
-/*
-    Модуль меню игрока.
-
-    created 20.09.19 by Carter Slade
-*/
-
 mp.playerMenu = {
     init(data) {
         if (data.house) data.house.street = mp.utils.getStreetName(data.house.pos);

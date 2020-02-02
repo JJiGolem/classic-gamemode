@@ -5,15 +5,10 @@ let money = call('money');
 let notifs = call('notifications');
 
 module.exports = {
-    // Кол-во наличных за 1 ед. доната
     convertCash: 100,
-    // Стоимость смены ника
     nicknamePrice: 100,
-    // Стоимость снятия варна
     clearWarnPrice: 200,
-    // Стоимость открытия нового слота
     slotPrice: 500,
-    // Макс. кол-во слотов
     slotsMax: 3,
 
     setDonate(player, donate, reason = "") {
@@ -52,7 +47,6 @@ module.exports = {
         };
         if (player.account.donate < this.nicknamePrice) return out(`Необходимо ${this.nicknamePrice} CC`);
 
-        // TODO: check nickname
         let reg = /^[A-z]{2,15} [A-z]{2,15}$/;
         if (!reg.test(name)) return out(`Имя и фамилия должны состоять из 2-15 латинских букв каждое`);
 

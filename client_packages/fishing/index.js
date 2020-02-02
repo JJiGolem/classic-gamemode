@@ -71,7 +71,6 @@ const checkConditions = () => {
         !localPlayer.vehicle &&
         !localPlayer.getVehicleIsTryingToEnter() &&
         !localPlayer.isInAir() &&
-        // !localPlayer.isPlayingAnim() &&
         !localPlayer.isJumping() &&
         !localPlayer.isDiving() &&
         !localPlayer.isEvasiveDiving() &&
@@ -227,7 +226,6 @@ mp.events.add('fishing.game.menu', () => {
     if (mp.busy.includes()) return;
 
     mp.events.call('prompt.showByName', 'fishing');
-    // bindButtons(true);
 });
 
 mp.events.add('click', (x, y, upOrDown, leftOrRight, relativeX, relativeY, worldPosition, hitEntity) => {
@@ -357,7 +355,7 @@ let fishingExit = () => {
     }
 }
 
-function playBaseAnimation(state, timeout) { /// Анимация держания удочки
+function playBaseAnimation(state, timeout) {
     if (state) {
         if (!timeout) timeout = 0;
         mp.timer.add(()=> {
@@ -368,7 +366,7 @@ function playBaseAnimation(state, timeout) { /// Анимация держани
     }
 }
 
-function playWaitAnimation(state, timeout) { /// Анимация начала рыбалки
+function playWaitAnimation(state, timeout) {
     if (state) {
         if (!timeout) timeout = 0;
         mp.timer.add(()=> {
@@ -379,7 +377,7 @@ function playWaitAnimation(state, timeout) { /// Анимация начала �
     }
 }
 
-function playFetchAnimation(state, timeout) { /// Анимация вытягивания
+function playFetchAnimation(state, timeout) {
     if (state) {
         if (!timeout) timeout = 0;
         mp.timer.add(()=> {

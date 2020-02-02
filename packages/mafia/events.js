@@ -268,7 +268,6 @@ module.exports = {
         notifs.info(player, `Предложение отклонено`);
         notifs.info(inviter, `${player.name} отклонил предложение`);
     },
-    // снять/надеть веревку
     "mafia.cuffs": (player, data) => {
         if (typeof data == 'string') data = JSON.parse(data);
         var header = `Веревка`;
@@ -305,7 +304,6 @@ module.exports = {
             rec.call(`mafia.follow.stop`);
         }
     },
-    // снять/надеть мешок на голову
     "mafia.bag": (player, data) => {
         if (typeof data == 'string') data = JSON.parse(data);
         var header = `Мешок`;
@@ -313,8 +311,6 @@ module.exports = {
             notifs.error(player, text, header);
         };
         var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
-        // rec = player; // for tests
-
         if (!rec || !rec.character) return out(`Игрок не найден`);
         var dist = player.dist(rec.position);
         if (dist > 5) return out(`${rec.name} далеко`);
@@ -394,8 +390,6 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Игрок не найден`, header);
         if (rec.getVariable("inBoot") == null) return notifs.error(player, `${rec.name} не в багажнике`, header);
         if (!factions.isMafiaFaction(player.character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
-        // TODO: проверка на багажник
-
         mp.vehicles.at(rec.getVariable("inBoot")).setVariable("inBoot", null);
         rec.setVariable("inBoot", null);
 

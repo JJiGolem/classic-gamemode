@@ -8,7 +8,7 @@ let jobs = call('jobs');
 
 module.exports = {
 
-    "characterInit.done": (player) => { //characterInit.done
+    "characterInit.done": (player) => {
         player.call('chat.load');
         player.call('chat.message.push', ['!{#00abff} Добро пожаловать на Classic Roleplay!']);
 
@@ -31,13 +31,7 @@ module.exports = {
     // },
 
     "chat.tags.update": () => {
-        /*
-        TODO:
-        Вызывать функцию при выборе персонажа/принятии/увольнении
-        Сделать проверку на то, состоит ли человек в организации
-        Если состоит, вызываем на клиенте addChatTags и передаем туда массив нужных тэгов
-        Рация
-        */
+
     },
 
 
@@ -128,12 +122,11 @@ module.exports = {
 
         mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
-                // Тот, кто участвует в эфире Weazel News, не слышит себя в чате
                 if (playerInStream && currentPlayer.id == player.id) return;
 
                 currentPlayer.call('chat.action.say', [player.name, player.id, message]);
 
-                if (currentPlayer.spy) { // если на игроке установлена прослушка
+                if (currentPlayer.spy) {
                     var fibAgent = mp.players.at(currentPlayer.spy.playerId);
                     if (!fibAgent) return delete currentPlayer.spy;
                     if (!fibAgent.character) return delete currentPlayer.spy;
@@ -164,12 +157,11 @@ module.exports = {
 
         mp.players.forEachInRange(player.position, 20, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
-                // Тот, кто участвует в эфире Weazel News, не слышит себя в чате
                 if (playerInStream && currentPlayer.id == player.id) return;
 
                 currentPlayer.call('chat.action.shout', [player.name, player.id, message]);
 
-                if (currentPlayer.spy) { // если на игроке установлена прослушка
+                if (currentPlayer.spy) {
                     var fibAgent = mp.players.at(currentPlayer.spy.playerId);
                     if (!fibAgent) return delete currentPlayer.spy;
                     if (!fibAgent.character) return delete currentPlayer.spy;

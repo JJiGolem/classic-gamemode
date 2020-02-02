@@ -6,7 +6,6 @@ let notifs = call('notifications');
 let timer = call('timer');
 
 module.exports = {
-    // Позиции, где можно проводить бизвары
     mafiaZones: [{
             id: 0,
             name: "Зона для рекета 1",
@@ -38,23 +37,23 @@ module.exports = {
             y: 3092.919677734375,
         }
     ],
-    // Мин. ранг, который может бизварить
+
     bizWarRank: 8,
-    // Зоны, на которых происходит бизвар
+
     wars: {},
-    // Время завершения последнего бизвара (ms)
+
     lastWarTime: 0,
-    // Время отдыха между бизварами (ms)
+
     waitWarTime: 20 * 60 * 1000,
-    // Повторное участие в бизваре после убийства
+
     reveangeKill: false,
-    // Время захвата (ms)
+
     warTime: 5 * 60 * 1000,
-    // Промежуток часов, в который можно начать захват
+
     bizWarInterval: [11, 20],
-    // Кол-во боеприпасов, списываемое за выдачу оружия
+
     gunAmmo: 100,
-    // Кол-во боеприпасов, списываемое за выдачу патронов
+
     ammoAmmo: 1,
 
     convertToClientMafiaZones() {
@@ -80,7 +79,7 @@ module.exports = {
 
         return null;
     },
-    // влияние мафии от 0 до 1 (min: 0 - ниодного бизнеса не захвачено, max: 1 - все бизнесы захвачены)
+
     getPowerMafia(mafiaId) {
         var count = 0;
         var bizesCount = bizes.getBizesByFactionId(mafiaId).length;
@@ -230,7 +229,7 @@ module.exports = {
             rec.call(`mafia.bizWar.score.set`, [mafiaId, score]);
         });
     },
-    // сколько осталось для окончания бизвар (ms)
+
     haveTime(war) {
         return this.warTime - (Date.now() - war.startTime);
     },

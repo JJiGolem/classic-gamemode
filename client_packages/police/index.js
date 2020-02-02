@@ -1,20 +1,14 @@
 "use strict";
 
-/*
-    Модуль полиции.
-
-    created 20.08.19 by Carter Slade
-*/
-
 mp.police = {
     arrestType: null,
     haveCuffs: false,
     followPlayer: null,
     wanted: 0,
     wantedTimer: null,
-    clearWantedTime: 60 * 60 * 1000, // время очищения 1 ур. розыска (ms)
+    clearWantedTime: 60 * 60 * 1000,
     searchRadius: 150,
-    searchTime: 2 * 60 * 1000, // время жизни блипа поиска преступника
+    searchTime: 2 * 60 * 1000,
     searchTimer: null,
     natives: {
         SET_BLIP_SPRITE: "0xDF735600A4696DAF",
@@ -22,17 +16,14 @@ mp.police = {
         SET_BLIP_COLOUR: "0x03D7FB09E75D6B7E",
     },
     jailInfo: {
-        // КПЗ ЛСПД
         0: {
             coords: new mp.Vector3(459.35162353515625, -997.807373046875, 24.914854049682617),
             radius: 10,
         },
-        // тюрьма за городом
         1: {
             coords: new mp.Vector3(1689.7947998046875, 2598.755859375, 45.56488800048828),
             radius: 200,
         },
-        // КПЗ ЛССД
         2: {
             coords: new mp.Vector3(-439.4527282714844, 5989.65185546875, 31.716529846191406),
             radius: 20,
@@ -116,38 +107,38 @@ mp.events.add({
     },
     "render": () => {
         if (mp.police.followPlayer) {
-            mp.game.controls.disableControlAction(0, 21, true); /// бег
-            mp.game.controls.disableControlAction(0, 22, true); /// прыжок
-            mp.game.controls.disableControlAction(0, 31, true); /// вперед назад
-            mp.game.controls.disableControlAction(0, 30, true); /// влево вправо
-            mp.game.controls.disableControlAction(0, 24, true); /// удары
-            mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
-            mp.game.controls.disableControlAction(0, 257, true); /// стрельба
-            mp.game.controls.disableControlAction(1, 200, true); // esc
-            mp.game.controls.disableControlAction(0, 140, true); /// удары R
-            mp.game.controls.disableControlAction(24, 37, true); /// Tab
-            mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
+            mp.game.controls.disableControlAction(0, 21, true);
+            mp.game.controls.disableControlAction(0, 22, true);
+            mp.game.controls.disableControlAction(0, 31, true);
+            mp.game.controls.disableControlAction(0, 30, true);
+            mp.game.controls.disableControlAction(0, 24, true);
+            mp.game.controls.disableControlAction(0, 25, true);
+            mp.game.controls.disableControlAction(0, 257, true);
+            mp.game.controls.disableControlAction(1, 200, true);
+            mp.game.controls.disableControlAction(0, 140, true); 
+            mp.game.controls.disableControlAction(24, 37, true);
+            mp.game.controls.disableControlAction(0, 257, true); 
         }
         if (mp.police.haveCuffs) {
-            mp.game.controls.disableControlAction(0, 24, true); /// удары
-            mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
-            mp.game.controls.disableControlAction(0, 257, true); /// стрельба
-            mp.game.controls.disableControlAction(0, 140, true); /// удары R
-            mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
+            mp.game.controls.disableControlAction(0, 24, true); 
+            mp.game.controls.disableControlAction(0, 25, true); 
+            mp.game.controls.disableControlAction(0, 257, true); 
+            mp.game.controls.disableControlAction(0, 140, true);
+            mp.game.controls.disableControlAction(0, 257, true); 
 
             if (mp.players.local.vehicle) {
-                mp.game.controls.disableControlAction(0, 59, true); /// INPUT_VEH_MOVE_LR
-                mp.game.controls.disableControlAction(0, 60, true); /// INPUT_VEH_MOVE_UD
-                mp.game.controls.disableControlAction(0, 71, true); /// INPUT_VEH_ACCELERATE
-                mp.game.controls.disableControlAction(0, 72, true); /// INPUT_VEH_BRAKE
-                mp.game.controls.disableControlAction(0, 75, true); /// INPUT_VEH_EXIT
+                mp.game.controls.disableControlAction(0, 59, true); 
+                mp.game.controls.disableControlAction(0, 60, true); 
+                mp.game.controls.disableControlAction(0, 71, true); 
+                mp.game.controls.disableControlAction(0, 72, true); 
+                mp.game.controls.disableControlAction(0, 75, true);
             }
         }
         if (mp.police.arrestType != null) {
-            mp.game.controls.disableControlAction(0, 24, true); /// удары
-            mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
-            mp.game.controls.disableControlAction(0, 257, true); /// стрельба
-            mp.game.controls.disableControlAction(0, 140, true); /// удары R
+            mp.game.controls.disableControlAction(0, 24, true);
+            mp.game.controls.disableControlAction(0, 25, true);
+            mp.game.controls.disableControlAction(0, 257, true);
+            mp.game.controls.disableControlAction(0, 140, true);
         }
     },
     "police.follow.start": (playerId) => {

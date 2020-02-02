@@ -166,66 +166,24 @@ var mapCaseWnewsData =  {
     },
 }
 
-
-//api
-/*
-    mapCaseWnewsMembersData.list = [{ num, name, rank }];
-
-    массив, отображающийся в списке сотрудников
-*/
-/*
-    mapCaseWnewsAdsData.adsAmount = int;
-
-    Кол-во сообщений для редактирования.
-*/
-/*
-    mapCaseWnewsAdsData.setAd({ text: str, author: str });
-
-    Показывает всплывающее окно для редактирования объявления
-    Параметр - объект с обязательными свойствами:
-        text - содержание объявления
-        author - автор объявления
-*/
-/*
-    mapCaseWnewsAdsData.adData.maxLength = int
-
-    Устанавливает максимальное кол-во символов в текстовом поле редактирования сообщения. Стандартно 380.
-*/
-
-
-
-//Следущие функции необходимо реализовать
-//Для примера в них реализованы импровизированные ответы от сервера
-
-//Функция, устанавливающая массив рангов (от младшего к старшему)
 mapCaseWnewsMembersData.setRanks(["Старший редахтер", "Альпака", "Главный уборщик", "Старший Альпака"]);
 
-
-//Функция, срабатывающая при увольнение сотрудника
-//data - данные о сотруднике из записи в списке
 mapCaseWnewsMembersData.dismiss = (data) => {
     mp.trigger(`callRemote`, `mapCase.news.members.uval`, data.id);
 }
 
-
-//Функция, срабатывающая при понижении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
-//data - данные о сотруднике из записи в списке
 mapCaseWnewsMembersData.lowerRank = (data) => {
     if (data.rank <= 1)
         return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет мин. ранг - ${mapCaseWnewsMembersData.ranks[data.rank - 1]}`);
     mp.trigger(`callRemote`, `mapCase.news.rank.lower`, data.id);
 }
 
-
-//Функция, срабатывающая при повышении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
-//data - данные о сотруднике из записи в списке
 mapCaseWnewsMembersData.raiseRank = (data) => {
     if (data.rank >= mapCaseWnewsMembersData.ranks.length)
         return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет макс. ранг - ${mapCaseWnewsMembersData.ranks[data.rank - 1]}`);
     mp.trigger(`callRemote`, `mapCase.news.rank.raise`, data.id);
 }
 
-//Функция, срабатывающая при запросе объявления
 mapCaseWnewsAdsData.getAd = () => {
     mp.trigger(`callRemote`, `mapCase.news.ads.get`);
     // setTimeout(() => {
@@ -237,8 +195,6 @@ mapCaseWnewsAdsData.getAd = () => {
     // }, 3000);
 }
 
-//Функция, срабатывающая при отпралении объявления
-//adData - информация об объявлении ({ text, author })
 mapCaseWnewsAdsData.adData.send = (adData) => {
     mp.trigger(`callRemote`, `mapCase.news.ads.accept`, JSON.stringify(adData));
     // console.log(adData);
@@ -248,8 +204,6 @@ mapCaseWnewsAdsData.adData.send = (adData) => {
     // }, 3000);
 }
 
-//Функция, срабатывающая при отказе публикации
-//adData - информация об объявлении ({ text, author })
 mapCaseWnewsAdsData.adData.refuse = (adData) => {
     mp.trigger(`callRemote`, `mapCase.news.ads.cancel`, JSON.stringify(adData));
     // console.log(adData);
@@ -258,25 +212,5 @@ mapCaseWnewsAdsData.adData.refuse = (adData) => {
     //     mapCaseWnewsAdsData.adsAmount--;
     // }, 3000);
 }
-
-//for tests
-
-/*mapCaseWnewsMembersData.list = [
-    {
-        num: 1,
-        name: "Curys Raider",
-        rank: 2,
-    },
-    {
-        num: 2,
-        name: "Curysirusew Raiderderder",
-        rank: 1,
-    },
-    {
-        num: 3,
-        name: "Curysirusew Raiderderder",
-        rank: 1,
-    },
-];*/
 
 mapCaseWnewsAdsData.adsAmount = 0;

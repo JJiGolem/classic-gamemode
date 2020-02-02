@@ -1,7 +1,6 @@
 "use strict";
 const Sequelize = require('sequelize');
 
-/// Модель персоонажа аккаунта
 module.exports = (sequelize, DataTypes) => {
     const model = sequelize.define("Character", {
         id: {
@@ -17,13 +16,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(50),
             allowNull: false
         },
-        /// Работа
         job: {
             type: DataTypes.INTEGER(11),
             defaultValue: null,
             allowNull: true
         },
-        // Организация
         factionId: {
             type: DataTypes.INTEGER(11),
             defaultValue: null,
@@ -34,7 +31,6 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: null,
             allowNull: true
         },
-        /// Финансы
         cash: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
@@ -50,7 +46,6 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: false
         },
-        /// Последние сохраненные координаты
         x: {
             type: DataTypes.FLOAT,
             allowNull: false
@@ -68,7 +63,6 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: false
         },
-        /// Статус
         status: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
@@ -79,7 +73,6 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: false
         },
-        /// Ограничения
         warnDate: {
             type: DataTypes.DATE,
             defaultValue: null,
@@ -89,7 +82,6 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: false
         },
-        /// Статистика
         minutes: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
@@ -105,7 +97,6 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: Sequelize.NOW,
             allowNull: false
         },
-        /// Лицензии
         carLicense: {
             type: DataTypes.TINYINT(1),
             defaultValue: 0,
@@ -144,7 +135,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE,
             defaultValue: null
         },
-        /// Внешность
         gender: {
             type: DataTypes.INTEGER(11),
             allowNull: false
@@ -201,7 +191,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },
-        // Здоровье, сытость, голод
         health: {
             type: DataTypes.INTEGER(11),
             defaultValue: 100,
@@ -229,25 +218,21 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('thirst', val);
             },
         },
-        // Наркозависимость
         narcotism: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
             allowNull: false,
         },
-        // Зависимость от никотина
         nicotine: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
             allowNull: false,
         },
-        // Скилл крафта (кол-во секунд, потраченных на изготовление)
         craft: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
             allowNull: false,
         },
-        // Законопослушность
         law: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
@@ -257,13 +242,11 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('law', val);
             },
         },
-        // Количество преступлений
         crimes: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
             allowNull: false,
         },
-        // Уровень розыска
         wanted: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
@@ -273,7 +256,6 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('wanted', val);
             },
         },
-        // Причина розыска
         wantedCause: {
             type: DataTypes.STRING,
             defaultValue: null,
@@ -283,7 +265,6 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue("wantedCause", val);
             }
         },
-        // Оставшееся время ареста
         arrestTime: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
@@ -293,13 +274,11 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('arrestTime', val);
             }
         },
-        // Типа ареста: 0 - КПЗ, 1 - тюрьма, 2 - деморган
         arrestType: {
             type: DataTypes.TINYINT(1),
             defaultValue: 0,
             allowNull: false
         },
-        // Оставшееся время мута
         muteTime: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
@@ -309,13 +288,11 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('muteTime', val);
             }
         },
-        // Пригласивший персонаж
         inviterId: {
             type: DataTypes.INTEGER(11),
             defaultValue: null,
             allowNull: true,
         },
-        // Условия реф. промокода (0 - не выполнил, 1 - выполнил)
         inviteCompleted: {
             type: DataTypes.TINYINT(1),
             defaultValue: 0,

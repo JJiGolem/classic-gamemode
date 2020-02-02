@@ -1,12 +1,5 @@
 "use strict";
 
-
-/*
-    Модуль маркеров.
-
-    created 13.10.19 by Carter Slade
-*/
-
 mp.moduleMarkers = {
     drawRadius: 60,
 };

@@ -1,11 +1,5 @@
 "use strict";
 
-/*
-    Модуль маршрутов.
-
-    created 08.09.19 by Carter Slade
-*/
-
 mp.routes = {
     createCheckpoint(data) {
         if (typeof data == 'string') data = JSON.parse(data);

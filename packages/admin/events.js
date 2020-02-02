@@ -4,19 +4,16 @@ let commands = {};
 
 module.exports = {
     "init": () => {
-        /// Список всех команд на сервере
         admin.init();
         commands = admin.getCommands();
 
         inited(__dirname);
     },
-    /// обработка админ команд
     "admin.command.handle": (player, command, args) => {
         if (command == "/ahelp") return mp.events.call('admin.command.help', player, args);
         let cmd = commands[command];
         if (!cmd) return;
 
-        // TODO: проверка на access
         if (player.character.admin >= cmd.access) {
             if (cmd.args) {
                 let requiredArgs;
@@ -110,7 +107,6 @@ module.exports = {
             });
         }
     },
-    /// обработка команды ahelp
     "admin.command.help": (player, args) => {
         if (!args[0] || isNaN(parseInt(args[0]))) return player.call('chat.message.push', [`!{#ffffff} Используйте /ahelp [уровень администрирования]`]);
 
@@ -123,7 +119,6 @@ module.exports = {
             }
         }
     },
-    /// Отправить сообщение всем админам
     "admin.notify.all": (message) => {
         mp.players.forEach((current) => {
             if (current.character) {
@@ -146,7 +141,6 @@ module.exports = {
             }
         });
     },
-    /// Отправить сообщение всем игрокам
     "admin.notify.players": (message) => {
         mp.players.forEach((current) => {
             if (!current.character) return;
@@ -163,7 +157,6 @@ module.exports = {
                 current.call('chat.message.split', [message, fixed, color]);
         });
     },
-    // Поступила жалоба от игрока
     "admin.report": (player, message) => {
         var media = player.character.Promocode.media;
         var color = (!media) ? "#ffe838" : "#ff3ec8";

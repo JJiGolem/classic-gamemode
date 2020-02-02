@@ -1,14 +1,8 @@
 "use strict";
 
-/*
-    Модуль мирных зон.
-
-    created 12.12.19 by Carter Slade
-*/
-
 mp.peaceZones = {
     inside: false,
-    interiors: [60418], // интерьеры в ЗЗ
+    interiors: [60418],
     ignoreFactions: [2, 3, 4],
 
     isInside() {
@@ -26,10 +20,10 @@ mp.events.add({
     "render": () => {
         var canHitTree = mp.woodman.treePos && mp.woodman.isAxInHands();
         if (mp.peaceZones.isInside() && !canHitTree && !mp.peaceZones.ignoreFactions.includes(mp.factions.faction)) {
-            mp.game.controls.disableControlAction(0, 24, true); /// удары
-            mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
-            mp.game.controls.disableControlAction(0, 140, true); /// удары R
-            mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
+            mp.game.controls.disableControlAction(0, 24, true);
+            mp.game.controls.disableControlAction(0, 25, true);
+            mp.game.controls.disableControlAction(0, 140, true);
+            mp.game.controls.disableControlAction(0, 257, true);
         }
     },
 });

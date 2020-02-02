@@ -1,11 +1,5 @@
 "use strict";
 
-/*
-    Модуль планшета.
-
-    created 24.08.19 by Carter Slade
-*/
-
 mp.mapCase = {
     enable(val) {
         var faction = mp.factions.faction;
@@ -57,17 +51,11 @@ mp.mapCaseGover = {
     },
 };
 mp.mapCasePd = {
-    // Время установления личности (ms)
     searchTime: 15 * 1000,
-    // Макс. дистанция установления личности
     searchMaxDist: 10,
-    // Таймер установления личности
     searchTimer: null,
-    // ИД игрока, личность которого устанавливается
     searchPlayerId: null,
-    // Время жизни блипа подкрепления (ms)
     emergencyBlipTime: 60000,
-    // Блипы, где запросили подкрепление
     emergencyBlips: [],
 
     menuHeader(text) {
@@ -168,17 +156,11 @@ mp.mapCaseArmy = {
     },
 };
 mp.mapCaseFib = {
-    // Время установления личности (ms)
     searchTime: 15 * 1000,
-    // Макс. дистанция установления личности
     searchMaxDist: 10,
-    // Таймер установления личности
     searchTimer: null,
-    // ИД игрока, личность которого устанавливается
     searchPlayerId: null,
-    // Время жизни блипа подкрепления (ms)
     emergencyBlipTime: 60000,
-    // Блипы, где запросили подкрепление
     emergencyBlips: [],
 
     setResultData(array) {
@@ -428,14 +410,14 @@ mp.events.add("mapCase.news.members.rank.set", mp.mapCaseNews.setMemberRank);
 mp.events.add("time.main.tick", () => {
     var start = Date.now();
     var id = mp.mapCasePd.searchPlayerId;
-    if (id) { // происходит установление личности
+    if (id) {
         var rec = mp.players.atRemoteId(id);
         if (!rec) return mp.mapCasePd.stopSearch(`Игрок не найден`);
         var dist = mp.vdist(rec.position, mp.players.local.position);
         if (dist > mp.mapCasePd.searchMaxDist) return mp.mapCasePd.stopSearch(`Игрок далеко`);
     }
     id = mp.mapCaseFib.searchPlayerId;
-    if (id) { // происходит установление личности
+    if (id) {
         var rec = mp.players.atRemoteId(id);
         if (!rec) return mp.mapCaseFib.stopSearch(`Игрок не найден`);
         var dist = mp.vdist(rec.position, mp.players.local.position);

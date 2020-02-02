@@ -1,9 +1,7 @@
 var inventory = new Vue({
     el: '#inventory',
     data: {
-        // Макс. вес предметов, переносимый игроком
         maxPlayerWeight: 30,
-        // Общая информация о предметах
         itemsInfo: {
             1: {
                 name: 'Очки',
@@ -102,7 +100,6 @@ var inventory = new Vue({
                 chance: 50,
             },
         },
-        // Меню предмета по ПКМ
         itemsMenu: {
             // itemId: struct menu
             /*18: { // test
@@ -112,7 +109,7 @@ var inventory = new Vue({
                     }
                 }
             },*/
-            4: { // прослушка
+            4: {
                 'Установить': {
                     handler(item) {
                         var data = {
@@ -122,28 +119,28 @@ var inventory = new Vue({
                     }
                 }
             },
-            16: { // сигареты
+            16: {
                 'Курить': {
                     handler(item) {
                         mp.trigger(`callRemote`, `inventory.item.smoke.use`, item.sqlId);
                     }
                 }
             },
-            24: { // малая аптечка
+            24: {
                 'Вылечиться': {
                     handler(item) {
                         mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
                     }
                 }
             },
-            25: { // пластырь
+            25: { 
                 'Вылечиться': {
                     handler(item) {
                         mp.trigger(`callRemote`, `inventory.item.patch.use`, item.sqlId);
                     }
                 }
             },
-            26: { // адреналин
+            26: {
                 'Реанимировать': {
                     handler(item) {
                         var data = {
@@ -154,14 +151,14 @@ var inventory = new Vue({
                     }
                 }
             },
-            27: { // большая аптечка
+            27: {
                 'Вылечиться': {
                     handler(item) {
                         mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
                     }
                 }
             },
-            28: { // наручники
+            28: {
                 'Скрутить': {
                     handler(item) {
                         var data = {
@@ -172,7 +169,6 @@ var inventory = new Vue({
                     }
                 }
             },
-            // 4 типа наркотиков
             29: {
                 'Употребить': {
                     handler(item) {
@@ -201,43 +197,6 @@ var inventory = new Vue({
                     }
                 }
             },
-            /*37: { // test
-                'Разрядить': {
-                    handler(item) {
-                        console.log(`разрядить: ${item}`)
-                    }
-                },
-                'Сломать': {
-                    handler(item) {
-                        console.log(`сломать ${item}`);
-                    }
-                },
-                'Разобрать': {
-                    items: {
-                        'Полностью': {
-                            handler(item) {
-                                console.log(`Полностью ${item}`)
-                            }
-                        },
-                        'Для переноски': {
-                            handler(item) {
-                                console.log(`для переноски ${item}`)
-                            }
-                        },
-                    }
-                },
-                'Присоединить': {
-                    handler(item) {
-                        console.log(`Присоединить ${item}`);
-                    }
-                },
-                'Отсоединить': {
-                    handler(item) {
-                        console.log(`Отсоединить ${item}`);
-                    }
-                },
-            },*/
-            // 4 типа патронов
             37: {
                 'Зарядить': {
                     handler(item) {
@@ -270,7 +229,7 @@ var inventory = new Vue({
                     }
                 }
             },
-            54: { // веревка
+            54: {
                 'Связать': {
                     handler(item) {
                         var data = {
@@ -281,7 +240,7 @@ var inventory = new Vue({
                     }
                 }
             },
-            55: { // мешок
+            55: {
                 'Надеть на голову': {
                     handler(item) {
                         var data = {
@@ -292,7 +251,7 @@ var inventory = new Vue({
                     }
                 }
             },
-            56: { // канистра
+            56: {
                 'Заправить': {
                     handler(item) {
                         var data = {
@@ -322,7 +281,7 @@ var inventory = new Vue({
                     }
                 },
             },
-            139: { // спички
+            139: {
                 'Костер': {
                     handler(item) {
                         var data = {
@@ -334,9 +293,7 @@ var inventory = new Vue({
                 },
             },
         },
-        // Вайт-лист предметов, которые можно надеть
         bodyList: {
-            // columnIndex: [itemId, ...]
             0: [1],
             1: [6],
             2: [14],
@@ -346,16 +303,14 @@ var inventory = new Vue({
             6: [11],
             7: [10],
             8: [12],
-            9: [], // автоматы
+            9: [],
             10: [13],
             11: [8],
             12: [9],
             13: null
         },
-        // Вайт-лист предметов, которые можно использовать в горячих клавишах
         hotkeysList: {
-            // itemId: {...}
-            4: { // прослушка
+            4: {
                 handler(item) {
                     var data = {
                         itemSqlId: item.sqlId
@@ -363,22 +318,22 @@ var inventory = new Vue({
                     mp.trigger(`callRemote`, `fib.spy`, JSON.stringify(data));
                 }
             },
-            16: { // сигареты
+            16: {
                 handler(item) {
                     mp.trigger(`callRemote`, `inventory.item.smoke.use`, item.sqlId);
                 }
             },
-            24: { // малая аптечка
+            24: {
                 handler(item) {
                     mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
                 }
             },
-            25: { // пластырь
+            25: {
                 handler(item) {
                     mp.trigger(`callRemote`, `inventory.item.patch.use`, item.sqlId);
                 }
             },
-            26: { // адреналин
+            26: {
                 handler(item) {
                     var data = {
                         itemSqlId: item.sqlId,
@@ -387,12 +342,12 @@ var inventory = new Vue({
                     mp.trigger(`inventory.item.adrenalin.use.callRemote`, JSON.stringify(data));
                 }
             },
-            27: { // большая аптечка
+            27: {
                 handler(item) {
                     mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
                 }
             },
-            28: { // наручники
+            28: {
                 handler(item) {
                     var data = {
                         cuffsSqlId: item.sqlId
@@ -401,7 +356,6 @@ var inventory = new Vue({
                     mp.trigger(`police.cuffs.callRemote`, JSON.stringify(data));
                 }
             },
-            // наркотики
             29: {
                 handler(item) {
                     mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
@@ -422,7 +376,6 @@ var inventory = new Vue({
                     mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
                 }
             },
-            // патроны
             37: {
                 handler(item) {
                     mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
@@ -443,7 +396,7 @@ var inventory = new Vue({
                     mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
                 }
             },
-            54: { // веревка
+            54: {
                 handler(item) {
                     var data = {
                         cuffsSqlId: item.sqlId
@@ -452,7 +405,7 @@ var inventory = new Vue({
                     mp.trigger(`mafia.cuffs.callRemote`, JSON.stringify(data));
                 }
             },
-            55: { // мешок
+            55: {
                 handler(item) {
                     var data = {
                         bagSqlId: item.sqlId
@@ -461,7 +414,7 @@ var inventory = new Vue({
                     mp.trigger(`mafia.bag.callRemote`, JSON.stringify(data));
                 }
             },
-            56: { // канистра
+            56: {
                 handler(item) {
                     var data = {
                         sqlId: item.sqlId,
@@ -470,10 +423,10 @@ var inventory = new Vue({
                     mp.trigger(`callRemote`, `inventory.item.use`, JSON.stringify(data));
                 }
             },
-            136: { // кирка
+            136: {
                 handler(item) {}
             },
-            139: { // спички
+            139: {
                 handler(item) {
                     var data = {
                         sqlId: item.sqlId,
@@ -483,76 +436,48 @@ var inventory = new Vue({
                 }
             },
         },
-        // Блек-лист предметов, которые не могут храниться в других предметах
         blackList: {
-            // parentItemId: [cildItemId, ...]
             3: [13],
             7: [13],
             8: [13],
         },
-        // Вайт-лист предметов, которые могут перетаскиваться друг на друга
         mergeList: {
-            // parentItemId: [cildItemId, ...]
-            // 9mm
             37: [20],
-            // 12mm
             38: [48],
-            // 7.62mm
             39: [21, 107],
-            // 5.56mm
             40: [22, 99],
         },
-        // Огнестрельные оружия
         weaponsList: [20, 21, 22, 41, 44, 46, 47, 48, 49, 50, 52, 80, 87, 88, 89, 90, 91, 93, 96, 99, 100, 107],
-        // Кидаемые оружия (гранаты, снежки)
         throwableWeaponsList: [117],
-        // Еда
         eatList: [35, 126, 127, 128, 129, 132, 134],
-        // Напитки
         drinkList: [34, 130, 133],
-        // Предметы, которые можно изымать при обыске
         takeSearchList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 14, 17, 18, 19, 20, 21, 22, 23, 24, 26, 27, 28, 29, 30, 31, 32, 33, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 125],
-        // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
         environment: [],
-        // Предметы на игроке (экипировка)
         equipment: {},
-        // Предметы на горячих клавишах
         hotkeys: {},
-        // Фокус мышки на горячей клавише
         hotkeyFocus: null,
-        // Сытость игрока
         satiety: 0,
-        // Жажда игрока
         thirst: 0,
-        // Режим отладки
         debug: false,
-        // Показ инвентаря на экране
         show: false,
-        // Возможность использования инвентаря
         enable: false,
-        // Возможность взаимодействия с предметами инвентаря
         controlEnable: true,
-        // Время последнего открытия/закрытия (ms)
         lastShowTime: 0,
-        // Показ описания предмета на экране
         itemDesc: {
             item: null,
             x: 0,
             y: 0
         },
-        // Уведомление инвентаря
         itemNotif: {
             text: null,
             x: 0,
             y: 0
         },
-        // Показ меню предмета на экране
         itemMenu: {
             item: null,
             x: 0,
             y: 0
         },
-        // Показа переносимого предмета на экране
         itemDrag: {
             item: null,
             div: null,
@@ -569,29 +494,27 @@ var inventory = new Vue({
             x: 0,
             y: 0
         },
-        // Крутятся все предметы
         spin: false,
-        // Блокировка слот рук
         handsBlock: false,
-        // Последнее использование хоткея
+
         lastUseHotkey: 0,
-        // Анти-флуд использования хоткея
+
         waitUseHotkey: 1000,
-        // Анти-флуд на использование еды (ms)
+
         eatWaitTime: 30000,
         lastUseEat: 0,
-        // Анти-флуд на использование напитка (ms)
+
         drinkWaitTime: 30000,
         lastUseDrink: 0,
-        // Режим обыска
+
         searchMode: null,
-        // Время исследования при обыске
+
         searchWait: 5000,
-        // Таймер исследования при обыске
+
         searchTimer: null,
-        // Список предметов для исследования при обыске
+
         searchList: [],
-        // Время подсветки предмета как 'найден при обыске'
+
         foundTime: 60 * 1000,
     },
     computed: {
@@ -710,7 +633,6 @@ var inventory = new Vue({
         },
     },
     methods: {
-        // ******************  [ Private ] ******************
         urlItemImg(itemId) {
             return `img/inventory/items/${itemId}.png`;
         },
@@ -826,10 +748,9 @@ var inventory = new Vue({
                     if (item.wait) return;
                     if (this.searchMode) return;
                     if (!this.controlEnable) return;
-                    if (e.which == 1) { // Left Mouse Button
+                    if (e.which == 1) {
                         this.itemDrag.item = item;
                         this.itemDrag.div = e.target;
-                        // до сжатых иконок
                         // this.itemDrag.x = e.screenX - rect.x - e.target.offsetWidth / 2;
                         // this.itemDrag.y = e.screenY - rect.y - e.target.offsetHeight / 2;
                         this.itemDrag.x = e.screenX - rect.x;
@@ -1149,7 +1070,7 @@ var inventory = new Vue({
                 bodyIndex = parseInt(bodyIndex);
                 var list = this.bodyList[bodyIndex];
                 if (!list) continue;
-                if (list.includes(itemId)) { // предмет, можно надеть
+                if (list.includes(itemId)) {
                     var isFind = !this.equipment[bodyIndex];
                     if (isFind) return {
                         pocketIndex: null,
@@ -1161,9 +1082,9 @@ var inventory = new Vue({
 
             for (var index in this.equipment) {
                 var item = this.equipment[index];
-                if (!item.pockets) continue; // не имеет карманы
-                if (item.itemId == itemId) continue; // тип предмета совпадает (рубашку в рубашку нельзя и т.д.)
-                if (this.blackListExists(item.itemId, itemId)) continue; // предмет в черном списке (сумку в рубашку нельзя и т.д.)
+                if (!item.pockets) continue; 
+                if (item.itemId == itemId) continue; 
+                if (this.blackListExists(item.itemId, itemId)) continue; 
                 for (var pocketI = 0; pocketI < item.pockets.length; pocketI++) {
                     // var pocket = item.pockets[pocketI];
                     var matrix = this.genMatrix(item, pocketI);
@@ -1195,7 +1116,6 @@ var inventory = new Vue({
             var matrix = [];
             var cols = item.pockets[pocketIndex].cols;
             var rows = item.pockets[pocketIndex].rows;
-            // Создаем пустую матрицу
             for (var i = 0; i < rows; i++) {
                 matrix[i] = [];
                 for (var j = 0; j < cols; j++) {
@@ -1206,7 +1126,6 @@ var inventory = new Vue({
             var children = item.pockets[pocketIndex].items;
             // console.log(`------------ children:`);
             // console.log(children);
-            // Наполняем матрицу занятами ячейками
             for (var index in children) {
                 var child = children[index];
                 var coord = this.indexToXY(rows, cols, index);
@@ -1324,7 +1243,6 @@ var inventory = new Vue({
             }
             return list;
         },
-        // получить ID предмета патронов по ID предмета оружия
         getAmmoItemId(itemId) {
             for (var ammoId in this.mergeList) {
                 var list = this.mergeList[ammoId];
@@ -1342,11 +1260,9 @@ var inventory = new Vue({
 
             mp.trigger("callRemote", eventName, JSON.stringify(values));
         },
-        // Ожидание синхр. предмета с сервером
         setWaitItem(item, enable) {
             Vue.set(item, 'wait', enable);
         },
-        // Предмет был найден при обыске
         setFoundItem(item, enable) {
             if (typeof item == 'number') item = this.getItem(item);
             if (item) {
@@ -1358,7 +1274,6 @@ var inventory = new Vue({
                 }
             }
         },
-        // Ожидание исследования предметов при обыске
         setSearchItems(items, enable) {
             this.searchList = [];
             items.forEach(item => {
@@ -1389,7 +1304,6 @@ var inventory = new Vue({
             }, this.searchWait);
         },
 
-        // ******************  [ Inventory Config ] ******************
         setItemsInfo(itemsInfo) {
             if (typeof itemsInfo == 'string') itemsInfo = JSON.parse(itemsInfo);
             for (var itemId in itemsInfo) {
@@ -1471,7 +1385,6 @@ var inventory = new Vue({
             if (typeof list == 'string') list = JSON.parse(list);
             Vue.set(this.bodyList, index, list);
         },
-        // ******************  [ Player Inventory ] ******************
         getItem(sqlId) {
             var item = this.getItemBySqlId(sqlId, this.equipment);
             return item;
@@ -1511,7 +1424,6 @@ var inventory = new Vue({
             for (var index in this.equipment) {
                 this.deleteItem(this.equipment[index].sqlId);
             }
-            // запуск исследования
             this.setSearchItems(Object.values(data.items), true);
             for (var index in data.items) {
                 var item = data.items[index];
@@ -1598,18 +1510,17 @@ var inventory = new Vue({
         getItemName(item) {
             if (!item) return null;
             if (item.pockets && item.pockets.findIndex(x => x.search || Object.values(x.items).findIndex(y => y.search) != -1) != -1) return 'Обыск...';
-            if ([6, 7, 8, 9, 15, 133].includes(item.itemId) && item.params.name) // одежда, рыба, алко-напиток
+            if ([6, 7, 8, 9, 15, 133].includes(item.itemId) && item.params.name)
                 return `${item.params.name}`;
-            if (item.itemId == 16 && item.params.name) // сигареты
+            if (item.itemId == 16 && item.params.name)
                 return this.itemsInfo[item.itemId].name + " " + item.params.name;
-            if (item.itemId == 33 && item.params.vehName) // ключи авто
+            if (item.itemId == 33 && item.params.vehName)
                 return `Ключи от ${item.params.vehName}`;
-            if (item.itemId == 131 && item.params.name) // ресурс - дерево
+            if (item.itemId == 131 && item.params.name)
                 return `Дерево ${item.params.name}`;
             return this.itemsInfo[item.itemId].name;
         },
 
-        // ******************  [ Hotkeys ] ******************
         bindHotkey(itemSqlId, key) {
             var item = this.getItem(itemSqlId);
             if (!item) {
@@ -1651,7 +1562,6 @@ var inventory = new Vue({
             }
         },
 
-        // ******************  [ Environment ] ******************
         addEnvironmentPlace(place) {
             if (typeof place == 'string') place = JSON.parse(place);
             Vue.set(place, 'showPockets', true);
@@ -1840,308 +1750,3 @@ var inventory = new Vue({
         });
     }
 });
-
-// for tests
-/*inventory.initItems({
-    0: {
-        sqlId: 100,
-        itemId: 1,
-        params: {}
-    },
-    5: {
-        sqlId: 200,
-        itemId: 7,
-        params: {},
-        pockets: [{
-                cols: 3,
-                rows: 2,
-                items: {}
-            },
-            {
-                cols: 3,
-                rows: 2,
-                items: {}
-            },
-            {
-                cols: 15,
-                rows: 20,
-                items: {
-                    2: {
-                        sqlId: 300,
-                        itemId: 1,
-                        params: {},
-                        // found: true,
-                    },
-                    6: {
-                        sqlId: 301,
-                        itemId: 16,
-                        params: {
-                            count: 20
-                        },
-                    },
-                    30: {
-                        sqlId: 302,
-                        itemId: 24,
-                        params: {
-                            count: 2
-                        },
-                    },
-                }
-            }
-        ]
-    }
-});
-
-inventory.addEnvironmentPlace({
-    sqlId: -200,
-    header: "Холодильник",
-    pockets: [{
-            cols: 5,
-            rows: 7,
-            items: {},
-        },
-        {
-            cols: 5,
-            rows: 7,
-            items: {},
-        },
-        {
-            cols: 7,
-            rows: 7,
-            items: {},
-        }
-    ],
-});
-inventory.addEnvironmentPlace({
-    sqlId: -100,
-    header: "Шкаф",
-    pockets: [{
-            cols: 10,
-            rows: 8,
-            items: {
-                0: {
-                    sqlId: 595,
-                    itemId: 7,
-                    pockets: [{
-                        cols: 5,
-                        rows: 5,
-                        items: {},
-                    }],
-                    params: {}
-                }
-            },
-        },
-        {
-            cols: 9,
-            rows: 8,
-            items: {
-                0: {
-                    sqlId: 590,
-                    itemId: 13,
-                    pockets: [{
-                        cols: 5,
-                        rows: 6,
-                        items: {
-                            0: {
-                                sqlId: 600,
-                                itemId: 7,
-                                pockets: [{
-                                    rows: 10,
-                                    cols: 10,
-                                    items: {
-                                        0: {
-                                            sqlId: 427,
-                                            itemId: 13,
-                                            pockets: [{
-                                                    cols: 5,
-                                                    rows: 3,
-                                                    items: {}
-                                                },
-                                                {
-                                                    cols: 5,
-                                                    rows: 3,
-                                                    items: {}
-                                                },
-                                                {
-                                                    cols: 5,
-                                                    rows: 3,
-                                                    items: {}
-                                                },
-                                            ],
-                                            params: {}
-                                        }
-                                    }
-                                }],
-                                params: {}
-                            }
-                        }
-                    }],
-                    params: {},
-                }
-            },
-        },
-        {
-            cols: 4,
-            rows: 2,
-            items: {},
-        },
-        {
-            cols: 5,
-            rows: 2,
-            items: {},
-        }
-    ],
-});
-inventory.addEnvironmentPlace({
-    sqlId: -10,
-    header: "Шкаф",
-    pockets: [{
-        cols: 18,
-        rows: 10,
-        items: {
-            0: {
-                sqlId: 1,
-                itemId: 37,
-                // index: 0,
-                params: {
-                    count: 110
-                }
-            },
-            5: {
-                sqlId: 2,
-                itemId: 37,
-                // index: 5,
-                params: {
-                    count: 10
-                }
-            },
-            10: {
-                sqlId: 3,
-                itemId: 24,
-                // index: 10,
-                params: {
-                    count: 4,
-                    health: 70,
-                }
-            },
-            140: {
-                sqlId: 4,
-                itemId: 18,
-                // index: 10,
-                params: {
-                    health: 70,
-                }
-            },
-            148: {
-                sqlId: 5,
-                itemId: 1,
-                // index: 10,
-                params: {}
-            },
-            10: {
-                sqlId: 6,
-                itemId: 21,
-                params: {
-                    health: 10,
-                }
-            }
-        }
-    }]
-});
-inventory.initSearchItems({
-    playerId: 11,
-    playerName: "Alex Cortez",
-    items: {
-        0: {
-            sqlId: 53,
-            itemId: 1,
-            params: {}
-        },
-        5: {
-            sqlId: 54,
-            itemId: 7,
-            params: {},
-            pockets: [{
-                    cols: 3,
-                    rows: 2,
-                    items: {}
-                },
-                {
-                    cols: 3,
-                    rows: 2,
-                    items: {}
-                },
-                {
-                    cols: 15,
-                    rows: 20,
-                    items: {
-                        20: {
-                            sqlId: 79,
-                            itemId: 1,
-                            params: {},
-                            // found: true,
-                        },
-                        60: {
-                            sqlId: 80,
-                            itemId: 16,
-                            params: {
-                                count: 20
-                            },
-                        },
-                        80: {
-                            sqlId: 81,
-                            itemId: 24,
-                            params: {
-                                count: 2
-                            },
-                        },
-                    }
-                }
-            ]
-        },
-        11: {
-            sqlId: 56,
-            itemId: 8,
-            params: {},
-            pockets: [{
-                    cols: 5,
-                    rows: 5,
-                    items: {}
-                },
-                {
-                    cols: 5,
-                    rows: 5,
-                    items: {}
-                },
-                {
-                    cols: 15,
-                    rows: 20,
-                    items: {
-                        20: {
-                            sqlId: 179,
-                            itemId: 1,
-                            params: {},
-                        },
-                        60: {
-                            sqlId: 180,
-                            itemId: 16,
-                            params: {
-                                count: 20
-                            },
-                        },
-                        80: {
-                            sqlId: 181,
-                            itemId: 24,
-                            params: {
-                                count: 2
-                            },
-                        },
-                    }
-                }
-            ]
-        },
-    },
-});
-inventory.debug = true;
-inventory.show = true;
-inventory.enable = true;*/

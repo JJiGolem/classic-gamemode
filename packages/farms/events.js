@@ -182,7 +182,6 @@ module.exports = {
         player.call("routes.checkpoints.destroy");
         notifs.success(player, `Удачного дня!`, header);
         if ([2, 3].includes(player.farmJob.type)) {
-            // тракторы с зерном и самолеты с удобрением, которые загрузил игрок
             var vehicles = mp.vehicles.toArray().filter(x => x.key == 'farm' && x.products && x.products.playerId == player.id);
             vehicles.forEach(veh => {
                 veh.setVariable("label", null);
@@ -221,7 +220,6 @@ module.exports = {
             try {
                 var rec = mp.players.at(playerId);
                 if (!rec || rec.character.id != characterId) return;
-                // TODO: проверка на присмерти
                 rec.addAttachment("farmTrowel", true);
                 if (!rec.farmJob) return;
                 var obj = mp.objects.at(objId);
@@ -368,7 +366,6 @@ module.exports = {
             count: data.count
         };
 
-        // TODO: возможность покупки урожая С (травка)
         var cantAdd = inventory.cantAdd(player, itemId, params);
         if (cantAdd) return out(cantAdd);
 
@@ -632,7 +629,7 @@ module.exports = {
         var key = ["balance", "taxBalance"][data.balance];
         var farm = player.farm;
         if (farm[key] == data.sum) return out(`Баланс уже $${data.sum}`);
-        if (farm[key] < data.sum) { // пополнить баланс
+        if (farm[key] < data.sum) {
             data.sum -= farm[key];
             if (player.character.cash < data.sum) return out(`Необходимо $${data.sum}`);
             money.removeCash(player, data.sum, (res) => {
@@ -643,7 +640,7 @@ module.exports = {
                 player.call(`selectMenu.loader`, [false]);
                 player.call(`selectMenu.hide`);
             }, `Пополнение баланса фермы #${farm.id}`);
-        } else { // снять с баланса
+        } else {
             data.sum = farm[key] - data.sum;
             if (farm[key] < data.sum) return out(`Необходимо $${data.sum} на балансе`);
             money.addCash(player, data.sum, (res) => {
@@ -701,7 +698,7 @@ module.exports = {
             player.removeFromVehicle();
             return notifs.error(player, `Необходимо иметь должность: ${farms.getJobName(jobType)}`, header);
         }
-        if (jobType == 1) { // фермер
+        if (jobType == 1) {
             player.call(`prompt.waitShowByName`, [`farm_farmer`]);
             if (!vehicle.products || !vehicle.products.count) return;
             var count = vehicle.products.count;
@@ -711,7 +708,7 @@ module.exports = {
                 var pos = farms.getWarehouse(player.farmJob.farm.id).position;
                 player.call(`waypoint.set`, [pos.x, pos.y]);
             }
-        } else if (jobType == 2) { // тракторист
+        } else if (jobType == 2) {
             player.call(`prompt.waitShowByName`, [`farm_tractor`]);
             if (!vehicle.grains || !vehicle.grains.count) {
                 notifs.info(player, `Загрузите зерно на складе фермы`, header);
@@ -722,7 +719,7 @@ module.exports = {
             var count = vehicle.grains.count;
 
             notifs.info(player, `Зерно в тракторе: ${count} из 600 ед.`, header);
-        } else if (jobType == 3) { // пилот
+        } else if (jobType == 3) {
             player.call(`prompt.waitShowByName`, [`farm_pilot`]);
             if (!vehicle.soils || !vehicle.soils.count) {
                 notifs.info(player, `Загрузите удобрение на складе`, header);

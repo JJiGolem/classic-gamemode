@@ -4,27 +4,14 @@
 import $ from 'jquery';
 
 const initialState = {
-    // name: 'Ilya Maxin',
     // isDriver: true,
     // isHave: true,
     // isLoad: true,
     // symbolPriceNews: 3,
     // contacts: [
     //     {
-    //         name: 'Влад Кузнецов',
-    //         number: '773631'
-    //     },
-    //     {
-    //         name: 'Данила',
-    //         number: '134432'
-    //     },
-    //     {
     //         name: 'Диман',
     //         number: '123'
-    //     },
-    //     {
-    //         name: 'Вика',
-    //         number: '55555'
     //     }
     // ],
     // houses: [
@@ -116,7 +103,7 @@ const initialState = {
     // factionBiz: {
     //     id: 3,
     //     name: 'QQQQQ',
-    //     type: 'Магазин жопы',
+    //     type: 'Магазин',
     //     cashBox: 732101,
     //     area: 'Палето Бэй',
     //     resourcesMax: 2000,

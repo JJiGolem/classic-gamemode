@@ -2,7 +2,7 @@
 
 mp.voiceChat.muted = true;
 mp.events.add('characterInit.done', function() {
-    mp.keys.bind(0x4E, true, function() { // N
+    mp.keys.bind(0x4E, true, function() {
         if (mp.game.ui.isPauseMenuActive()) return;
         if (mp.busy.includes(['chat', 'terminal'])) return;
         if (!mp.busy.add('voicechat', false)) return;
@@ -24,14 +24,14 @@ mp.events.add('characterInit.done', function() {
         playVoiceAnimation(mp.players.local);
     });
 
-    mp.keys.bind(0x4E, false, function() { // N
+    mp.keys.bind(0x4E, false, function() {
         if (mp.game.ui.isPauseMenuActive()) return;
         mp.voiceChat.muted = true;
         mp.callCEFV("hud.voice = false");
         mp.busy.remove('voicechat');
     });
 
-    mp.keys.bind(0x73, false, function() { // F4
+    mp.keys.bind(0x73, false, function() { 
         if (!mp.voiceChat.muted) return mp.notify.error("Отпустите клавишу N", "Голосовой чат");
         mp.voiceChat.cleanupAndReload(true, true, true);
         mp.notify.success("Голосовой чат был перезагружен", "Голосовой чат");
@@ -44,9 +44,6 @@ mp.speechChanel = {};
 let listeners = [];
 let channels = {};
 
-/// Добавить канал связи с требуемыми настройками
-/// maxRange = 0 - на любой дистанции volume = 1
-/// autoConnection будет ли автоматически подключаться/отключаться
 mp.speechChanel.addChannel = (name, maxRange = 0, autoConnection = false, use3d = false) => {
     channels[name] = {
         "maxRange": maxRange,
@@ -55,7 +52,6 @@ mp.speechChanel.addChannel = (name, maxRange = 0, autoConnection = false, use3d 
     };
 };
 
-/// Подключить выбранного игрока к каналу связи
 mp.speechChanel.connect = (player, channel) => {
     if (player == null) return;
     let index = listeners.findIndex(x => x.playerId === player.remoteId);
@@ -80,7 +76,6 @@ mp.events.add("voiceChat.connect", (playerId, channel) => {
     mp.speechChanel.connect(mp.players.atRemoteId(playerId), channel);
 });
 
-/// Отключить выбранного игрока от канала связи
 mp.speechChanel.disconnect = (player, channel, isSend = false) => {
     if (player == null) return;
     let index = listeners.findIndex(x => x.playerId === player.remoteId);
@@ -136,9 +131,7 @@ let updateCurrent = function(player, index, newCh) {
 
 
 mp.speechChanel.addChannel("voice", 10, true, true);
-/// Обработчик изменения состояния игроков для изменения состояния голосовой связи
 mp.timer.addInterval(() => {
-    /// Автоматическое подключение к заданным каналам всех игроков в зоне стрима
     mp.players.forEachInStreamRange(player => {
         if (player != mp.players.local && mp.players.local.dimension === player.dimension) {
             let dist = mp.game.system.vdist(player.position.x, player.position.y, player.position.z,
@@ -151,7 +144,7 @@ mp.timer.addInterval(() => {
             }
         }
     });
-    /// Автоматическое отключение заданных каналов всех игроков
+
     for (let i = 0; i < listeners.length; i++) {
         let player = mp.players.atRemoteId(listeners[i].playerId);
         if (player == null) return;

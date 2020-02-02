@@ -1,24 +1,13 @@
 "use strict";
 
-
-/*
-    Модуль мафий (организации).
-
-    created 18.09.19 by Carter Slade
-*/
-
 mp.mafia = {
-    // Блипы зон для рекетов
     mafiaZones: [],
-    // Показ блипов на карте
     zonesShow: false,
-    // Цвета блипов (factionId: blipColor)
     colors: {
         12: 43,
         13: 31,
         14: 40,
     },
-    // Нативки
     natives: {
         _GET_BLIP_INFO_ID_ITERATOR: "0x186E5D252FA50E7D",
         GET_FIRST_BLIP_INFO_ID: "0x1BEDE233E6CD2A1F",
@@ -138,14 +127,9 @@ mp.mafia = {
 
         if (typeof target == 'object') target = JSON.stringify(target);
         if (typeof killer == 'object') killer = JSON.stringify(killer);
-        // самоубийство
         if (reason == 3452007600) return mp.callCEFV(`killList.add(\`${target}\`)`);
-        // на авто
         if (reason == 2741846334) return mp.callCEFV(`killList.add(\`${target}\`, \`${killer}\`, 'car')`);
-        // рукопашка
         if (reason == 2725352035) return mp.callCEFV(`killList.add(\`${target}\`, \`${killer}\`, 'hand')`);
-
-        // огнестрел, либо что-то еще? :D
         var name = mp.weapons.getWeaponName(reason);
         mp.callCEFV(`killList.add(\`${target}\`, \`${killer}\`, \`${name}\`)`);
     },
@@ -193,7 +177,6 @@ mp.mafia = {
         mp.callCEFV(`selectMenu.setItemValues('mafiaCash', 'Баланс', \`${cash}\`)`);
     },
     registerAttachments() {
-        // мешок на голове
         mp.attachmentMngr.register("headBag", "prop_cs_sack_01", 65068, new mp.Vector3(0.02, 0, 0),
             new mp.Vector3(90, -90, 10)
         );
@@ -355,7 +338,3 @@ mp.events.addDataHandler("inBoot", (entity, entityId = null) => {
 
 mp.mafia.registerAttachments();
 
-// for tests
-// mp.players.local.destroyBlip();
-// mp.players.local.createBlip(1);
-// mp.game.invoke(mp.mafia.natives._SET_BLIP_SHOW_HEADING_INDICATOR, mp.players.local.blip, true);

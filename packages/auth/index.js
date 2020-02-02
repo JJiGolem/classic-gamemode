@@ -1,5 +1,5 @@
 "use strict";
-/// Функции модуля авторизации
+
 const bcrypt = require('bcryptjs');
 
 let emailCodes = new Map();

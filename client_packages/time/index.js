@@ -1,11 +1,5 @@
 "use strict";
 
-/*
-    Модуль таймера.
-
-    created 20.08.19 by Carter Slade
-*/
-
 mp.time = {
     lastMainTickTime: null,
     lastMinuteTickTime: null,

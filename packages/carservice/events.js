@@ -116,7 +116,7 @@ module.exports = {
                 if (result) {
                     mp.events.call('carservice.diagnostics.preparation', sender, target);
                     let income = price - salary;
-                    carservice.updateCashbox(serviceId, income); /// Начисление денег за диагностику в кассу
+                    carservice.updateCashbox(serviceId, income);
                     money.addMoney(sender, salary, function (result) {
                         if (result) {
                             sender.call('notifications.push.success', [`К зарплате добавлено $${salary}`, 'Автомастерская']);
@@ -152,7 +152,6 @@ module.exports = {
             target.vehicle.setVariable("engine", false);
         }
 
-        /// Для обработки выхода из игры
         player.mechanicRepairInfo = {
             target: target
         }
@@ -294,7 +293,6 @@ module.exports = {
         }
 
         if (state) {
-            /// Снять деньги
             if (target.character.cash < target.repairPrice) {
                 target.call('notifications.push.error', [`Недостаточно денег`, `Автомастерская`]);
                 mechanic.call('notifications.push.error', [`Клиент отказался`, `Автомастерская`]);
@@ -311,8 +309,8 @@ module.exports = {
                     let salary = parseInt(target.repairPrice * salaryMultiplier);
                     let bonus = carservice.calculateBonus(player);
                     let income = target.repairPrice - salary;
-                    carservice.removeProducts(serviceId, target.repairProducts); /// Снятие продуктов
-                    carservice.updateCashbox(serviceId, income); /// Начисление денег за ремонт
+                    carservice.removeProducts(serviceId, target.repairProducts);
+                    carservice.updateCashbox(serviceId, income);
                     jobs.addJobExp(mechanic, 0.05);
                     money.addMoney(mechanic, parseInt(salary * (1 + bonus)), function (result) {
                         if (result) {
@@ -370,14 +368,11 @@ module.exports = {
     "carservice.service.end.mechanic": (player, result) => {
         delete player.mechanicRepairInfo;
         switch (result) {
-            /// Ремонт завершен удачно
             case 0:
                 player.call('notifications.push.success', [`Ремонт окончен`, 'Автомастерская']);
                 break;
-            /// Прерывание ремонта без дополнительных уведомлений
             case 1:
                 break;
-            /// Прерывание ремонта с уведомлением об окончании
             default:
                 player.call('notifications.push.warning', [`Ремонт прерван`, 'Автомастерская']);
                 break;
@@ -391,19 +386,16 @@ module.exports = {
         if (!vehicle) return;
         delete player.targetRepairInfo;
         switch (result) {
-            /// Ремонт завершен удачно
             case 0:
                 player.call('notifications.push.success', [`Ремонт окончен`, 'Автомастерская']);
                 vehicle.repair();
                 vehicle.isBeingRepaired = false;
                 vehicle.setVariable('hood', false);
                 break;
-            /// Прерывание ремонта без дополнительных уведомлений
             case 1:
                 vehicle.isBeingRepaired = false;
                 vehicle.setVariable('hood', false);
                 break;
-            /// Прерывание ремонта с уведомлением об окончании
             default:
                 player.call('notifications.push.warning', [`Ремонт прерван`, 'Автомастерская']);
                 vehicle.isBeingRepaired = false;

@@ -1,16 +1,5 @@
 "use strict";
 
-/*
-    Модуль меню взаимодействия в GUI (VUE).
-    Используется при взаимодействии с игроками/авто.
-    Например: показать документы, вступить в режим торговли, открыть двери авто.
-
-    created 24.07.19 by Carter Slade
-*/
-
-// ************** События взаимодействия с меню **************
-
-// Вызов события необходимо прописать в [CEF] interactionMenu.menu.handler(), если в этом есть необходимость.
 mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
     var entity = mp.getCurrentInteractionEntity();
     if (menuName == 'player_interaction') {

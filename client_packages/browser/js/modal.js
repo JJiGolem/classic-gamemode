@@ -259,6 +259,3 @@ var modal = new Vue({
         }
     },
 });
-
-// for tests
-// modal.showByName("carrier_help");

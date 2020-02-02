@@ -1,5 +1,3 @@
-/// Пример создания NPC
-
 mp.events.add("NPC.create", (data) => {
     let ped = mp.peds.new(mp.game.joaat(data.model), new mp.Vector3(data.position.x, data.position.y, data.position.z), data.heading, data.position.d ? data.position.d : 0);
 

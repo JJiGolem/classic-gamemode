@@ -1,12 +1,5 @@
 "use strict";
 
-
-/*
-    Модуль грузоперевозчика.
-
-    created 11.09.19 by Carter Slade
-*/
-
 mp.carrier = {
     bizOrderBlip: null,
 

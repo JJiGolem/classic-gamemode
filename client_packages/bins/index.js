@@ -1,21 +1,10 @@
 "use strict";
 
-/*
-    Модуль мусорок.
-
-    created 02.10.19 by Carter Slade
-*/
-
 mp.bins = {
-    // Находимся возле мусорки
     inside: false,
-    // Время поиска мусора (ms)
     waitTrash: [5000, 15000],
-    // Таймер на поиск мусора
     trashTimer: null,
-    // Ищет мусор в данный момент
     finding: false,
-    // Блипы мусорок
     blips: [],
 
     setInside(enable) {
@@ -74,7 +63,7 @@ mp.events.add({
         mp.keys.bind(69, true, () => {
             if (mp.game.ui.isPauseMenuActive()) return;
             mp.bins.trashHandler();
-        }); // E
+        });
     },
     "bins.inside": (enable) => {
         mp.bins.setInside(enable);

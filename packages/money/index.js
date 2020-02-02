@@ -2,25 +2,13 @@
 
 let logger;
 let bank;
-/// ФОРМАТ ЛОГОВ [MONEY]
-/// `[MONEY] 1000 add cash to | Just because`
-/// `[${moduleName}] ${moneyCount} ${operation} ${moneyType} ${target} | ${reason}`
-/// moduleName - название модуля
-/// moneyCount - кол-во средств
-/// operation - операция (add/remove)
-/// moneyType - тип средств(cash/money)
-/// target - цель к котрой применена операция(to - на текущего игрока/from - текущим игроком)
-/// reason - причина
 
-/// Функции модуля системы финансов игрока
 module.exports = {
     init() {
         logger = call("logger");
         bank = call("bank");
     },
-    /// player - игрок которому перевести средства
-    /// number - количество средств
-    /// callback - функция колбека, которая вызовется по завершению работы или в случае ошибки
+
     addCash(player, number, callbackT, reason = "") {
         if (typeof player == 'number') return this.addCashById(player, number, callbackT, reason);
         if (callbackT == null) return;
@@ -53,9 +41,7 @@ module.exports = {
             callback(false);
         });
     },
-    /// id - id персоонажа которому перевести средства
-    /// number - количество средств
-    /// callback - функция колбека, которая вызовется по завершению работы или в случае ошибки
+
     addCashById(id, number, callbackT, reason = "") {
         if (callbackT == null) return;
         let callback = (result) => {
@@ -316,7 +302,7 @@ module.exports = {
             this.removeMoney(player, number, callback, reason);
         }
     },
-    /// Для ироков, которые онлайн
+
     moveCash(playerFrom, playerTo, number, callbackT, reasonFrom = "", reasonTo = "") {
         if (callbackT == null) return;
         let callback = (result) => {

@@ -35,6 +35,3 @@ var driverLicense = new Vue({
         }
     }
 });
-
-// for tests
-// driverLicense.show = true;

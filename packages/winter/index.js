@@ -6,17 +6,12 @@ let routes = call('routes');
 let utils = call('utils');
 
 module.exports = {
-    // ИД предмета 'Снежок'
     snowballItemId: 117,
-    // Кол-во снежков, которое можно подобрать с земли
     snowballCount: 5,
-    // Цена аренды трактора
     vehPrice: 100,
-    // ЗП за одну точку на тракторе
     pay: 5,
-    // Новогодняя одежда
     clothes: {
-        0: [ // муж.
+        0: [
             [{
                     itemId: 6,
                     params: {
@@ -198,7 +193,7 @@ module.exports = {
                 },
             ]
         ],
-        1: [ // жен.
+        1: [
             [{
                     itemId: 6,
                     params: {
@@ -381,25 +376,20 @@ module.exports = {
             ]
         ]
     },
-    // Опыт скилла за один круг
     exp: 0.2,
-    // Новогодние елки
     treePositions: [
         [-493.359619140625, -241.74563598632812, 34.796925354003906, 30.690296173095703],
         [-538.72119140625, -262.4330749511719, 34.3997200012207, 207.77587890625],
         [-28.137731552124023, -1736.7506103515625, 28.303434371948242, 300.8648376464844]
     ],
-    // получить арендованный трактор игрока
     getVehByDriver(player) {
         return mp.vehicles.toArray().find(x => x.db && x.db.key == 'job' && x.db.owner == 8 && x.driver && x.driver.playerId == player.id && x.driver.characterId == player.character.id);
     },
-    // получить игрока, который арендовал грузовик
     getDriverByVeh(veh) {
         if (!veh.driver) return;
         var d = veh.driver;
         return mp.players.toArray().find(x => x.character && x.id == d.playerId && x.character.id == d.characterId);
     },
-    // очистить трактор от аренды водителя
     clearVeh(veh) {
         var driver = this.getDriverByVeh(veh);
         if (driver) driver.call("routes.checkpoints.destroy");

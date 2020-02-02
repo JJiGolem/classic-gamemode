@@ -29,7 +29,7 @@ module.exports = {
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
             if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
-            var mins = Math.clamp(args[1], 1, 60 * 12); // 12 суток макс.
+            var mins = Math.clamp(args[1], 1, 60 * 12);
 
             police.startLSCellArrest(rec, null, mins * 60 * 1000);
             args.shift();
@@ -45,7 +45,7 @@ module.exports = {
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
             if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
-            var mins = Math.clamp(args[1], 1, 60 * 12); // 12 суток макс.
+            var mins = Math.clamp(args[1], 1, 60 * 12);
 
             police.startBCCellArrest(rec, null, mins * 60 * 1000);
             args.shift();
@@ -61,7 +61,7 @@ module.exports = {
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
             if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
-            var mins = Math.clamp(args[1], 1, 60 * 12); // 12 часов макс.
+            var mins = Math.clamp(args[1], 1, 60 * 12);
 
             police.startJailArrest(rec, null, mins * 60 * 1000);
             args.shift();
@@ -85,7 +85,7 @@ module.exports = {
                 }
             });
             if (!character) return out.error(`Персонаж ${name} не найден`, player);
-            let mins = Math.clamp(args[2], 1, 60 * 12); // 12 часов макс.
+            let mins = Math.clamp(args[2], 1, 60 * 12);
             args.splice(0, 3);
             let reason = args.join(" ");
 

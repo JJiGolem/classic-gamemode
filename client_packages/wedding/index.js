@@ -1,11 +1,5 @@
 "use strict";
 
-/*
-    Модуль свадьбы.
-
-    created 02.10.19 by Carter Slade
-*/
-
 mp.wedding = {
 
 };

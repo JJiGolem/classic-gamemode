@@ -35,8 +35,6 @@ module.exports = {
         this.jobsPay();
         this.farmsTax();
         this.allBroadcast();
-        // TODO: Налоги на дома
-        // TODO: Налоги на бизы
     },
     allBroadcast() {
         mp.players.forEach((rec) => {

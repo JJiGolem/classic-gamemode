@@ -79,14 +79,14 @@ mp.events.add('barbershop.exit', () => {
 
 mp.events.add('render', () => {
     if (controlsDisabled) {
-        mp.game.controls.disableControlAction(0, 21, true); /// бег
-        mp.game.controls.disableControlAction(0, 22, true); /// прыжок
-        mp.game.controls.disableControlAction(0, 31, true); /// вперед назад
-        mp.game.controls.disableControlAction(0, 30, true); /// влево вправо
-        mp.game.controls.disableControlAction(0, 24, true); /// удары
-        mp.game.controls.disableControlAction(1, 200, true); // esc
-        mp.game.controls.disableControlAction(0, 140, true); /// удары R
-        mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
+        mp.game.controls.disableControlAction(0, 21, true);
+        mp.game.controls.disableControlAction(0, 22, true);
+        mp.game.controls.disableControlAction(0, 31, true);
+        mp.game.controls.disableControlAction(0, 30, true);
+        mp.game.controls.disableControlAction(0, 24, true);
+        mp.game.controls.disableControlAction(1, 200, true);
+        mp.game.controls.disableControlAction(0, 140, true);
+        mp.game.controls.disableControlAction(0, 257, true);
     }
 
     if (rotation.left) player.setHeading(player.getHeading() - 2);
@@ -333,15 +333,15 @@ function initCurrentAppearanceParams(data) {
 
 function bindKeys(bind) {
     if (bind) {
-        mp.keys.bind(0x41, true, startRotationLeft); // A
-        mp.keys.bind(0x41, false, stopRotationLeft); // A
-        mp.keys.bind(0x44, true, startRotationRight); // D
-        mp.keys.bind(0x44, false, stopRotationRight); // D
+        mp.keys.bind(0x41, true, startRotationLeft);
+        mp.keys.bind(0x41, false, stopRotationLeft);
+        mp.keys.bind(0x44, true, startRotationRight);
+        mp.keys.bind(0x44, false, stopRotationRight);
     } else {
-        mp.keys.unbind(0x41, true, startRotationLeft); // A
-        mp.keys.unbind(0x41, false, stopRotationLeft); // A
-        mp.keys.unbind(0x44, true, startRotationRight); // D
-        mp.keys.unbind(0x44, false, stopRotationRight); // D
+        mp.keys.unbind(0x41, true, startRotationLeft);
+        mp.keys.unbind(0x41, false, stopRotationLeft);
+        mp.keys.unbind(0x44, true, startRotationRight);
+        mp.keys.unbind(0x44, false, stopRotationRight);
         rotation.left = false;
         rotation.right = false;
     }

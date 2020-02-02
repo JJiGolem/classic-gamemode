@@ -1,5 +1,4 @@
 "use strict";
-/// Массив всех домов на сервере
 let houses = [];
 let interiors = [];
 let garages = [];
@@ -12,11 +11,9 @@ let carmarket;
 let timer;
 let utils;
 
-/// Economic constants
 let dropHouseMultiplier = 0.6;
 let holderImprovmentMultiplier = 0.01;
 
-/// Функции модуля системы домов
 let changeBlip = function(house) {
     if (house.blip == null) return;
     if (house.info.characterId != null) {
@@ -83,10 +80,8 @@ let dropHouse = function(house, sellToGov) {
         changeBlip(house);
         house.info.save().then(() => {
             if (money == null) return console.log("[HOUSES] House dropped " + house.info.id + ". But player didn't getmoney");
-            /// Продажа всех авто в гараже
             carmarket != null && carmarket.sellAllCharacterVehicles(characterId);
 
-            /// Зачисление средств игроку
             money.addMoneyById(characterId, house.info.price * dropHouseMultiplier, function(result) {
                 if (result) {
                     console.log("[HOUSES] House dropped " + house.info.id);
@@ -275,7 +270,6 @@ module.exports = {
 
         house = this.addHouse(info);
         this.setTimer(house);
-        /// Инициализация улучшений
         if (house.info.holder) {
             this.improvementLoad(house, "holder");
         }
@@ -575,7 +569,7 @@ module.exports = {
             dimension: house.id,
         });
         holder.inventory = {
-            items: [], // предметы в шкафу
+            items: [],
         };
         holder.houseInfo = house;
 

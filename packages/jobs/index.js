@@ -2,11 +2,8 @@ let money = require('../money');
 let notifs = require('../notifications');
 
 module.exports = {
-    // Работы
     jobs: [],
-    // Бонус к скиллам (1 - x1)
     bonusSkill: 2,
-    // Бонус к ЗП (1 - x1)
     bonusPay: 1,
 
     async init() {

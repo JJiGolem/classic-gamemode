@@ -1,15 +1,7 @@
 "use strict";
 
-/*
-    Модуль мира объектов ГТА.
-
-    created 26.10.19 by Carter Slade
-*/
-
 mp.world = {
-    // Показанные объекты для настройки
     debugObjects: [],
-    // Хеши дверей
     doorHashes: [-1603817716,
         -1747119540,
         -1565579268,
@@ -462,9 +454,7 @@ mp.world = {
         -251167274,
         582134182
     ],
-    // Режим настройки дверей
     doorControl: false,
-    // Двери
     doors: [],
 
     clearDebugObjects() {
@@ -524,7 +514,7 @@ mp.world = {
 
 mp.events.add({
     "characterInit.done": () => {
-        mp.keys.bind(69, true, () => { // E
+        mp.keys.bind(69, true, () => {
             if (mp.game.ui.isPauseMenuActive()) return;
             mp.world.lockDoorHandler();
         });
@@ -534,7 +524,7 @@ mp.events.add({
         mp.notify.info(`Режим ${mp.world.doorControl? 'включен' : 'выключен'}`, `Контроль дверей`);
     },
     "world.doors.init": (doors) => {
-        mp.utils.closeDoors(); // обрабатываем старые двери (до введения управления)
+        mp.utils.closeDoors();
         mp.world.initDoors(doors);
     },
     "world.doors.set": (id, locked) => {

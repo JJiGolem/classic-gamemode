@@ -1,12 +1,5 @@
 "use strict";
 
-
-/*
-    Модуль крафта.
-
-    created 20.12.19 by Carter Slade
-*/
-
 mp.craft = {
 
     addItemToQueue(index, item) {

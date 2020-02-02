@@ -1,6 +1,6 @@
 "use strict";
 var weatherInfoLoaded;
-var currentWeather = {}; // поля: summary, temperature, icon
+var currentWeather = {};
 
 mp.events.add('weather.info.update', (weather) => {
     currentWeather = weather;

@@ -183,7 +183,7 @@ var mapCase = new Vue({
             if (selectMenu.isEditing) return;
             if (Date.now() - self.lastShowTime < 500) return;
             if (self.inputFocus) return;
-            if (e.keyCode == 80 && self.enable) self.show = !self.show; // P
+            if (e.keyCode == 80 && self.enable) self.show = !self.show;
         });
     }
 });
@@ -351,9 +351,3 @@ Vue.component('map-case-calls', {
         }
     }
 });
-
-// for tests
-/*mapCase.type = "ems";
-mapCase.show = true;
-mapCase.enable = true;
-mapCase.userName = "user"*/

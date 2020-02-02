@@ -2,7 +2,6 @@ var infoTable = new Vue({
     el: "#infoTable",
     data: {
         show: false,
-        // Доступные таблицы с информацией
         tables: {
             "character_skills": {
                 header: "Навыки",
@@ -34,7 +33,6 @@ var infoTable = new Vue({
                 ]
             }
         },
-        // Текущая информация
         name: "character_skills"
     },
     methods: {

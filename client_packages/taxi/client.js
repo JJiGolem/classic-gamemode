@@ -6,7 +6,7 @@ let destination;
 const PRICE_PER_KM = 100;
 
 let lastCallTime;
-let minCallTime = 60*1000; /// промежуток для вызова
+let minCallTime = 60*1000;
 
 let isActiveTaxiClient = false;
 mp.events.add('taxi.client.app.open', () => {

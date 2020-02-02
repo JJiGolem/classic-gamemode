@@ -6,49 +6,48 @@ mp.inventory = {
     handsBlock: false,
     handsBlockForce: false,
     groundItemMarker: {},
-    // Настройка аттачей на спине
     backAttachInfo: {
-        41: { // Бейсбольная бита
+        41: {
             bone: 24818,
             pos: new mp.Vector3(0.25, -0.155, -0.1),
             rot: new mp.Vector3(13, -90, 7)
         },
-        52: { // Compact Rifle
+        52: {
             bone: 24818,
             pos: new mp.Vector3(0.2, -0.165, -0.1),
             rot: new mp.Vector3(13, 180, 10)
         },
-        53: { // MG
+        53: {
             bone: 24818,
             pos: new mp.Vector3(0.2, -0.165, -0.1),
             rot: new mp.Vector3(13, 180, 10)
         },
-        68: { // Клюшка
+        68: {
             bone: 24818,
             pos: new mp.Vector3(0.2, -0.145, -0.1),
             rot: new mp.Vector3(13, -90, 10)
         },
-        70: { // топор
+        70: {
             bone: 24818,
             pos: new mp.Vector3(0.2, -0.15, -0.1),
             rot: new mp.Vector3(13, -90, 10)
         },
-        76: { // каменный топор
+        76: {
             bone: 24818,
             pos: new mp.Vector3(0.2, -0.15, -0.1),
             rot: new mp.Vector3(13, -90, 10)
         },
-        104: { // Combat MG
+        104: {
             bone: 24818,
             pos: new mp.Vector3(0.2, -0.165, -0.1),
             rot: new mp.Vector3(13, 180, 10)
         },
-        105: { // Combat MK II
+        105: {
             bone: 24818,
             pos: new mp.Vector3(0.2, -0.165, -0.1),
             rot: new mp.Vector3(13, 180, 10)
         },
-        136: { // кирка
+        136: {
             bone: 24818,
             pos: new mp.Vector3(0.35, -0.1, -0.1),
             rot: new mp.Vector3(0, -90, 10)
@@ -176,7 +175,6 @@ mp.inventory = {
         return itemObj;
     },
     takeItemHandler() {
-        // поднятие предмета с земли
         if (mp.busy.includes()) return;
         if (mp.players.local.vehicle) return;
         if (!mp.players.local.getHealth()) return;
@@ -509,10 +507,10 @@ mp.events.add("render", () => {
         mp.inventory.groundItemMarker.visible = true;
     } else mp.inventory.groundItemMarker.visible = false;
     if (player.getVariable("hands")) {
-        mp.game.controls.disableControlAction(0, 24, true); /// удары
-        mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
-        mp.game.controls.disableControlAction(0, 140, true); /// удары R
-        mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
+        mp.game.controls.disableControlAction(0, 24, true);
+        mp.game.controls.disableControlAction(0, 25, true);
+        mp.game.controls.disableControlAction(0, 140, true);
+        mp.game.controls.disableControlAction(0, 257, true);
     }
     if (mp.renderChecker) mp.utils.drawText2d(`inventory rend: ${Date.now() - start} ms`, [0.8, 0.59]);
 });

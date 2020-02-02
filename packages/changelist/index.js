@@ -1,7 +1,6 @@
 "use strict";
 
 module.exports = {
-    // Лайки на обновлениях (changelist_id: [accountId, ..., ...])
     likes: {},
 
     async init() {

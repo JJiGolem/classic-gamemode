@@ -17,7 +17,6 @@ let clothesConfig = {
             [0, 0],
             [14, 0]
         ],
-        /// 11 / 3 / 8
         tops: [
             [0, 2, 0, 0, 9, 0],
             [5, 1, 4, 0, 3, 0],
@@ -35,7 +34,6 @@ let clothesConfig = {
             [5, 0],
             [15, 3]
         ],
-        /// 11 / 3 / 8
         tops: [
             [17, 0, 5, 0, 15, 0],
             [1, 0, 0, 0, 15, 0],
@@ -53,7 +51,6 @@ const TOP_ID = 7;
 const PANTS_ID = 8;
 const SHOES_ID = 9;
 
-/// Функции модуля выбора и создания персоонажа
 module.exports = {
     timeForSecondSlot: 100,
     costSecondSlot: 500,
@@ -181,7 +178,6 @@ module.exports = {
         }
         return charInfos;
     },
-    /// Функции создания персоонажа
     create(player) {
         player.characterInfo = {
             accountId: player.account.id,
@@ -389,17 +385,17 @@ module.exports = {
     getSpawn() {
         switch (call('utils').randomInteger(0, 5)) {
             case 0:
-                return [-252.91534423828125, -338.6800231933594, 29.70627212524414]; /// Рокфорд-Хиллз
+                return [-252.91534423828125, -338.6800231933594, 29.70627212524414];
             case 1:
-                return [258.9052429199219, -1112.8656005859375, 29.43829917907715]; /// Мишн-Роу
+                return [258.9052429199219, -1112.8656005859375, 29.43829917907715]; 
             case 2:
-                return [-197.68017578125, -804.0416870117188, 30.45401954650879]; /// Пиллбокс-Хилл
+                return [-197.68017578125, -804.0416870117188, 30.45401954650879]; 
             case 3:
-                return [1155.053466796875, -470.5561828513281, 66.53962158203125]; /// Миррор-Парк
+                return [1155.053466796875, -470.5561828513281, 66.53962158203125]; 
             case 4:
-                return [-164.7874755859375, 6426.59912109375, 31.886451721191406]; /// Палето-Бэй
+                return [-164.7874755859375, 6426.59912109375, 31.886451721191406]; 
             case 5:
-                return [1958.814208984365, 3844.35888671875, 31.985401153564453]; /// Сэнди-Шорс
+                return [1958.814208984365, 3844.35888671875, 31.985401153564453];
             default:
                 return [-252.91534423828125, -338.6800231933594, 29.70627212524414];
         }
@@ -456,19 +452,19 @@ module.exports = {
         });
     },
     spawn(player) {
-        if (player.character.arrestTime) return; // заспавнит модуль [police]
+        if (player.character.arrestTime) return;
         var settings = player.character.settings;
         var house = houses.getHouseByCharId(player.character.id);
 
         if (settings.spawn === 1 && !house) settings.spawn = 0;
         if (settings.spawn === 2 && !player.character.factionId) settings.spawn = 0;
         switch (settings.spawn) {
-            case 0: // улица
+            case 0:
                 player.spawn(new mp.Vector3(player.character.x, player.character.y, player.character.z));
                 player.heading = player.character.h;
                 player.dimension = 0;
                 break;
-            case 1: // дом
+            case 1: 
                 var pos = new mp.Vector3(house.info.Interior.x, house.info.Interior.y, house.info.Interior.z);
                 player.spawn(pos);
                 player.dimension = house.info.id;
@@ -477,7 +473,7 @@ module.exports = {
                     place: 1
                 };
                 break;
-            case 2: //организация
+            case 2:
                 var marker = factions.getMarker(player.character.factionId);
                 player.spawn(marker.position);
                 player.dimension = marker.dimension;

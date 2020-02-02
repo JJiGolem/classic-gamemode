@@ -374,7 +374,7 @@ module.exports = {
 
         var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getBySqlId(data.sqlId);
         var character = null;
-        if (!rec || !rec.character) { // игрок оффлайн
+        if (!rec || !rec.character) {
             character = await db.Models.Character.findByPk(data.sqlId, {
                 attributes: ['id', 'name', 'factionId', 'factionRank'],
             });

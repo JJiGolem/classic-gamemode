@@ -1,13 +1,5 @@
 "use strict";
 
-/*
-    Модуль диалога предложения в GUI (VUE).
-    Используется для подтверждения операции, в основном, финансовой, но не только.
-    Например: при продаже дома/бизнеса/авто, при принятии в организацию и пр.
-
-    created 07.07.19 by Carter Slade
-*/
-
 mp.offerDialog = {
     show: (name, values) => {
         mp.events.call("offerDialog.show", name, values);
@@ -30,7 +22,7 @@ mp.events.add("offerDialog.show", (name, values) => {
     //         if (player && !player.isFamiliar) values.name = "Гражданин";
     //     }
     // }
-    // TODO: Прикрутить сис-му знакомств, чтобы не было видно ника незнакомца. ^^^
+
     // mp.gui.cursor.show(true, true);
     mp.callCEFV(`offerDialog.show(\`${name}\`, ${JSON.stringify(values)})`);
 });

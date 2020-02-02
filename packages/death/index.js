@@ -1,9 +1,7 @@
 "use strict";
 
 module.exports = {
-    // Кол-во ХП у лежачего игрока
     health: 50,
-    // Список ID персонажей присмерти, которые вышли с сервера
     knockedList: [],
 
     addKnocked(player, time = 5 * 60 * 1000) {

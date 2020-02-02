@@ -59,93 +59,20 @@ var mapCaseGoverData =  {
     },
 }
 
-
-//api
-/*
-    mapCaseEmsCallsData.list = [{num, name, description}];
-
-    массив, отображающийся в списке вызовов
-*/
-/*
-    mapCaseEmsMembersData.list = [{ num, name, rank }];
-
-    массив, отображающийся в списке сотрудников
-*/
-
-
-//Следущие функции необходимо реализовать
-//Для примера в них реализованы импровизированные ответы от сервера
-
-//Функция, срабатывающая при принятии вызова
-//data - данные о вызове
-
-//Функция, устанавливающая массив рангов (от младшего к старшему)
 mapCaseGoverMembersData.setRanks(["Старший медик", "Альпака", "Главный уборщик", "Старший Альпака"]);
 
-
-//Функция, срабатывающая при увольнение сотрудника
-//data - данные о сотруднике из записи в списке
 mapCaseGoverMembersData.dismiss = (data) => {
     mp.trigger(`callRemote`, `mapCase.gover.members.uval`, data.id);
 }
 
-
-//Функция, срабатывающая при понижении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
-//data - данные о сотруднике из записи в списке
 mapCaseGoverMembersData.lowerRank = (data) => {
     if (data.rank <= 1)
         return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет мин. ранг - ${mapCaseGoverMembersData.ranks[data.rank - 1]}`);
     mp.trigger(`callRemote`, `mapCase.gover.rank.lower`, data.id);
 }
 
-
-//Функция, срабатывающая при повышении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
-//data - данные о сотруднике из записи в списке
 mapCaseGoverMembersData.raiseRank = (data) => {
     if (data.rank >= mapCaseGoverMembersData.ranks.length)
         return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет макс. ранг - ${mapCaseGoverMembersData.ranks[data.rank - 1]}`);
     mp.trigger(`callRemote`, `mapCase.gover.rank.raise`, data.id);
 }
-
-
-//for tests
-/*mapCaseEmsCallsData.list = [
-    {
-        num: 2,
-        name: "Curys Raider",
-        description: "ПАльпака покусал",
-    },
-    {
-        num: 1,
-        name: "ACurysirusew Raiderderder",
-        description: "Альпака покусал",
-    },
-    {
-        num: 3,
-        name: "Curysirusew Raiderderder",
-        description: "Альпака покусал",
-    },
-    {
-        num: 4,
-        name: "Curys Raider",
-        description: "Альпака покусал",
-    },
-];*/
-
-/*mapCaseEmsMembersData.list = [
-    {
-        num: 1,
-        name: "Curys Raider",
-        rank: 2,
-    },
-    {
-        num: 2,
-        name: "Curysirusew Raiderderder",
-        rank: 1,
-    },
-    {
-        num: 3,
-        name: "Curysirusew Raiderderder",
-        rank: 1,
-    },
-];*/

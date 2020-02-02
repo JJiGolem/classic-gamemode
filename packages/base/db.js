@@ -1,5 +1,5 @@
 "use strict";
-/// Документ по работе с БД, не подключает игнорируемые модули
+
 const Sequelize = require('sequelize');
 const fs = require("fs");
 global.Op = Sequelize.Op;
@@ -7,7 +7,7 @@ global.Op = Sequelize.Op;
 module.exports = {
     sequelize: null,
     Models: {},
-    /// Подключение к БД
+    
     connect: function(callback) {
         console.log("[DATABASE] db connect...");
         this.sequelize = new Sequelize('classic_db', mp.config.dbUser, mp.config.dbPassword, {
@@ -25,7 +25,7 @@ module.exports = {
         this.loadModels();
         callback();
     },
-    /// Загрузка моделей таблиц из папки 'db' в каждом из модулей, кроме игнорируемого
+    
     loadModels: function() {
         console.log("[DATABASE] load models...");
         fs.readdirSync(path.dirname(__dirname)).forEach(dir => {

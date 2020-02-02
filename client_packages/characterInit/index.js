@@ -1,5 +1,5 @@
 "use strict";
-/// Выбор персоонажа и подключение создания персоонажа
+
 require("characterInit/characterCreate.js");
 const freemodeCharacters = [mp.game.joaat("mp_m_freemode_01"), mp.game.joaat("mp_f_freemode_01")];
 
@@ -11,20 +11,18 @@ let peds = [];
 let selectMarkers = [];
 let currentCharacter = 0;
 
-/// ИЗМЕНЯТЬ ДАННЫЕ НАСТРОЙки ДЛЯ УСТАНОВКИ ПЕДОВ
-/// Начальная координата камеры
-const camPos = [-222.94, 6584.72, 8];//[1220.15, 195.36, 80.5];//[-1828.8, -870.1, 3.1];
-/// На сколько ниже камера смотрит, чем находится
+const camPos = [-222.94, 6584.72, 8];
+
 const camPosZDelta = -0.4;
-/// Расстояние от камеры до текущего педа
+
 const camDist = 2.5;
-/// Расстояние между педами
+
 const pedDist = 2.5;
-/// Поворот линии педов
+
 const pedsRotation = 225;
-/// Поворот педа
+
 const pedRotation = 120;
-/// Поворот камеры
+
 const camRotation = 70;
 
 const cosCamRot = Math.cos(camRotation * Math.PI/180);
@@ -111,7 +109,6 @@ mp.events.add("characterInit.done", () => {
     selectMarkers = [];
     peds = [];
 
-    // Отключение регенарции здоровья
     mp.game.player.setHealthRechargeMultiplier(0);
 
     mp.utils.requestIpls();
@@ -139,7 +136,7 @@ mp.events.add('characterInit.choose', () => {
         mp.events.callRemote('characterInit.choose', currentCharacter);
     }
 });
-mp.events.add('characterInit.choose.ans', (ans) => {     //0 - не успешно     1 - успешно
+mp.events.add('characterInit.choose.ans', (ans) => { 
     if (ans === 0) {
         if(!isBinding){
             binding(true);
@@ -268,7 +265,7 @@ let choose = function() {
 
 let setCharClothes = function(indexPed) {
     if (charClothes.length <= indexPed) return;
-    mp.utils.clearAllView(mp.players.local, charInfos[indexPed].hair); // раздеваем игрока полностью
+    mp.utils.clearAllView(mp.players.local, charInfos[indexPed].hair);
     let clothes = charClothes[indexPed].clothes;
     let props = charClothes[indexPed].props;
     for (let i = 0; i < clothes.length; i++) {
@@ -355,9 +352,9 @@ let colorForOverlayIdx = function(index, indexPed) {
 
 function binding(active) {
     if (active) {
-        mp.keys.bind(0x27, true, chooseRight);   // Right arrow
-        mp.keys.bind(0x25, true, chooseLeft);    // Left arrow
-        mp.keys.bind(0x0D, true, choose);        // Enter
+        mp.keys.bind(0x27, true, chooseRight);   
+        mp.keys.bind(0x25, true, chooseLeft);    
+        mp.keys.bind(0x0D, true, choose);      
     }
     else {
         mp.keys.unbind(0x27, true, chooseRight);

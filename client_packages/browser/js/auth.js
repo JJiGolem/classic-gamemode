@@ -208,14 +208,6 @@ var auth = new Vue({
             if (code == 9) {
                 this.form = 3;
                 mp.trigger(`callRemote`, `auth.email.confirm`, 1);
-                // открывается панель, на которой нужно предложить пользователю подтвердить почту
-                // там можно либо не подтверждать и вызывать mp.trigger('auth.email.confirm', answer);
-                // где 0 - не согласился подтвердить
-                // 1 - согласился подтвердить
-                // в случае если пользователь согласился подвтердить почту,
-                // то должно открыться окно ввода пароля из письма, отправленного на электронную почту
-                // После чего пользователь вводит пароль из письма и ты вызываешь mp.trigger('auth.email.confirm.code', code);
-                // и тебе приходит ответ `auth.showEmailConfirmResult(${result})`
             }
 
             loader.show = false;
@@ -228,24 +220,20 @@ var auth = new Vue({
         },
         showRecoveryResult(code) {
             loader.show = false;
-            // код был отправлен на почту
             if (code == 3) {
                 this.recoveryCodeSent = true;
                 return;
             }
-            // код был подтвержден
             if (code == 5) {
                 this.recoveryCodeSent = false;
                 this.recoveryCodeConfirmed = true;
                 return;
             }
-            // аккаунт восстановлен
             if (code == 8) {
                 this.recoveryCodeConfirmed = false;
                 this.recoveryCompleted = true;
                 this.form = 0;
             }
-            // превышено количество попыток
             if (code == 9) {
                 this.show = false;
                 notifications.push('error', "Превышено количество попыток (вы были кикнуты)");
@@ -286,5 +274,3 @@ var auth = new Vue({
     }
 });
 
-// for tests
-// auth.show = true;

@@ -7,21 +7,13 @@ let timer = call('timer');
 let utils = call('utils');
 
 module.exports = {
-    // Фермы
     farms: [],
-    // Маркеры ферм
     markers: [],
-    // Блипы ферм
     blips: [],
-    // Склады ферм
     warehouses: [],
-    // Склады ферм с удобрением
     soilsWarehouse: [],
-    // Должности
     jobNames: ["Работник", "Фермер", "Тракторист", "Пилот"],
-    // Требуемые скиллы для работы на должности
     jobExps: [0, 1, 2, 10],
-    // Муж. рабочая одежда
     maleClothes: [
         [{
                 type: "Clothes",
@@ -223,38 +215,24 @@ module.exports = {
             },
         ],
     ],
-    // Модели авто и их типы работ
     vehModels: {
         "bodhi2": 1,
         "rebel": 1,
         "tractor2": 2,
         "duster": 3,
     },
-    // Объекты урожая на поле
     fieldObjects: {},
-    // Время сбора одного 1 ед. урожая (ms)
     takeCropTime: 7000,
-    // Время созревания поля (ms)
     growthTime: 20 * 60 * 1000,
-    // Вместимость зерна на складе
     grainsMax: 2000,
-    // Вместимость урожая на складе (для каждого типа)
     productsMax: 800,
-    // Вместимость удобрения на складе
     soilsMax: 1000,
-    // Вместимость урожая на поле
-    cropMax: 600 + 400, // 400 ед. для эффекта удобрения
-    // Макс. цена за 1 ед. зерна/удобрения/урожая
+    cropMax: 600 + 400,
     priceMax: 100,
-    // Макс. ЗП для работника/фермера/тракториста/пилота
     payMax: 100,
-    // Коэффициент при продаже фермы в штат (farmPrice * farmSellK)
     farmSellK: 0.8,
-    // Макс. баланс налога
     taxBalanceMax: 10000,
-    // Налог в час
     tax: 50,
-    // Кол-во опыта за 1 куст
     exp: 0.01,
 
     async init() {
@@ -463,7 +441,6 @@ module.exports = {
 
         vehicle.products.count++;
         vehicle.setVariable("label", `${vehicle.products.count} из 200 ед.`);
-        // Синхра объектов в кузове
         if (vehicle.products.count % 33 == 0)
             vehicle.setVariable("farmProductsState", parseInt(vehicle.products.count / 33));
     },
@@ -550,8 +527,8 @@ module.exports = {
                 new mp.Vector3(2132.9755859375, 4782.25, 40.97028732299805),
             ]
         ];
-        var start = 5; // первые 5 точек - на разгон самолета
-        var deltaZ = [70, 80]; // высота полета
+        var start = 5;
+        var deltaZ = [70, 80];
         var list = points[farm.id - 1].slice();
         for (var i = start; i < list.length - start; i++) {
             list[i].z = utils.randomInteger(deltaZ[0], deltaZ[1]);
@@ -610,7 +587,6 @@ module.exports = {
             }
         }, this.growthTime / 3);
     },
-    // удобрить поля фермы
     soilFields(farm) {
         var fields = farm.fields.filter(x => x.count && x.count < this.cropMax);
         var objects = [];

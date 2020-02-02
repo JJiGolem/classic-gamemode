@@ -6,7 +6,6 @@ let timer = call('timer');
 let utils = call('utils');
 
 module.exports = {
-    // Изготовители (станок, верстак и т.п.)
     crafters: [{
             name: "Станок",
             description: "Используется для переработки ресурсов и изготовления инструментов.",
@@ -222,9 +221,7 @@ module.exports = {
             object: null,
         },
     ],
-    // Время ожидания предмета, после которого предмет из очереди уничтожится
     destroyItemTime: 10 * 60 * 1000,
-    // ИД предмета 'Дерево'
     firewoodItemId: 137,
 
     init() {

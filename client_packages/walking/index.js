@@ -1,12 +1,5 @@
 "use strict";
 
-
-/*
-    Модуль походок.
-
-    created 03.10.19 by Carter Slade
-*/
-
 mp.walking = {
     setWalkingStyle(player, style) {
         if (!style) {

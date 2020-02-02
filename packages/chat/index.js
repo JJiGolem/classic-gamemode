@@ -1,5 +1,4 @@
 "use strict";
-/// Модуль чата, с историей сообщений, тегами и процессами
 
 module.exports = {
     push(player, text) {

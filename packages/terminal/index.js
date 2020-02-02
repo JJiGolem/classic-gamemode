@@ -4,11 +4,8 @@ let notifs = require('../notifications');
 let admin;
 
 module.exports = {
-    // Мин. уровень админки для доступа к консоли (character.admin)
     access: 1,
-    // Доступные команды
     commands: {},
-
 
     async init() {
         admin = call('admin');

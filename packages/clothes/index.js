@@ -1,9 +1,7 @@
 "use strict";
 
 module.exports = {
-    // Список одежды
     list: {
-        // жен.
         "0": {
             "bracelets": [],
             "ears": [],
@@ -15,7 +13,6 @@ module.exports = {
             "tops": [],
             "watches": [],
         },
-        // муж.
         "1": {
             "bracelets": [],
             "ears": [],

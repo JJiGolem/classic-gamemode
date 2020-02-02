@@ -1,5 +1,3 @@
-// Модуль рыбалки
-
 "use strict"
 
 let money;

@@ -1,6 +1,5 @@
 "use strict";
 
-// Список всех анимаций
 let list = require('./data.js');
 
 module.exports = {

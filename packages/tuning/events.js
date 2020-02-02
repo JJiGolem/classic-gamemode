@@ -41,7 +41,6 @@ module.exports = {
             // player.vehicle.setVariable("engine", false);
             player.vehicle.isBeingTuned = true;
 
-            // TODO: from Carter: test hotfix with vehicle dimension
             mp.players.forEach(rec => {
                 if (!rec.character) return;
                 if (rec.id == player.id) return;
